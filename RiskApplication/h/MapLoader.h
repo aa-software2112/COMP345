@@ -18,6 +18,7 @@ class MapLoader {
 		void mapLoader_LoadMap(const std::string& pathToMap);
 
 	private:
+		std::string mapHeaders[3] = {"[Map]", "[Continents]", "[Territories]"};
 		bool mapLoader_FileExists(const std::string& path);
 
 

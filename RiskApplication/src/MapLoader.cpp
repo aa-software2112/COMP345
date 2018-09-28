@@ -22,9 +22,15 @@ void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 
 	/** Open the file */
 	fstream mapHdl;
+	string lineRead;
 
 	mapHdl.open(pathToMap.c_str(), std::ios::in );
 
+	/** Read entire contents of file */
+	while (getline(mapHdl, lineRead))
+	{
+		print(lineRead);
+	}
 
 
 	mapHdl.close();
