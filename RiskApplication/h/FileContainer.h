@@ -1,27 +1,37 @@
 /*
- * MAP_LOADER.h
+ * FILE_CONTAINER.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_MAP_LOADER_H_
-#define H_MAP_LOADER_H_
+#ifndef H_FILE_CONTAINER_H_
+#define H_FILE_CONTAINER_H_
 
 #include <fstream>
 #include "Utilities.h"
-#include "FileContainer.h"
+using namespace std;
 
-class MapLoader {
+class FileContainer {
 	public:
+		enum fileOperation {
+			READ = 0,
+			WRITE = 1,
+		};
 		/** Constructor **/
-		MapLoader();
-		void mapLoader_LoadMap(const std::string& pathToMap);
+		FileContainer(const string& argFilePath);
+		void fileContainer_openFileInMode(fileOperation operationMode);
+		void fileContainer_displayRemainingContents(void);
+		string * fileContainer_getNextLine(void);
+		bool fileContainer_exists();
 
 	private:
-		FileContainer * mapFileContainer;
-		std::string mapHeaders[3] = {"[Map]", "[Continents]", "[Territories]"};
-		bool mapLoader_FileExists(const std::string& path);
+		void fileContainer_setMode(fileOperation argOperationMode);
+		fileOperation fileContainer_getMode(void);
+		fileOperation operationMode;
+		fstream fileHandle;
+		string filePath;
+		bool fileExists;
 
 
 };
@@ -35,6 +45,7 @@ class MapLoader {
  * 						PUBLIC TYPEDEFS
  ***************************************************************/
 
+
 /***************************************************************
  * 						PUBLIC GLOBALS
  ***************************************************************/
@@ -45,9 +56,9 @@ class MapLoader {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where MAP_LOADER_LOCAL isn't defined.
+ * exposed to other source files where FILE_CONTAINER_LOCAL isn't defined.
  * */
-#ifdef MAP_LOADER_LOCAL
+#ifdef FILE_CONTAINER_LOCAL
 
 
 /***************************************************************
@@ -71,4 +82,4 @@ class MapLoader {
 
 
 
-#endif /* H_MAP_LOADER_H_ */
+#endif /* H_FILE_CONTAINER_H_ */
