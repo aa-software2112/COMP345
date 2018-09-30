@@ -1,34 +1,27 @@
 /*
- * MAP_LOADER.h
+ * FILE_READER.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_MAP_LOADER_H_
-#define H_MAP_LOADER_H_
+#ifndef H_FILE_READER_H_
+#define H_FILE_READER_H_
 
 #include <fstream>
-#include <map>
 #include "Utilities.h"
-#include "FileReader.h"
+#include "FileContainer.h"
+using namespace std;
 
-class MapLoader {
+class FileReader {
 	public:
-		/** Constructor **/
-		MapLoader();
-		void mapLoader_LoadMap(const std::string& pathToMap);
+		FileReader(const string& argPathToFile);
+		bool fileReader_findLineContaining(string& stringToFind);
+		bool fileReader_getStringUntilLineContaining(string& stringBuffer, string& stringToStopAt);
 
 	private:
-		/** The three configuration map objects for storing key,value .map file pairs */
-		map<string, string> mapConfig;
-		map<string, string> continentConfig;
-		map<string, string> territoryConfig;
+		FileContainer * file;
 
-		FileReader * mapFileReader;
-		std::string mapHeaders[4] = {"[Map]", "[Continents]", "[Territories]", "EOF"};
-		bool mapLoader_ParseConfig(int configIndex);
-		void mapLoader_ParseMapFile(void);
 
 
 };
@@ -42,6 +35,7 @@ class MapLoader {
  * 						PUBLIC TYPEDEFS
  ***************************************************************/
 
+
 /***************************************************************
  * 						PUBLIC GLOBALS
  ***************************************************************/
@@ -52,9 +46,9 @@ class MapLoader {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where MAP_LOADER_LOCAL isn't defined.
+ * exposed to other source files where FILE_READER_LOCAL isn't defined.
  * */
-#ifdef MAP_LOADER_LOCAL
+#ifdef FILE_READER_LOCAL
 
 
 /***************************************************************
@@ -78,4 +72,4 @@ class MapLoader {
 
 
 
-#endif /* H_MAP_LOADER_H_ */
+#endif /* H_FILE_READER_H_ */

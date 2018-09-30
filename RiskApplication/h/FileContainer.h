@@ -22,7 +22,7 @@ class FileContainer {
 		FileContainer(const string& argFilePath);
 		void fileContainer_openFileInMode(fileOperation operationMode);
 		void fileContainer_displayRemainingContents(void);
-		string * fileContainer_getNextLine(void);
+		bool fileContainer_getNextLine(string& nextLine);
 		bool fileContainer_exists();
 
 	private:
@@ -72,6 +72,8 @@ class FileContainer {
 /***************************************************************
  * 						PRIVATE GLOBALS
  ***************************************************************/
+/** The string returned from fileContainer_getNextLine() when EOF is reached */
+#define NO_VALUE	"_NV_"
 
 /***************************************************************
  * 						PRIVATE FUNCTIONS

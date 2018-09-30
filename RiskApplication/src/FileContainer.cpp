@@ -1,5 +1,5 @@
 
-#define FILE_CONTAINTER_LOCAL
+#define FILE_CONTAINER_LOCAL
 #include "FileContainer.h"
 
 FileContainer::FileContainer(const string& argFilePath) {
@@ -58,11 +58,11 @@ void FileContainer::fileContainer_displayRemainingContents()
 {
 	if (this->fileContainer_getMode() == READ)
 	{
-		string * lRead;
+		string lRead;
 
-		while((lRead = this->fileContainer_getNextLine()))
+		while(this->fileContainer_getNextLine(lRead))
 		{
-			print(*lRead);
+			print(lRead);
 
 		}
 	}
@@ -70,20 +70,21 @@ void FileContainer::fileContainer_displayRemainingContents()
 
 }
 
-string * FileContainer::fileContainer_getNextLine(void) {
+/** Gets the next line and stores it in the reference passed in arg1,
+ * Returns true if line was found, else false
+ */
+bool FileContainer::fileContainer_getNextLine(string& nextLine) {
 
 	if (this->operationMode == READ)
 	{
-		string * outputString = new string();
 
-		if (getline(this->fileHandle, *outputString))
+		if (getline(this->fileHandle, nextLine))
 		{
-			return outputString;
+			return true;
 		}
 	}
 
-	return NULL;
-
+	return false;
 
 }
 
