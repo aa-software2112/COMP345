@@ -22,68 +22,96 @@ MapLoader::MapLoader() {
 /** Opens the file, reads it, and extracts data from it */
 void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 {
+	/** TODO: reset all attributes belonging to this object */
 
 	/** Create new file container for current map file */
 	this->mapFileReader = new FileReader(pathToMap);
 
-	/** Found [Map], parse and store key, value pairs until [Continents] */
-	if(this->mapFileReader->fileReader_findLineContaining(mapHeaders[0]))
-	{
+	/** Extract content from .map file */
+	this->mapLoader_ParseMapFile();
 
-		this->mapLoader_ParseMapFile();
-
-	}
-	/**
-	this->mapFileReader->fileReader_findLineContaining(mapHeaders[1]);
-	this->mapFileReader->fileReader_findLineContaining(mapHeaders[2]);
-	*/
 }
 
-void MapLoader::mapLoader_ParseMapFile(void)
+/** Function attempts to extract all data from .map files:
+ * Returns false if any of the headers is not found
+ */
+bool MapLoader::mapLoader_ParseMapFile(void)
 {
+	bool parsedAllSections = false;
+	string stringBuffer;
 
-	/** Map configuration was parsed and reached [Continents] */
-	if (this->mapLoader_ParseConfig(0))
+	/** Could not find [Map] */
+	if(!this->mapFileReader->fileReader_findLineContaining(mapHeaders[0]))
 	{
-		/** Continents were parsed and reached [Territories] */
-		if(this->mapLoader_ParseConfig(1))
+
+		print("Invalid file format!");
+		return parsedAllSections;
+	}
+
+	/** [Map] found, extract [Map] configuration, then parse continents section, then territories */
+	if (this->mapLoader_ParseConfig(stringBuffer, MAP))
+	{
+		/** Parse results */
+		print(stringBuffer);
+
+		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
+			/** Parse results */
+			print(stringBuffer);
 
-			if (this->mapLoader_ParseConfig(2))
+			if( this->mapLoader_ParseConfig(stringBuffer, TERRITORIES))
 			{
+				/** Parse results */
+				print(stringBuffer);
 
-				return;
+				parsedAllSections = true;
 			}
-
 
 		}
 
+	}
+	/** The file could not be read to completion - invalid format*/
+	else
+	{
+		print("Invalid file format!");
+		parsedAllSections = false;
 
 	}
 
-
+	return parsedAllSections;
 }
 
-bool MapLoader::mapLoader_ParseConfig(int configIndex)
+/** Returns true if, while extracting all data from current header, the start of the
+ * next header was found, otherwise returns false
+ */
+bool MapLoader::mapLoader_ParseConfig(string& stringBuffer, mapHeaderIdx configIndex)
 {
-	string stringBuffer;
 
-	/** Store all strings in buffer until [Continents] is reached */
+	/** Clear string buffer */
+	stringBuffer = "";
+
+	/** Store all strings in buffer until next header is reached */
 	if(this->mapFileReader->fileReader_getStringUntilLineContaining(stringBuffer, mapHeaders[configIndex + 1]))
 	{
 
-		print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
+		//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
 		return true;
 
 	}
-	/** Continents was not reached */
+	/** Next value was not reached */
 	else
 	{
-		print("Could not find " + mapHeaders[configIndex + 1]);
-		print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
+		/** In the case of searching through TERRITORIES, there is no header that follows */
+		if ((configIndex + 1) == END_OF_FILE)
+		{
+			//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
+			return true;
+		}
+
+		//print("Could not find " + mapHeaders[configIndex + 1]);
+		//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
 		return false;
 	}
-
 
 
 }

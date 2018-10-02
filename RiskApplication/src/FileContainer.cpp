@@ -15,10 +15,12 @@ FileContainer::FileContainer(const string& argFilePath) {
 	}
 	else
 	{
+
 		fclose(file);
 		this->fileExists = true;
 
 	}
+
 
 	/** Default file operation is read */
 	this->operationMode = READ;

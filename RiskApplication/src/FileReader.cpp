@@ -20,7 +20,7 @@ bool FileReader::fileReader_findLineContaining(string& stringToFind)
 	{
 		if (nextLineRead.find(stringToFind, 0) != string::npos)
 		{
-			print("Found text: " + stringToFind + " in text file line: "  + nextLineRead);
+			//print("Found text: " + stringToFind + " in text file line: "  + nextLineRead);
 			return true;
 		}
 

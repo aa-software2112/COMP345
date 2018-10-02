@@ -25,10 +25,19 @@ class MapLoader {
 		map<string, string> continentConfig;
 		map<string, string> territoryConfig;
 
+		/** Enums representing index values for map header */
+		enum mapHeaderIdx {
+			MAP = 0,
+			CONTINENTS,
+			TERRITORIES,
+			END_OF_FILE
+		};
+
 		FileReader * mapFileReader;
 		std::string mapHeaders[4] = {"[Map]", "[Continents]", "[Territories]", "EOF"};
-		bool mapLoader_ParseConfig(int configIndex);
-		void mapLoader_ParseMapFile(void);
+		bool mapLoader_ParseConfig(string& stringBuffer, mapHeaderIdx configIndex);
+		void mapLoader_ExtractFromBuffer(mapHeaderIdx);
+		bool mapLoader_ParseMapFile(void);
 
 
 };
