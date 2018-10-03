@@ -23,6 +23,9 @@ void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 	this->mapFileReader = new FileReader(pathToMap);
 
 	/** Extract content from .map file */
+	/** TODO throw an error if map file is not parsable within defined format, or
+	 * if key,value pairs are missing for any necessary section
+	 */
 	this->mapLoader_ParseMapFile();
 
 }
@@ -53,12 +56,13 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 	{
 		//print(stringBuffer);
 
-		gameMap.map_AddEntryToMapConfig(stringBuffer);
+		gameMap.map_AddListToMapConfig(stringBuffer);
 
 		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
 			/** Parse results */
-			print(stringBuffer);
+			//print(stringBuffer);
+			gameMap.map_AddListToContinents(stringBuffer);
 
 			if( this->mapLoader_ParseConfig(stringBuffer, TERRITORIES))
 			{

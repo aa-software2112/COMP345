@@ -1,34 +1,32 @@
 /*
- * MAP.h
+ * CONTINENT.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_MAP_H_
-#define H_MAP_H_
+#ifndef H_CONTINENT_H_
+#define H_CONTINENT_H_
+
 
 #include <map>
 #include <regex>
-#include "Continent.h"
 #include "Utilities.h"
 using namespace std;
 
-class Map {
+class Continent {
 	public:
 		/** Constructor **/
-		Map();
-		void map_AddListToMapConfig(vector<string>& keyValueString);
-		void map_AddListToContinents(vector<string>& keyValueString);
+		Continent(string continentName, int bonusValue);
 
 	private:
-		/** Contains the configuration options under [MAP] header */
-		map<string, string> mapConfig;
-		map<string, Continent*> mapContinents;
-		void map_DisplayMapConfig(void);
-		void map_DisplayContinents(void);
+		friend ostream &operator<<(ostream&, const Continent&);
+
+		string continentName;
+		int bonusValue;
 
 };
+
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
@@ -48,9 +46,9 @@ class Map {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where MAP_LOCAL isn't defined.
+ * exposed to other source files where CONTINENT_LOCAL isn't defined.
  * */
-#ifdef MAP_LOCAL
+#ifdef CONTINENT_LOCAL
 
 
 /***************************************************************
@@ -74,4 +72,4 @@ class Map {
 
 
 
-#endif /* H_MAP_H_ */
+#endif /* H_CONTINENT_H_ */
