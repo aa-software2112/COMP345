@@ -9,6 +9,7 @@
 #define H_FILE_READER_H_
 
 #include <fstream>
+#include <vector>
 #include "Utilities.h"
 #include "FileContainer.h"
 using namespace std;
@@ -17,7 +18,9 @@ class FileReader {
 	public:
 		FileReader(const string& argPathToFile);
 		bool fileReader_findLineContaining(string& stringToFind);
-		bool fileReader_getStringUntilLineContaining(string& stringBuffer, string& stringToStopAt);
+		//bool fileReader_getStringUntilLineContaining(string& stringBuffer, string& stringToStopAt);
+		bool fileReader_getStringUntilLineContaining(vector<string>& stringBuffer, string& stringToStopAt);
+
 
 	private:
 		FileContainer * file;

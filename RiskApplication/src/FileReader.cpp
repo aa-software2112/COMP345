@@ -31,7 +31,7 @@ bool FileReader::fileReader_findLineContaining(string& stringToFind)
 
 }
 
-bool FileReader::fileReader_getStringUntilLineContaining(string& stringBuffer, string& stringToStopAt)
+bool FileReader::fileReader_getStringUntilLineContaining(vector<string>& stringBuffer, string& stringToStopAt)
 {
 
 	string nextLineRead;
@@ -43,7 +43,8 @@ bool FileReader::fileReader_getStringUntilLineContaining(string& stringBuffer, s
 		if (nextLineRead.find(stringToStopAt, 0) == string::npos)
 		{
 			/** Add current string to buffer */
-			stringBuffer += (nextLineRead + "\n");
+			//stringBuffer += (nextLineRead + "\n");
+			stringBuffer.push_back(nextLineRead);
 		}
 		else
 		{

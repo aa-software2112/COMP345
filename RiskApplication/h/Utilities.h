@@ -9,6 +9,7 @@
 #define H_UTILITIES_H_
 
 #include <iostream>
+#include <vector>
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
@@ -26,7 +27,8 @@
  * 						PUBLIC FUNCTIONS
  ***************************************************************/
 void print(const std::string& str);
-
+void print(std::vector<std::string>& vector);
+void splitString(std::string& stringToSplit, std::string& delimiter, std::vector<std::string>& container);
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
  * exposed to other source files where UTILITIES_LOCAL isn't defined.

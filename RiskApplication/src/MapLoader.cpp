@@ -9,11 +9,6 @@ MapLoader::MapLoader() {
 
 	/** The mapConfig expects 5 explicit keys, all
 	 * other configurations are based on the map itself and cannot be hard-coded */
-	this->mapConfig["author"];
-	this->mapConfig["image"];
-	this->mapConfig["wrap"];
-	this->mapConfig["scroll"];
-	this->mapConfig["warn"];
 
 	print("MapLoader Constructor");
 
@@ -38,7 +33,12 @@ void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 bool MapLoader::mapLoader_ParseMapFile(void)
 {
 	bool parsedAllSections = false;
-	string stringBuffer;
+	//string stringBuffer;
+
+	vector<string> stringBuffer;
+
+	/** This will be the Map object returned to caller */
+	Map gameMap;
 
 	/** Could not find [Map] */
 	if(!this->mapFileReader->fileReader_findLineContaining(mapHeaders[0]))
@@ -51,8 +51,9 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 	/** [Map] found, extract [Map] configuration, then parse continents section, then territories */
 	if (this->mapLoader_ParseConfig(stringBuffer, MAP))
 	{
-		/** Parse results */
-		print(stringBuffer);
+		//print(stringBuffer);
+
+		gameMap.map_AddEntryToMapConfig(stringBuffer);
 
 		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
@@ -84,11 +85,13 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 /** Returns true if, while extracting all data from current header, the start of the
  * next header was found, otherwise returns false
  */
-bool MapLoader::mapLoader_ParseConfig(string& stringBuffer, mapHeaderIdx configIndex)
+bool MapLoader::mapLoader_ParseConfig(vector<string>& stringBuffer, mapHeaderIdx configIndex)
+		//string& stringBuffer, mapHeaderIdx configIndex)
 {
 
 	/** Clear string buffer */
-	stringBuffer = "";
+	//stringBuffer = "";
+	stringBuffer.erase(stringBuffer.begin(), stringBuffer.end());
 
 	/** Store all strings in buffer until next header is reached */
 	if(this->mapFileReader->fileReader_getStringUntilLineContaining(stringBuffer, mapHeaders[configIndex + 1]))
