@@ -23,22 +23,82 @@ void print(std::vector<std::string> & vector)
 /** Splits a string by delimiter and stores tokens in container vector */
 void splitString(std::string& stringToSplit, std::string& delimiter, std::vector<std::string>& container)
 {
+    if (delimiter == "") return;
+
 	/** Clear the vector */
 	container.erase(container.begin(), container.end());
+
+    /** temporary string */
+    std::string tempString;
 
 	int startIndex = 0;
 	int foundIndex = stringToSplit.find(delimiter, startIndex);
 
 	while (foundIndex != std::string::npos)
 	{
-		/** Delimiter was found starting at foundIndex */
-		container.push_back( stringToSplit.substr( startIndex, ( foundIndex - startIndex ) ) );
+	    /** Get string before newly found delimiter index */
+		tempString = stringToSplit.substr( startIndex, ( foundIndex - startIndex ) );
 
+        /** Remove all leading and trailing whitespace */
+		removeEdgeWhitespace(tempString);
+
+		/** Delimiter was found starting at foundIndex */
+		container.push_back( tempString );
+
+        /** The next index to start searching from */
 		startIndex = foundIndex + delimiter.length();
 
+        /** The next index where the delimiter is found */
 		foundIndex = stringToSplit.find(delimiter, startIndex);
+
 
 	}
 
+	/** After last delimiter is found, the rest of the string should be added */
+    tempString = stringToSplit.substr( startIndex, (stringToSplit.size() - startIndex) );
+
+	removeEdgeWhitespace(tempString);
+
+	container.push_back( tempString );
 
 }
+
+
+void removeEdgeWhitespace(std::string& stringToParse)
+{
+
+	/** Removes leading and trailing whitespace */
+	removeLeadingWhitespace(stringToParse);
+	removeTrailingWhitespace(stringToParse);
+
+}
+
+void removeLeadingWhitespace(std::string& stringToParse)
+{
+	size_t firstIndexOfNonWhitespace = stringToParse.find_first_not_of(" ");
+
+	/** Found a character that is a non-whitespace at the start of string */
+	if (firstIndexOfNonWhitespace != std::string::npos)
+	{
+		stringToParse = stringToParse.substr(firstIndexOfNonWhitespace, (stringToParse.size() - firstIndexOfNonWhitespace));
+
+	}
+
+}
+
+
+void removeTrailingWhitespace(std::string& stringToParse)
+{
+	size_t lastIndexOfNonWhitespace = stringToParse.find_last_not_of(" ");
+
+	/** Found a character that is a non-whitespace at the end of the string */
+	if (lastIndexOfNonWhitespace != std::string::npos)
+	{
+		stringToParse = stringToParse.substr(0, (lastIndexOfNonWhitespace + 1));
+
+	}
+
+}
+
+
+

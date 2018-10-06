@@ -39,7 +39,9 @@ void splitString(std::string& stringToSplit, std::string& delimiter, std::vector
 /***************************************************************
  * 						PRIVATE DEFINITIONS
  ***************************************************************/
-
+void removeLeadingWhitespace(std::string& stringToParse);
+void removeTrailingWhitespace(std::string& stringToParse);
+void removeEdgeWhitespace(std::string& stringToParse);
 /***************************************************************
  * 						PRIVATE TYPEDEFS
  ***************************************************************/
