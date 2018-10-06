@@ -63,6 +63,22 @@ void splitString(std::string& stringToSplit, std::string& delimiter, std::vector
 
 }
 
+bool isNumeric(std::string& str)
+{
+    int i = -1;
+
+    /** Iterate while not EOS */
+    while(str[++i] != '\0')
+    {
+    	/** Not a number */
+        if ( (( (int)str[i] ) < ((int) '0') || ((int) str[i]) > ((int) '9') ) )
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 void removeEdgeWhitespace(std::string& stringToParse)
 {

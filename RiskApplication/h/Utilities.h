@@ -29,6 +29,8 @@
 void print(const std::string& str);
 void print(std::vector<std::string>& vector);
 void splitString(std::string& stringToSplit, std::string& delimiter, std::vector<std::string>& container);
+bool isNumeric(std::string& str);
+
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
  * exposed to other source files where UTILITIES_LOCAL isn't defined.

@@ -1,31 +1,25 @@
 /*
- * CONTINENT.h
+ * COUNTRY.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_CONTINENT_H_
-#define H_CONTINENT_H_
-
+#ifndef H_COUNTRY_H_
+#define H_COUNTRY_H_
 
 #include <map>
-#include <regex>
-#include "Country.h"
 #include "Utilities.h"
 using namespace std;
 
-class Continent {
+class Country {
 	public:
 		/** Constructor **/
-		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country country);
+		Country();
+		string country_GetName(void);
 
 	private:
-		friend ostream &operator<<(ostream&, const Continent&);
-
-		string continentName;
-		int bonusValue;
+		string countryName;
 
 };
 
@@ -48,9 +42,9 @@ class Continent {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where CONTINENT_LOCAL isn't defined.
+ * exposed to other source files where COUNTRY_LOCAL isn't defined.
  * */
-#ifdef CONTINENT_LOCAL
+#ifdef COUNTRY_LOCAL
 
 
 /***************************************************************
@@ -74,4 +68,4 @@ class Continent {
 
 
 
-#endif /* H_CONTINENT_H_ */
+#endif /* H_COUNTRY_H_ */
