@@ -41,7 +41,7 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 	vector<string> stringBuffer;
 
 	/** This will be the Map object returned to caller */
-	Map gameMap;
+	Map * gameMap = new Map();
 
 	/** Could not find [Map] */
 	if(!this->mapFileReader->fileReader_findLineContaining(mapHeaders[0]))
@@ -56,19 +56,19 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 	{
 		//print(stringBuffer);
 
-		gameMap.map_AddListToMapConfig(stringBuffer);
+		gameMap->map_AddListToMapConfig(stringBuffer);
 
 		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
 			/** Parse results */
 			//print(stringBuffer);
-			gameMap.map_AddListToContinents(stringBuffer);
+			gameMap->map_AddListToContinents(stringBuffer);
 
 			if( this->mapLoader_ParseConfig(stringBuffer, TERRITORIES))
 			{
 				/** Parse results */
-				print(stringBuffer);
-
+				//print(stringBuffer);
+				gameMap->map_AddListToCountries(stringBuffer);
 				parsedAllSections = true;
 			}
 

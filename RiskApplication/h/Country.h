@@ -10,16 +10,29 @@
 
 #include <map>
 #include "Utilities.h"
+#include "Continent.h"
 using namespace std;
+
+class Continent;
 
 class Country {
 	public:
 		/** Constructor **/
-		Country();
+		Country(void);
+		Country(string countryName);
+		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate );
 		string country_GetName(void);
+		void country_SetXCoordinate(UINT x);
+		void country_SetYCoordinate(UINT y);
+		void country_SetContinent(Continent * linkContinent);
 
 	private:
+		/** A pointer to the continent that this country belongs to */
+		Continent * parentContinent;
+		UINT xCoordinate;
+		UINT yCoordinate;
 		string countryName;
+		friend ostream &operator<<(ostream&, const Country&);
 
 };
 

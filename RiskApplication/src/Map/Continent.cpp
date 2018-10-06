@@ -9,6 +9,16 @@ Continent::Continent(string continentName, int bonusValue)
 
 }
 
+void Continent::continent_AddLinkToCountry(Country * country)
+{
+	/** Country has not yet been linked to this continent */
+	if (mapOfCountries.find(country->country_GetName()) == mapOfCountries.end())
+	{
+		mapOfCountries[country->country_GetName()] = country;
+	}
+
+}
+
 ostream &operator<<(ostream& strm, const Continent& continent)
 {
 
@@ -16,3 +26,4 @@ ostream &operator<<(ostream& strm, const Continent& continent)
 	return strm;
 
 }
+

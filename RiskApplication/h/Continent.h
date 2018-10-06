@@ -11,19 +11,23 @@
 
 #include <map>
 #include <regex>
-#include "Country.h"
 #include "Utilities.h"
+#include "Country.h"
 using namespace std;
+
+class Country;
 
 class Continent {
 	public:
 		/** Constructor **/
 		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country country);
+		void continent_AddLinkToCountry(Country * country);
 
 	private:
 		friend ostream &operator<<(ostream&, const Continent&);
 
+		/** TODO, implement as Vertex<Country> */
+		map<string, Country *> mapOfCountries;
 		string continentName;
 		int bonusValue;
 

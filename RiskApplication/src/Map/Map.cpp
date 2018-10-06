@@ -72,6 +72,94 @@ void Map::map_AddListToContinents(vector<string>& keyValueString)
 
 }
 
+void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
+{
+	string delimiterByComma(",");
+	vector<string> splitStringContainer;
+
+
+	/** Iterate over each entry in Key=Value string */
+	for (vector<string>::iterator it = commaSeparatedStrings.begin(); it != commaSeparatedStrings.end(); it++)
+	{
+		/** Split comma separated string */
+		splitString(*it, delimiterByComma, splitStringContainer);
+
+		/** Size of split string (which is a territory) must be AT-LEAST 5, defined as
+		 * Index 0: New Country/Territory (Non-blank string)
+		 * Index 1: X-coordinate (must be numeric)
+		 * Index 2: Y-coordinate (must be numeric)
+		 * Index 3: Continent that Index 0 belongs to (must exist as a continent object by this point in 'mapContinents')
+		 * Index 4: At least 1 country that Index 0 connects to
+		 * Index 5 +: All other countries that Index 0 connects to
+		 */
+
+		/** The first five values, from Index 0 -> Index 4 should be available */
+		if (splitStringContainer.size() >= 5)
+		{
+			/** Format of each is checked here - if all are valid, entries are processed */
+			if ( (splitStringContainer[0] != "") && isNumeric(splitStringContainer[1]) &&
+					isNumeric(splitStringContainer[2]) && (mapContinents.find(splitStringContainer[3]) != mapContinents.end()) )
+			{
+				//print("\nNEW COUNTRY");
+				//print(splitStringContainer);
+
+
+				/** Create the country ... TODO implement mapCountries as <string, Vertex<Country>> once Graph is implemented */
+				/** TODO add the country to the list of verticies with edges - Vu is made here */
+				/** Check if current country already exists (made by a previous entry) */
+				if ( mapCountries.find(splitStringContainer[0]) != mapCountries.end() )
+				{
+					/** Add remaining data to it (x, y, and continent)*/
+					Country *tempCountry = mapCountries[splitStringContainer[0]];
+					tempCountry->country_SetXCoordinate((UINT) (strtol(splitStringContainer[1].c_str(), NULL, 10) ));
+					tempCountry->country_SetYCoordinate((UINT) (strtol(splitStringContainer[2].c_str(), NULL, 10) ));
+					tempCountry->country_SetContinent(mapContinents[splitStringContainer[3]]);
+
+				}
+				/** Country doesn't exist yet */
+				else
+				{
+					int xCoord = (UINT) (strtol(splitStringContainer[1].c_str(), NULL, 10) );
+					int yCoord = (UINT) (strtol(splitStringContainer[2].c_str(), NULL, 10) );
+
+					mapCountries[splitStringContainer[0]] = new Country(mapContinents[splitStringContainer[3]], \
+																splitStringContainer[0], xCoord, yCoord);
+
+				}
+
+				/** Loop over all countries (Vx) and TODO add them to some graph function addEdge(Vu, Vx) */
+				size_t countryLinkIndex = 0;
+
+				for(countryLinkIndex = 4; countryLinkIndex < splitStringContainer.size(); countryLinkIndex++)
+				{
+
+					/** Country linking to country at Index 0 does not exist; must be created first */
+					if ( mapCountries.find(splitStringContainer[countryLinkIndex]) == mapCountries.end() )
+					{
+						mapCountries[splitStringContainer[countryLinkIndex]] = new Country(splitStringContainer[countryLinkIndex]);
+
+					}
+					/** TODO Country already exists, add it as an edge, vertex pair to Vu */
+					else
+					{
+
+					}
+
+
+				}
+
+
+				cout << *mapCountries[splitStringContainer[0]] << endl;
+
+			}
+
+		}
+
+
+	}
+
+}
+
 
 void Map::map_DisplayContinents(void)
 {

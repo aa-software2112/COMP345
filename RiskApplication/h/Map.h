@@ -11,6 +11,7 @@
 #include <map>
 #include <regex>
 #include "Continent.h"
+#include "Country.h"
 #include "Utilities.h"
 using namespace std;
 
@@ -20,11 +21,13 @@ class Map {
 		Map();
 		void map_AddListToMapConfig(vector<string>& keyValueString);
 		void map_AddListToContinents(vector<string>& keyValueString);
+		void map_AddListToCountries(vector<string>& keyValueString);
 
 	private:
 		/** Contains the configuration options under [MAP] header */
 		map<string, string> mapConfig;
 		map<string, Continent*> mapContinents;
+		map<string, Country*> mapCountries;
 		void map_DisplayMapConfig(void);
 		void map_DisplayContinents(void);
 
