@@ -32,6 +32,7 @@ class Graph {
 				bool operator< (const Vertex& otherVertex);
 				Edge * vertex_GetEdgeTo(Vertex *otherVertex);
 				void vertex_AddVertexEdgePair(Vertex *otherVertex, Edge * connectingEdge);
+				map<Vertex *, Edge *> * vertex_GetOutgoing(void);
 
 			private:
 				/** The element stored in the vertex */

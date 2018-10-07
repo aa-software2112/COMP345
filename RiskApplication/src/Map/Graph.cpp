@@ -26,9 +26,23 @@ void Graph<V, E>::graph_DisplayGraph()
 {
 	int i = 0;
 
+	/** For each vertex u */
 	for(i = 0; i<this->vertices.size(); i++)
 	{
-		cout << (*(this->vertices[i])).vertex_GetElement();
+		/** Current country checking over */
+		cout << "Connections for: " << (*(this->vertices[i])).vertex_GetElement();
+
+		/** For each vertex and edge v, e connected to u */
+		map<Vertex *, Edge *> * adjacencyMap = (*this->vertices[i]).vertex_GetOutgoing();
+
+		for (typename std::map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *>::iterator it=(*adjacencyMap).begin(); it!=(*adjacencyMap).end(); ++it)
+		{
+			/** Display the Country name connected to */
+			cout << (*(it->first)).vertex_GetElement() << endl;
+		}
+
+
+
 	}
 
 }
@@ -53,6 +67,15 @@ typename Graph<V, E>::Edge * Graph<V, E>::graph_InsertEdgeBetween(Vertex * v1, V
 
 		v2->vertex_AddVertexEdgePair(v1, newEdge);
 
+		print("Adding edge between ");
+		cout << (*v1).vertex_GetElement();
+		cout << (*v2).vertex_GetElement();
+	}
+	else
+	{
+		print("Edge already exists");
+		cout << (*v1).vertex_GetElement();
+		cout << (*v2).vertex_GetElement();
 
 	}
 
@@ -100,6 +123,14 @@ void Graph<V, E>::Vertex::vertex_AddVertexEdgePair(Vertex *otherVertex, Edge * c
 
 	this->vertexToEdge[otherVertex] = connectingEdge;
 
+
+}
+
+template <class V, class E>
+map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *> * Graph<V, E>::Vertex::vertex_GetOutgoing(void)
+{
+
+	return &(this->vertexToEdge);
 
 }
 

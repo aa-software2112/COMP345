@@ -13,6 +13,8 @@ Country::Country(void)
 
 	this->yCoordinate = 0;
 
+	this->numArmies = 0;
+
 	/** Store the country name */
 	this->countryName = "";
 
@@ -41,6 +43,7 @@ Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate,
 	/** Store the country name */
 	this->countryName = countryName;
 
+	this->numArmies = 0;
 
 }
 
@@ -49,6 +52,11 @@ string Country::country_GetName(void)
 {
 	/** Returns a copy of the country name */
 	return string(this->countryName);
+}
+
+void Country::country_SetNumArmies(UINT numArmies)
+{
+	this->numArmies = numArmies;
 }
 
 void Country::country_SetXCoordinate(UINT x)

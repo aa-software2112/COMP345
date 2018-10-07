@@ -25,12 +25,15 @@ class Country {
 		void country_SetXCoordinate(UINT x);
 		void country_SetYCoordinate(UINT y);
 		void country_SetContinent(Continent * linkContinent);
+		void country_SetNumArmies(UINT numArmies);
+
 
 	private:
 		/** A pointer to the continent that this country belongs to */
 		Continent * parentContinent;
 		UINT xCoordinate;
 		UINT yCoordinate;
+		UINT numArmies;
 		string countryName;
 		friend ostream& operator<<(ostream&, const Country&);
 

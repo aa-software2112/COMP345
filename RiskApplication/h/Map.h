@@ -30,6 +30,7 @@ class Map {
 		map<string, string> mapConfig;
 		map<string, Continent*> mapContinents;
 		map<string, Country*> mapCountries;
+		map<string, Graph<Country, string>::Vertex *> mapVertex;
 		void map_DisplayMapConfig(void);
 		void map_DisplayContinents(void);
 
