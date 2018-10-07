@@ -3,6 +3,42 @@
 #define UTILITIES_LOCAL
 #include "Utilities.h"
 
+void removeLeadingWhitespace(std::string& stringToParse)
+{
+	size_t firstIndexOfNonWhitespace = stringToParse.find_first_not_of(" ");
+
+	/** Found a character that is a non-whitespace at the start of string */
+	if (firstIndexOfNonWhitespace != std::string::npos)
+	{
+		stringToParse = stringToParse.substr(firstIndexOfNonWhitespace, (stringToParse.size() - firstIndexOfNonWhitespace));
+
+	}
+
+}
+
+
+void removeTrailingWhitespace(std::string& stringToParse)
+{
+	size_t lastIndexOfNonWhitespace = stringToParse.find_last_not_of(" ");
+
+	/** Found a character that is a non-whitespace at the end of the string */
+	if (lastIndexOfNonWhitespace != std::string::npos)
+	{
+		stringToParse = stringToParse.substr(0, (lastIndexOfNonWhitespace + 1));
+
+	}
+
+}
+
+void removeEdgeWhitespace(std::string& stringToParse)
+{
+
+	/** Removes leading and trailing whitespace */
+	removeLeadingWhitespace(stringToParse);
+	removeTrailingWhitespace(stringToParse);
+
+}
+
 /** Prints a string */
 void print(const std::string& str)
 {
@@ -79,42 +115,3 @@ bool isNumeric(std::string& str)
 
     return true;
 }
-
-void removeEdgeWhitespace(std::string& stringToParse)
-{
-
-	/** Removes leading and trailing whitespace */
-	removeLeadingWhitespace(stringToParse);
-	removeTrailingWhitespace(stringToParse);
-
-}
-
-void removeLeadingWhitespace(std::string& stringToParse)
-{
-	size_t firstIndexOfNonWhitespace = stringToParse.find_first_not_of(" ");
-
-	/** Found a character that is a non-whitespace at the start of string */
-	if (firstIndexOfNonWhitespace != std::string::npos)
-	{
-		stringToParse = stringToParse.substr(firstIndexOfNonWhitespace, (stringToParse.size() - firstIndexOfNonWhitespace));
-
-	}
-
-}
-
-
-void removeTrailingWhitespace(std::string& stringToParse)
-{
-	size_t lastIndexOfNonWhitespace = stringToParse.find_last_not_of(" ");
-
-	/** Found a character that is a non-whitespace at the end of the string */
-	if (lastIndexOfNonWhitespace != std::string::npos)
-	{
-		stringToParse = stringToParse.substr(0, (lastIndexOfNonWhitespace + 1));
-
-	}
-
-}
-
-
-

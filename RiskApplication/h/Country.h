@@ -32,7 +32,7 @@ class Country {
 		UINT xCoordinate;
 		UINT yCoordinate;
 		string countryName;
-		friend ostream &operator<<(ostream&, const Country&);
+		friend ostream& operator<<(ostream&, const Country&);
 
 };
 

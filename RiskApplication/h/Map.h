@@ -12,6 +12,7 @@
 #include <regex>
 #include "Continent.h"
 #include "Country.h"
+#include "Graph.h"
 #include "Utilities.h"
 using namespace std;
 
@@ -24,7 +25,8 @@ class Map {
 		void map_AddListToCountries(vector<string>& keyValueString);
 
 	private:
-		/** Contains the configuration options under [MAP] header */
+		/** Graph where nodes contain countries, and edges contain strings */
+		Graph<Country, string> graph;
 		map<string, string> mapConfig;
 		map<string, Continent*> mapContinents;
 		map<string, Country*> mapCountries;

@@ -107,6 +107,12 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 				/** Create the country ... TODO implement mapCountries as <string, Vertex<Country>> once Graph is implemented */
 				/** TODO add the country to the list of verticies with edges - Vu is made here */
 				/** Check if current country already exists (made by a previous entry) */
+
+				/** Will be used to obtain vertex stored into graph */
+				Graph<Country, string>::Vertex * countryVertex;
+				Graph<Country, string>::Vertex * countryAtOtherEndVertex;
+				Graph<Country,string>::Edge * edgeBetweenVertices;
+
 				if ( mapCountries.find(splitStringContainer[0]) != mapCountries.end() )
 				{
 					/** Add remaining data to it (x, y, and continent)*/
@@ -122,13 +128,19 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 					int xCoord = (UINT) (strtol(splitStringContainer[1].c_str(), NULL, 10) );
 					int yCoord = (UINT) (strtol(splitStringContainer[2].c_str(), NULL, 10) );
 
-					mapCountries[splitStringContainer[0]] = new Country(mapContinents[splitStringContainer[3]], \
-																splitStringContainer[0], xCoord, yCoord);
+					Country *tempCountry = new Country(mapContinents[splitStringContainer[3]], \
+							splitStringContainer[0], xCoord, yCoord);
 
+					mapCountries[splitStringContainer[0]] = tempCountry;
+
+					/** A country should be added to list of vertices in graph */
+					countryVertex = graph.graph_InsertVertex(tempCountry);
 				}
 
 				/** Loop over all countries (Vx) and TODO add them to some graph function addEdge(Vu, Vx) */
 				size_t countryLinkIndex = 0;
+
+				Country *tempCountry;
 
 				for(countryLinkIndex = 4; countryLinkIndex < splitStringContainer.size(); countryLinkIndex++)
 				{
@@ -136,8 +148,15 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 					/** Country linking to country at Index 0 does not exist; must be created first */
 					if ( mapCountries.find(splitStringContainer[countryLinkIndex]) == mapCountries.end() )
 					{
-						mapCountries[splitStringContainer[countryLinkIndex]] = new Country(splitStringContainer[countryLinkIndex]);
+						tempCountry =  new Country(splitStringContainer[countryLinkIndex]);
 
+						mapCountries[splitStringContainer[countryLinkIndex]] = tempCountry;
+
+						/** Insert next country */
+						countryAtOtherEndVertex = graph.graph_InsertVertex(tempCountry);
+
+						/** Insert edge between two countries */
+						edgeBetweenVertices = graph.graph_InsertEdgeBetween(countryVertex, countryAtOtherEndVertex);
 					}
 					/** TODO Country already exists, add it as an edge, vertex pair to Vu */
 					else
@@ -149,7 +168,7 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 				}
 
 
-				cout << *mapCountries[splitStringContainer[0]] << endl;
+				//cout << *mapCountries[splitStringContainer[0]] << endl;
 
 			}
 
@@ -157,6 +176,8 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 
 
 	}
+
+	graph.graph_DisplayGraph();
 
 }
 
