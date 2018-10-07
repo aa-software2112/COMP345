@@ -7,15 +7,12 @@ MapLoader::MapLoader() {
 
 	this->mapFileReader = NULL;
 
-	/** The mapConfig expects 5 explicit keys, all
-	 * other configurations are based on the map itself and cannot be hard-coded */
-
-	print("MapLoader Constructor");
+	this->loadedMap = NULL;
 
 }
 
 /** Opens the file, reads it, and extracts data from it */
-void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
+Map * MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 {
 	/** TODO: reset all attributes belonging to this object */
 
@@ -26,8 +23,12 @@ void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 	/** TODO throw an error if map file is not parsable within defined format, or
 	 * if key,value pairs are missing for any necessary section
 	 */
-	this->mapLoader_ParseMapFile();
+	if(this->mapLoader_ParseMapFile())
+	{
+		return this->loadedMap;
+	}
 
+	return NULL;
 }
 
 /** Function attempts to extract all data from .map files:
@@ -36,52 +37,39 @@ void MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 bool MapLoader::mapLoader_ParseMapFile(void)
 {
 	bool parsedAllSections = false;
-	//string stringBuffer;
 
 	vector<string> stringBuffer;
 
 	/** This will be the Map object returned to caller */
-	Map * gameMap = new Map();
+	this->loadedMap = new Map();
 
 	/** Could not find [Map] */
 	if(!this->mapFileReader->fileReader_findLineContaining(mapHeaders[0]))
 	{
-
-		print("Invalid file format!");
 		return parsedAllSections;
 	}
 
 	/** [Map] found, extract [Map] configuration, then parse continents section, then territories */
 	if (this->mapLoader_ParseConfig(stringBuffer, MAP))
 	{
-		//print(stringBuffer);
-
-		gameMap->map_AddListToMapConfig(stringBuffer);
+		loadedMap->map_AddListToMapConfig(stringBuffer);
 
 		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
 			/** Parse results */
-			//print(stringBuffer);
-			gameMap->map_AddListToContinents(stringBuffer);
+			loadedMap->map_AddListToContinents(stringBuffer);
 
 			if( this->mapLoader_ParseConfig(stringBuffer, TERRITORIES))
 			{
 				/** Parse results */
-				//print(stringBuffer);
-				gameMap->map_AddListToCountries(stringBuffer);
+				loadedMap->map_AddListToCountries(stringBuffer);
 				parsedAllSections = true;
 			}
 
 		}
 
 	}
-	/** The file could not be read to completion - invalid format*/
-	else
-	{
-		print("Invalid file format!");
-		parsedAllSections = false;
 
-	}
 
 	return parsedAllSections;
 }
@@ -90,20 +78,15 @@ bool MapLoader::mapLoader_ParseMapFile(void)
  * next header was found, otherwise returns false
  */
 bool MapLoader::mapLoader_ParseConfig(vector<string>& stringBuffer, mapHeaderIdx configIndex)
-		//string& stringBuffer, mapHeaderIdx configIndex)
 {
 
 	/** Clear string buffer */
-	//stringBuffer = "";
 	stringBuffer.erase(stringBuffer.begin(), stringBuffer.end());
 
 	/** Store all strings in buffer until next header is reached */
 	if(this->mapFileReader->fileReader_getStringUntilLineContaining(stringBuffer, mapHeaders[configIndex + 1]))
 	{
-
-		//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
 		return true;
-
 	}
 	/** Next value was not reached */
 	else
@@ -111,12 +94,9 @@ bool MapLoader::mapLoader_ParseConfig(vector<string>& stringBuffer, mapHeaderIdx
 		/** In the case of searching through TERRITORIES, there is no header that follows */
 		if ((configIndex + 1) == END_OF_FILE)
 		{
-			//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
 			return true;
 		}
 
-		//print("Could not find " + mapHeaders[configIndex + 1]);
-		//print("Buffer for " + mapHeaders[configIndex] + ":\n" + stringBuffer);
 		return false;
 	}
 

@@ -19,6 +19,11 @@ void Continent::continent_AddLinkToCountry(Country * country)
 
 }
 
+string Continent::continent_GetContinentName(void)
+{
+	return this->continentName;
+}
+
 ostream &operator<<(ostream& strm, const Continent& continent)
 {
 

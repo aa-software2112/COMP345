@@ -37,7 +37,7 @@ void Map::map_AddListToMapConfig(vector<string>& keyValueString)
 		}
 	}
 
-	this->map_DisplayMapConfig();
+	//this->map_DisplayMapConfig();
 
 }
 
@@ -68,7 +68,7 @@ void Map::map_AddListToContinents(vector<string>& keyValueString)
 		}
 	}
 
-	this->map_DisplayContinents();
+	//this->map_DisplayContinents();
 
 }
 
@@ -186,6 +186,47 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 	}
 
 	graph.graph_DisplayGraph();
+
+}
+
+vector<Country *> Map::map_GetCountriesAdjacentTo(Country * someCountry)
+{
+	/** Should only be passing countries to this function that come from the graph (not ones created outside of Map object) */
+
+	/** Adjacent-country container */
+	vector<Country *> adjacentCountries;
+
+	/** Get vertex corresponding to parameter country */
+	Graph<Country, string>::Vertex * vertexOfCountry = mapVertex[someCountry->country_GetName()];
+
+	/** For each vertex and edge v, e connected to u */
+	map<Graph<Country, string>::Vertex *, Graph<Country, string>::Edge *> * adjacencyMap = (*vertexOfCountry).vertex_GetOutgoing();
+
+	for (typename std::map<Graph<Country, string>::Vertex *, Graph<Country, string>::Edge *>::iterator it=(*adjacencyMap).begin(); it!=(*adjacencyMap).end(); ++it)
+	{
+		adjacentCountries.push_back( (*(it->first)).vertex_GetElementPtr());
+	}
+
+	return adjacentCountries;
+
+}
+
+vector<Country *> Map::map_GetAllCountries(void)
+{
+	/** Pull vertices list */
+	vector<Graph<Country, string>::Vertex *> * allVertices = graph.graph_GetVertices();
+
+	/** Country container */
+	vector<Country *> allCountriesContainer;
+
+	/** Iterate over all vertices, extract countries form them */
+	for(int i = 0; i< (*allVertices).size(); i++)
+	{
+		allCountriesContainer.push_back( (*((*allVertices)[i])).vertex_GetElementPtr());
+	}
+
+
+	return allCountriesContainer;
 
 }
 

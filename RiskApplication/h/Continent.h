@@ -22,6 +22,7 @@ class Continent {
 		/** Constructor **/
 		Continent(string continentName, int bonusValue);
 		void continent_AddLinkToCountry(Country * country);
+		string continent_GetContinentName(void);
 
 	private:
 		friend ostream &operator<<(ostream&, const Continent&);

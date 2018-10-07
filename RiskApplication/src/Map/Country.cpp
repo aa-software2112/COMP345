@@ -22,7 +22,16 @@ Country::Country(void)
 
 Country::Country(string countryName) // @suppress("Class members should be properly initialized")
 {
-	Country();
+	/** Country now points to a continent */
+	this->parentContinent = NULL;
+
+	/** Store the x & y coordinate of the country */
+	this->xCoordinate = 0;
+
+	this->yCoordinate = 0;
+
+	this->numArmies = 0;
+
 
 	/** Store the country name */
 	this->countryName = countryName;
@@ -81,7 +90,8 @@ ostream &operator<<(ostream& strm, const Country& country)
 {
 
 	strm << "COUNTRY_NANE: " << country.countryName << " (x, y): " << "(" << \
-			country.xCoordinate << ","  << country.yCoordinate << ") " << country.parentContinent << "\n" ;
+			country.xCoordinate << ","  << country.yCoordinate << ") CONTINENT: " << (*(country.parentContinent)).continent_GetContinentName() << " ARMIES: " << \
+			country.numArmies << "\n" ;
 	return strm;
 
 }

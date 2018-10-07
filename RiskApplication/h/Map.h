@@ -23,6 +23,8 @@ class Map {
 		void map_AddListToMapConfig(vector<string>& keyValueString);
 		void map_AddListToContinents(vector<string>& keyValueString);
 		void map_AddListToCountries(vector<string>& keyValueString);
+		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
+		vector<Country *> map_GetAllCountries(void);
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */

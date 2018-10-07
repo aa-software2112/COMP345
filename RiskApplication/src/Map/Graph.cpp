@@ -67,19 +67,17 @@ typename Graph<V, E>::Edge * Graph<V, E>::graph_InsertEdgeBetween(Vertex * v1, V
 
 		v2->vertex_AddVertexEdgePair(v1, newEdge);
 
-		print("Adding edge between ");
-		cout << (*v1).vertex_GetElement();
-		cout << (*v2).vertex_GetElement();
-	}
-	else
-	{
-		print("Edge already exists");
-		cout << (*v1).vertex_GetElement();
-		cout << (*v2).vertex_GetElement();
-
 	}
 
 	return newEdge;
+}
+
+template <class V, class E>
+vector<typename Graph<V, E>::Vertex *> * Graph<V, E>::graph_GetVertices(void)
+{
+
+	return &(this->vertices);
+
 }
 
 /** Vertex code */
@@ -95,6 +93,14 @@ V Graph<V, E>::Vertex::vertex_GetElement(void)
 	return *(this->element);
 
 }
+
+template <class V, class E>
+V * Graph<V, E>::Vertex::vertex_GetElementPtr(void)
+{
+	return this->element;
+
+}
+
 
 template <class V, class E>
 bool Graph<V, E>::Vertex::operator<(const Vertex& otherVertex)

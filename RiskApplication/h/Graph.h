@@ -29,6 +29,7 @@ class Graph {
 			public:
 				Vertex(V * element);
 				V vertex_GetElement(void);
+				V * vertex_GetElementPtr(void);
 				bool operator< (const Vertex& otherVertex);
 				Edge * vertex_GetEdgeTo(Vertex *otherVertex);
 				void vertex_AddVertexEdgePair(Vertex *otherVertex, Edge * connectingEdge);
@@ -60,6 +61,8 @@ class Graph {
 
 		/** Inserts an edge between two vertices */
 		Edge * graph_InsertEdgeBetween(Vertex * v1, Vertex * v2);
+
+		vector<Vertex *> * graph_GetVertices(void);
 
 		/** Displays all vertices' elements */
 		void graph_DisplayGraph(void);

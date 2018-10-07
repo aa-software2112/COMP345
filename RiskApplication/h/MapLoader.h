@@ -19,9 +19,12 @@ class MapLoader {
 	public:
 		/** Constructor **/
 		MapLoader();
-		void mapLoader_LoadMap(const std::string& pathToMap);
+		Map * mapLoader_LoadMap(const std::string& pathToMap);
 
 	private:
+		/** Holds a pointer to the previously loaded map */
+		Map * loadedMap;
+
 		/** The three configuration map objects for storing key,value .map file pairs */
 		map<string, string> continentConfig;
 		map<string, string> territoryConfig;
