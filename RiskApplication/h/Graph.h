@@ -9,6 +9,7 @@
 #define H_GRAPH_H_
 
 #include <map>
+#include <set>
 #include <vector>
 #include "Country.h"
 #include "Utilities.h"
@@ -47,9 +48,10 @@ class Graph {
 		class Edge {
 			public:
 				Edge(Vertex * u, Vertex * v);
+				vector<Vertex *> * edge_GetEndpoints(void);
 			private:
 				E * element;
-				Vertex * endpoints[2];
+				vector<Vertex *> endpoints;
 
 		};
 
@@ -67,7 +69,15 @@ class Graph {
 		/** Displays all vertices' elements */
 		void graph_DisplayGraph(void);
 
+		/** Checks graph connectivity using recursive depth-first-search */
+		bool graph_isConnected(void);
+
+		/** Gets the vertex at opposite end of edge */
+		Vertex * graph_GetOppositeVertex(Vertex *u, Edge *e);
+
 	private:
+		void graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices);
+
 		vector<Vertex *> vertices;
 		vector<Edge *> edges;
 

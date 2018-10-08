@@ -14,9 +14,9 @@ Southwest=2
 
 
 [Territories]
-Florida,143,45,Northwest,Cuba,Bahamas
-Cuba,211,170,Northwest,Nicaragua,Florida,Bahamas,Cayman Island,Jamaica,Haiti
-Bahamas,232,88,Northwest,Florida,Cuba
+Florida,143,45,Northwest,Cuba
+Cuba,211,170,Northwest,Nicaragua,Bahamas,Cayman Island,Jamaica,Haiti
+Bahamas,232,88,Northwest,Cuba
 Cayman Island,158,243,Northwest,Cuba,Nicaragua
 Jamaica,209,250,Northwest,Cuba,Haiti
 

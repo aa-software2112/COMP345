@@ -80,6 +80,88 @@ vector<typename Graph<V, E>::Vertex *> * Graph<V, E>::graph_GetVertices(void)
 
 }
 
+template <class V, class E>
+bool Graph<V, E>::graph_isConnected(void)
+{
+
+	if (this->vertices.size() > 0)
+	{
+		set<Vertex *> visitedVertices;
+		Vertex * startVertex = this->vertices[0];
+
+		this->graph_DepthFirstSearch(startVertex, visitedVertices);
+
+
+		cout << "The Depth-First-Search reached " << visitedVertices.size() << " vertices" << endl;
+		cout << "There are " << this->vertices.size() << " vertices in the graph" << endl;
+
+		/** Same size means graph is fully connected */
+		return (visitedVertices.size() == this->vertices.size());
+	}
+
+	return false;
+
+}
+
+template <class V, class E>
+void Graph<V, E>::graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices)
+{
+
+	/** Add start vertex into the known set */
+	knownVertices.insert(startVertex);
+
+	/** Get (Vertex, Edge) map for start Vertex */
+	map<Vertex *, Edge *> * adjacentVerticesAndEdges = startVertex->vertex_GetOutgoing();
+
+	/** it->first is a Vertex connected to startVertex through it->second, the edge connected to startVertex */
+	for (typename std::map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *>::iterator it=(*adjacentVerticesAndEdges).begin(); it!=(*adjacentVerticesAndEdges).end(); ++it)
+	{
+		/** Store current edge */
+		Edge * edge = (it->second);
+
+		Vertex * opposite = this->graph_GetOppositeVertex(startVertex, edge);
+
+		/** No opposite vertex is disconnected, immediately disqualifies connection definition */
+		if (opposite == NULL)
+		{
+			return;
+		}
+
+		/** Vertex has not been visited yet */
+		if (knownVertices.count(opposite) == 0)
+		{
+			this->graph_DepthFirstSearch(opposite, knownVertices);
+
+		}
+
+	}
+
+}
+
+template <class V, class E>
+typename Graph<V, E>::Vertex * Graph<V, E>::graph_GetOppositeVertex(Vertex * u, Edge * e)
+{
+	vector<Vertex *> * vertices = e->edge_GetEndpoints();
+
+	if((*vertices)[0] == u)
+	{
+		return (*vertices)[1];
+	}
+	else if ((*vertices)[1] == u)
+	{
+		return (*vertices)[0];
+	}
+	else
+	{
+		/** TODO, throw error */
+		print("Could not find opposite vertex!");
+		return NULL;
+	}
+
+
+}
+
+
 /** Vertex code */
 template <class V, class E>
 Graph<V, E>::Vertex::Vertex(V *element)
@@ -145,9 +227,15 @@ map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *> * Graph<V, E>
 template <class V, class E>
 Graph<V, E>::Edge::Edge(Vertex * u, Vertex * v)
 {
-	this->endpoints[0] = u;
-	this->endpoints[1] = v;
+	this->endpoints.push_back(u);
+	this->endpoints.push_back(v);
 	this->element = NULL;
+}
+
+template <class V, class E>
+vector<typename Graph<V, E>::Vertex *> * Graph<V, E>::Edge::edge_GetEndpoints(void)
+{
+	return &(this->endpoints);
 }
 
 template class Graph<Country, string>;

@@ -103,6 +103,11 @@ bool isNumeric(std::string& str)
 {
     int i = -1;
 
+    if (str[0] == NULL)
+    {
+    	return false;
+    }
+
     /** Iterate while not EOS */
     while(str[++i] != '\0')
     {
