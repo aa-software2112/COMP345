@@ -28,6 +28,7 @@ Map * MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 		return this->loadedMap;
 	}
 
+
 	return NULL;
 }
 
@@ -52,17 +53,27 @@ bool MapLoader::mapLoader_ParseMapFile(void)
 	/** [Map] found, extract [Map] configuration, then parse continents section, then territories */
 	if (this->mapLoader_ParseConfig(stringBuffer, MAP))
 	{
-		loadedMap->map_AddListToMapConfig(stringBuffer);
+		if (!loadedMap->map_AddListToMapConfig(stringBuffer))
+		{
+			return false;
+		}
 
 		if(this->mapLoader_ParseConfig(stringBuffer, CONTINENTS))
 		{
 			/** Parse results */
-			loadedMap->map_AddListToContinents(stringBuffer);
+			if(!loadedMap->map_AddListToContinents(stringBuffer))
+			{
+				return false;
+			}
 
 			if( this->mapLoader_ParseConfig(stringBuffer, TERRITORIES))
 			{
 				/** Parse results */
-				loadedMap->map_AddListToCountries(stringBuffer);
+				if(!loadedMap->map_AddListToCountries(stringBuffer))
+				{
+					return false;
+				}
+
 				parsedAllSections = true;
 			}
 
