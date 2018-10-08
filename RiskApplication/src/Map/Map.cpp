@@ -13,7 +13,7 @@ Map::Map()
 
 }
 
-void Map::map_AddListToMapConfig(vector<string>& keyValueString)
+bool Map::map_AddListToMapConfig(vector<string>& keyValueString)
 {
 	/** Assumes the format is "someKey=SomeValue" */
 	regex mapConfigPattern("(\\w+)=([a-zA-Z.'\\s]*)");
@@ -33,18 +33,23 @@ void Map::map_AddListToMapConfig(vector<string>& keyValueString)
 			{
 				mapConfig[regexMatches[1]] = regexMatches[2];
 			}
+			else
+			{
+				return false;
+			}
 
 		}
 	}
 
-	//this->map_DisplayMapConfig();
+	return true;
+
 
 }
 
-void Map::map_AddListToContinents(vector<string>& keyValueString)
+bool Map::map_AddListToContinents(vector<string>& keyValueString)
 {
 	/** Assumes the format is "someContinent=SomeValue" */
-	regex mapConfigPattern("([a-zA-Z0-9\\s]+)=([0-9]+)");
+	regex mapConfigPattern("([\\W\\w\\s]+)=([0-9]+)");
 	smatch regexMatches;
 
 	/** Iterate over each entry in Key=Value string */
@@ -64,15 +69,19 @@ void Map::map_AddListToContinents(vector<string>& keyValueString)
 				 */
 				mapContinents[regexMatches[1]] = new Continent(regexMatches[1], atoi(regexMatches[2].str().c_str()));
 			}
+			else
+			{
+				return false;
+			}
 
 		}
 	}
 
-	//this->map_DisplayContinents();
+	return true;
 
 }
 
-void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
+bool Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 {
 	string delimiterByComma(",");
 	vector<string> splitStringContainer;
@@ -93,17 +102,13 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 		 * Index 5 +: All other countries that Index 0 connects to
 		 */
 
-		/** The first five values, from Index 0 -> Index 4 should be available */
-		if (splitStringContainer.size() >= 5)
+		/** The first five values, from Index 0 -> Index 3 should be available */
+		if (splitStringContainer.size() >= 4)
 		{
 			/** Format of each is checked here - if all are valid, entries are processed */
 			if ( (splitStringContainer[0] != "") && isNumeric(splitStringContainer[1]) &&
 					isNumeric(splitStringContainer[2]) && (mapContinents.find(splitStringContainer[3]) != mapContinents.end()) )
 			{
-				//print("\nNEW COUNTRY");
-				//print(splitStringContainer);
-
-
 				/** Create the country ... TODO implement mapCountries as <string, Vertex<Country>> once Graph is implemented */
 				/** TODO add the country to the list of verticies with edges - Vu is made here */
 				/** Check if current country already exists (made by a previous entry) */
@@ -150,6 +155,12 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 				for(countryLinkIndex = 4; countryLinkIndex < splitStringContainer.size(); countryLinkIndex++)
 				{
 
+					/** Skip this entry, it is blank */
+					if (splitStringContainer[countryLinkIndex] == "")
+					{
+						continue;
+					}
+
 					/** Country linking to country at Index 0 does not exist; must be created first */
 					if ( mapCountries.find(splitStringContainer[countryLinkIndex]) == mapCountries.end() )
 					{
@@ -179,6 +190,23 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 				}
 
 			}
+			else
+			{
+				/** Incorrect format for the first four entries of the row */
+				return false;
+			}
+
+		}
+		else
+		{
+			/** Not an empty line */
+			if (!(splitStringContainer.size() == 1 && ( (splitStringContainer[0] == "\n") || (splitStringContainer[0] == "\r") || \
+					(splitStringContainer[0] == "\n\r") || (splitStringContainer[0].c_str()[0] == NULL))))
+			{
+
+				/** Not enough data to create a vertex/country */
+				return false;
+			}
 
 		}
 
@@ -186,6 +214,8 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 	}
 
 	graph.graph_DisplayGraph();
+
+	return true;
 
 }
 
@@ -230,6 +260,10 @@ vector<Country *> Map::map_GetAllCountries(void)
 
 }
 
+bool Map::map_IsConnected(void)
+{
+	return this->graph.graph_isConnected();
+}
 
 void Map::map_DisplayContinents(void)
 {

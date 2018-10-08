@@ -10,6 +10,7 @@
 
 #include <map>
 #include <regex>
+#include <locale>
 #include "Continent.h"
 #include "Country.h"
 #include "Graph.h"
@@ -20,11 +21,12 @@ class Map {
 	public:
 		/** Constructor **/
 		Map();
-		void map_AddListToMapConfig(vector<string>& keyValueString);
-		void map_AddListToContinents(vector<string>& keyValueString);
-		void map_AddListToCountries(vector<string>& keyValueString);
+		bool map_AddListToMapConfig(vector<string>& keyValueString);
+		bool map_AddListToContinents(vector<string>& keyValueString);
+		bool map_AddListToCountries(vector<string>& keyValueString);
 		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
 		vector<Country *> map_GetAllCountries(void);
+		bool map_IsConnected(void);
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */

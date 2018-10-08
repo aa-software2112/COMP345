@@ -31,10 +31,20 @@ int main()
 
 	Map * newMap;
 
-	if ( (newMap = p.mapLoader_LoadMap(mapFiles[3])) == NULL)
+	if ( (newMap = p.mapLoader_LoadMap(mapFiles[4])) == NULL)
 	{
 		print("Could not parse file");
 		return 0;
+	}
+
+	print("Map connected?");
+	if (newMap->map_IsConnected())
+	{
+		print("YES");
+	}
+	else
+	{
+		print("NO");
 	}
 
 	/** Map is of valid format */
