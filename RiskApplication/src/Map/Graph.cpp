@@ -24,10 +24,10 @@ typename Graph<V, E>::Vertex * Graph<V, E>::graph_InsertVertex(V * element)
 template <class V, class E>
 void Graph<V, E>::graph_DisplayGraph()
 {
-	int i = 0;
+	int i = 0; // unused?
 
 	/** For each vertex u */
-	for(i = 0; i<this->vertices.size(); i++)
+	for(unsigned i = 0; i<this->vertices.size(); i++)
 	{
 		/** Current country checking over */
 		cout << "Connections for: " << (*(this->vertices[i])).vertex_GetElement();

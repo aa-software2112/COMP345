@@ -14,18 +14,24 @@
 using namespace std;
 
 class Continent;
+class Player;
 
 class Country {
 	public:
 		/** Constructor **/
 		Country(void);
 		Country(string countryName);
-		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate );
+		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner );
 		string country_GetName(void);
+		UINT country_GetNumArmies(void);
+		/* Added by Rey */
+		Player* country_GetOwner(void);
 		void country_SetXCoordinate(UINT x);
 		void country_SetYCoordinate(UINT y);
 		void country_SetContinent(Continent * linkContinent);
 		void country_SetNumArmies(UINT numArmies);
+		/* Added by Rey */
+		void country_SetOwner(Player* player);
 
 
 	private:
@@ -35,6 +41,8 @@ class Country {
 		UINT yCoordinate;
 		UINT numArmies;
 		string countryName;
+		/* Added by Rey */
+		Player* owner;
 		friend ostream& operator<<(ostream&, const Country&);
 
 };

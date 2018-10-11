@@ -19,6 +19,7 @@ using namespace std;
 
 class Map {
 	public:
+		int setsTraded = 0;
 		/** Constructor **/
 		Map();
 		bool map_AddListToMapConfig(vector<string>& keyValueString);

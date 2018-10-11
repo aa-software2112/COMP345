@@ -18,6 +18,8 @@ Country::Country(void)
 	/** Store the country name */
 	this->countryName = "";
 
+	this->owner = NULL;
+
 }
 
 Country::Country(string countryName) // @suppress("Class members should be properly initialized")
@@ -38,7 +40,7 @@ Country::Country(string countryName) // @suppress("Class members should be prope
 }
 
 
-Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate )
+Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner )
 {
 	/** Country now points to a continent */
 	this->parentContinent = linkContinent;
@@ -53,6 +55,7 @@ Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate,
 	this->countryName = countryName;
 
 	this->numArmies = 0;
+	this->owner = thisOwner;
 
 }
 
@@ -61,6 +64,18 @@ string Country::country_GetName(void)
 {
 	/** Returns a copy of the country name */
 	return string(this->countryName);
+}
+
+/* Added by Rey */
+UINT Country::country_GetNumArmies(void)
+{
+	return this->numArmies;
+}
+
+/* Added by Rey */
+
+Player* Country::country_GetOwner(void){
+	return this->owner;
 }
 
 void Country::country_SetNumArmies(UINT numArmies)
@@ -84,6 +99,11 @@ void Country::country_SetContinent(Continent * linkContinent)
 	this->parentContinent = linkContinent;
 	this->parentContinent->continent_AddLinkToCountry(this);
 
+}
+
+/* Added by Rey */
+void Country::country_SetOwner(Player* player) {
+	this->owner = player;
 }
 
 ostream &operator<<(ostream& strm, const Country& country)
