@@ -111,7 +111,7 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 				/** Will be used to obtain vertex stored into graph */
 				Graph<Country, string>::Vertex * countryVertex;
 				Graph<Country, string>::Vertex * countryAtOtherEndVertex;
-				Graph<Country,string>::Edge * edgeBetweenVertices;
+				Graph<Country,string>::Edge * edgeBetweenVertices; // unused?
 
 				if ( mapCountries.find(splitStringContainer[0]) != mapCountries.end() )
 				{
@@ -129,7 +129,7 @@ void Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 					int yCoord = (UINT) (strtol(splitStringContainer[2].c_str(), NULL, 10) );
 
 					Country *tempCountry = new Country(mapContinents[splitStringContainer[3]], \
-							splitStringContainer[0], xCoord, yCoord);
+							splitStringContainer[0], xCoord, yCoord, NULL);
 
 					mapCountries[splitStringContainer[0]] = tempCountry;
 
@@ -220,7 +220,7 @@ vector<Country *> Map::map_GetAllCountries(void)
 	vector<Country *> allCountriesContainer;
 
 	/** Iterate over all vertices, extract countries form them */
-	for(int i = 0; i< (*allVertices).size(); i++)
+	for(unsigned int i = 0; i< (*allVertices).size(); i++)
 	{
 		allCountriesContainer.push_back( (*((*allVertices)[i])).vertex_GetElementPtr());
 	}
