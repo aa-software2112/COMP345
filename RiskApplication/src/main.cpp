@@ -27,7 +27,10 @@ int main()
 
 	string mapFiles[] = {basePathToMapFolder + "World.map", \
 							basePathToMapFolder + "Annys World.map", \
-							basePathToMapFolder + "WorldMissingMap.map", \
+							basePathToMapFolder + "MissingMapSection.map", \
+							basePathToMapFolder + "MissingXCoordinate.map", \
+							basePathToMapFolder + "MissingContinent.map", \
+							basePathToMapFolder + "RandomText.map", \
 							basePathToMapFolder + "Caribbean.map", \
 							basePathToMapFolder + "Grill's Galaxy.map" \
 						};
@@ -37,7 +40,7 @@ int main()
 	Map * newMap;
 
 	/** Load the map */
-	if ( (newMap = p.mapLoader_LoadMap(mapFiles[4])) == NULL)
+	if ( (newMap = p.mapLoader_LoadMap(mapFiles[1])) == NULL)
 	{
 		print("Could not parse file");
 		return 0;
