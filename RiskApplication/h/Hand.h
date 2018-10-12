@@ -2,7 +2,7 @@
  * Hand.h
  *
  *  Created on: Oct 10, 2018
- *      Author: Rainily
+ *      Author: Daniel
  */
 
 #ifndef RISKAPPLICATION_H_HAND_H_
@@ -16,10 +16,10 @@ public:
 	Hand();
 	void addCardToHand(Card* cardToAdd);
 	void removeCardFromHand(Card* cardToRemove);
-	vector<Card *> getHandOfCards();
+	vector<Card*> getHandOfCards();
 	int getNumberOfCards();
 private:
-	std::vector<Card* > handOfCards;
+	std::vector<Card*> handOfCards;
 
 };
 

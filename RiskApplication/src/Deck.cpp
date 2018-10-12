@@ -2,7 +2,7 @@
  * Deck.cpp
  *
  *  Created on: Oct 10, 2018
- *      Author: Rainily
+ *      Author: Daniel
  */
 
 #include "Deck.h"

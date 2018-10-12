@@ -18,18 +18,18 @@
 
 class Player {
 	public:
-		string playerName;
-		DiceRollingFacility myDRF;
-		Hand myHand;
-		std::vector<Country*> collectionOfCountries;
-
 		/** Constructor **/
 		Player();
 		Player(string name);
 
-		void reinforce();
+		string player_getPlayerName();
+		DiceRollingFacility* player_getMyDRF();
+		Hand* player_getMyHand();
+		std::vector<Country*> player_getMyCountries();
+
+		void reinforce(Map *currentMap);
 		void attack(Map *currentMap);
-		void fortity(Map *currentMap);
+		void fortify(Map *currentMap);
 
 		void addCountry(Country *newCountry);
 		void removeCountry(Country *newCountry);
@@ -38,6 +38,11 @@ class Player {
 
 		Player returnOwner(Country *currentCountry);
 
+	private:
+		string playerName;
+		DiceRollingFacility myDRF;
+		Hand myHand;
+		std::vector<Country*> collectionOfCountries;
 };
 
 
