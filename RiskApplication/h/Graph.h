@@ -23,8 +23,10 @@ using namespace std;
 /** This implementation assumes bi-directional edges */
 template <class V, class E>
 class Graph {
+
 	public:
 		class Edge;
+		class Vertex;
 		/** Vertex (Nodes) */
 		class Vertex {
 			public:
@@ -72,11 +74,15 @@ class Graph {
 		/** Checks graph connectivity using recursive depth-first-search */
 		bool graph_isConnected(void);
 
+		/** Checks that set of vertices is connected subgraph */
+		bool graph_IsConnectedSubgraph(set<Vertex *>& subGraphOfVertices);
+
 		/** Gets the vertex at opposite end of edge */
 		Vertex * graph_GetOppositeVertex(Vertex *u, Edge *e);
 
 	private:
 		void graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices);
+		void graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices, set<Vertex *>& subGraph);
 
 		vector<Vertex *> vertices;
 		vector<Edge *> edges;

@@ -125,6 +125,7 @@ bool Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 					tempCountry->country_SetXCoordinate((UINT) (strtol(splitStringContainer[1].c_str(), NULL, 10) ));
 					tempCountry->country_SetYCoordinate((UINT) (strtol(splitStringContainer[2].c_str(), NULL, 10) ));
 					tempCountry->country_SetContinent(mapContinents[splitStringContainer[3]]);
+					mapContinents[splitStringContainer[3]]->continent_AddLinkToVertex(mapVertex[splitStringContainer[0]]);
 
 				}
 				/** Country doesn't exist yet */
@@ -143,6 +144,9 @@ bool Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 
 					/** Add vertex to mapVertex (to see which vertex values already exist by string key) */
 					mapVertex[splitStringContainer[0]] = countryVertex;
+
+
+					mapContinents[splitStringContainer[3]]->continent_AddLinkToVertex(countryVertex);
 				}
 
 				/** Loop over all countries (Vx) and TODO add them to some graph function addEdge(Vu, Vx) */
@@ -213,7 +217,6 @@ bool Map::map_AddListToCountries(vector<string>& commaSeparatedStrings)
 
 	}
 
-	graph.graph_DisplayGraph();
 
 	return true;
 
@@ -263,6 +266,41 @@ vector<Country *> Map::map_GetAllCountries(void)
 bool Map::map_IsConnected(void)
 {
 	return this->graph.graph_isConnected();
+}
+
+bool Map::map_AllContinentsConnectedSubgraphs(void)
+{
+
+	bool allConnected = true;
+	Continent * nextContinent;
+	set<Graph<Country, string>::Vertex *> subGraphOfVertices;
+
+	/** Iterate over all continents */
+	for (map<string,Continent*>::iterator it=mapContinents.begin(); it!=mapContinents.end(); ++it)
+	{
+		nextContinent = it->second;
+
+		subGraphOfVertices = nextContinent->continent_GetVerticesAsSet();
+
+		cout << "Checking subgraph connectivity of Continent: " + nextContinent->continent_GetContinentName() << endl;
+
+		allConnected &= this->graph.graph_IsConnectedSubgraph(subGraphOfVertices);
+
+
+	}
+
+	return allConnected;
+
+}
+
+void Map::map_DisplayAllContinentSizes(void)
+{
+
+	for (map<string,Continent*>::iterator it=mapContinents.begin(); it!=mapContinents.end(); ++it)
+	{
+		cout << it->first << "=" << *(it->second) << " with #Countries: " << (*(it->second)).continent_GetNumberOfCountries() << endl;
+		(*(it->second)).continent_DisplayCountries();
+	}
 }
 
 void Map::map_DisplayContinents(void)

@@ -10,7 +10,6 @@
 
 #include <map>
 #include "Utilities.h"
-#include "Continent.h"
 using namespace std;
 
 class Continent;
@@ -24,13 +23,14 @@ class Country {
 		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner );
 		string country_GetName(void);
 		UINT country_GetNumArmies(void);
+		Continent * country_GetContinent(void);
+
 		/* Added by Rey */
 		Player* country_GetOwner(void);
 		void country_SetXCoordinate(UINT x);
 		void country_SetYCoordinate(UINT y);
 		void country_SetContinent(Continent * linkContinent);
 		void country_SetNumArmies(UINT numArmies);
-		/* Added by Rey */
 		void country_SetOwner(Player* player);
 
 

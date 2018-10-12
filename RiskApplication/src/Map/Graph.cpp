@@ -104,6 +104,69 @@ bool Graph<V, E>::graph_isConnected(void)
 }
 
 template <class V, class E>
+bool Graph<V, E>::graph_IsConnectedSubgraph(set<Vertex *>& subGraphOfVertices)
+{
+	/** Checks if the passed parameter is a connected subgraph */
+	if (subGraphOfVertices.size() > 0){
+
+		/** Get first vertex in set */
+		typename std::set<typename Graph<V, E>::Vertex *>::iterator it = subGraphOfVertices.begin();
+
+		Vertex * firstVertex = *it;
+		set<Vertex *> visitedVertices;
+
+		this->graph_DepthFirstSearch(firstVertex, visitedVertices, subGraphOfVertices);
+
+		cout << "The Subgraph Depth-First-Search reached " << visitedVertices.size() << " vertices" << endl;
+		cout << "There are " << subGraphOfVertices.size() << " vertices in the subgraph" << endl << endl;
+
+		/** Same size means graph is fully connected */
+		return (visitedVertices.size() == subGraphOfVertices.size());
+
+	}
+
+	return false;
+
+}
+
+template <class V, class E>
+void Graph<V, E>::graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices, set<Vertex *>& subGraph)
+{
+
+	/** Add start vertex into the known set */
+	knownVertices.insert(startVertex);
+
+	/** Get (Vertex, Edge) map for start Vertex */
+	map<Vertex *, Edge *> * adjacentVerticesAndEdges = startVertex->vertex_GetOutgoing();
+
+	/** it->first is a Vertex connected to startVertex through it->second, the edge connected to startVertex */
+	for (typename std::map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *>::iterator it=(*adjacentVerticesAndEdges).begin(); it!=(*adjacentVerticesAndEdges).end(); ++it)
+	{
+		/** Store current edge */
+		Edge * edge = (it->second);
+
+		Vertex * opposite = this->graph_GetOppositeVertex(startVertex, edge);
+
+		/** No opposite vertex is disconnected, immediately disqualifies connection definition */
+		if (opposite == NULL)
+		{
+			return;
+		}
+
+		/** Vertex has not been visited yet AND
+		 * vertex is part of the subgraph */
+		if ((knownVertices.count(opposite) == 0) && (subGraph.count(opposite) != 0))
+		{
+			this->graph_DepthFirstSearch(opposite, knownVertices, subGraph);
+
+		}
+
+	}
+
+}
+
+
+template <class V, class E>
 void Graph<V, E>::graph_DepthFirstSearch(Vertex * startVertex, set<Vertex *>& knownVertices)
 {
 

@@ -1,6 +1,7 @@
 
 #define COUNTRY_LOCAL
 #include "Country.h"
+#include "Continent.h"
 
 
 Country::Country(void)
@@ -24,6 +25,10 @@ Country::Country(void)
 
 Country::Country(string countryName) // @suppress("Class members should be properly initialized")
 {
+
+	/** Store the country name */
+	this->countryName = countryName;
+
 	/** Country now points to a continent */
 	this->parentContinent = NULL;
 
@@ -34,14 +39,14 @@ Country::Country(string countryName) // @suppress("Class members should be prope
 
 	this->numArmies = 0;
 
-
-	/** Store the country name */
-	this->countryName = countryName;
 }
 
 
 Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner )
 {
+	/** Store the country name */
+	this->countryName = countryName;
+
 	/** Country now points to a continent */
 	this->parentContinent = linkContinent;
 	this->parentContinent->continent_AddLinkToCountry(this);
@@ -50,9 +55,6 @@ Country::Country(Continent *linkContinent, string countryName, UINT xCoordinate,
 	this->xCoordinate = xCoordinate;
 
 	this->yCoordinate = yCoordinate;
-
-	/** Store the country name */
-	this->countryName = countryName;
 
 	this->numArmies = 0;
 	this->owner = thisOwner;
@@ -99,6 +101,11 @@ void Country::country_SetContinent(Continent * linkContinent)
 	this->parentContinent = linkContinent;
 	this->parentContinent->continent_AddLinkToCountry(this);
 
+}
+
+Continent * Country::country_GetContinent(void)
+{
+	return this->parentContinent;
 }
 
 /* Added by Rey */

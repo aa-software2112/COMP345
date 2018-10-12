@@ -23,7 +23,7 @@ int main()
 	 ***********************************************/
 
 	/** Change this path to comply with your filesystem (make sure there is a trailing forward slash) */
-	string basePathToMapFolder = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
+	string basePathToMapFolder = "C:\\Users\\Anthony Andreoli\\Desktop\\Concordia\\2018 - FALL\\COMP 345\\REPOSITORY\\COMP345\\RiskApplication\\MapFiles/";
 
 	string mapFiles[] = {basePathToMapFolder + "World.map", \
 							basePathToMapFolder + "Annys World.map", \
@@ -36,24 +36,36 @@ int main()
 
 	Map * newMap;
 
+	/** Load the map */
 	if ( (newMap = p.mapLoader_LoadMap(mapFiles[4])) == NULL)
 	{
 		print("Could not parse file");
 		return 0;
 	}
 
+	/** Map is of valid format */
+	print("Map is valid!");
+
+	/** Display the number of continents */
+
 	print("Map connected?");
 	if (newMap->map_IsConnected())
 	{
-		print("YES");
+		print("MAP CONNECTED\n");
 	}
 	else
 	{
-		print("NO");
+		print("MAP NOT CONNECTED\n");
 	}
 
-	/** Map is of valid format */
-	print("Map is valid!");
+	if(newMap->map_AllContinentsConnectedSubgraphs())
+	{
+		print("ALL CONTINENTS CONNECTED SUBGRAPHS\n");
+	}
+	else
+	{
+		print("CONTINENTS NOT ALL CONNECTED SUBGRAPHS\n");
+	}
 
 	/** Pull all countries - allCountries contains pointers to Country objects, so
 	 * any editing you perform on these countries (with setters) will be directly

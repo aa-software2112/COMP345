@@ -12,7 +12,7 @@
 #include <map>
 #include <regex>
 #include "Utilities.h"
-#include "Country.h"
+#include "Graph.h"
 using namespace std;
 
 class Country;
@@ -22,6 +22,10 @@ class Continent {
 		/** Constructor **/
 		Continent(string continentName, int bonusValue);
 		void continent_AddLinkToCountry(Country * country);
+		void continent_AddLinkToVertex(Graph<Country, string>::Vertex * vertex);
+		void continent_DisplayCountries(void);
+		UINT continent_GetNumberOfCountries(void);
+		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
 		string continent_GetContinentName(void);
 
 	private:
@@ -29,6 +33,7 @@ class Continent {
 
 		/** TODO, implement as Vertex<Country> */
 		map<string, Country *> mapOfCountries;
+		map<string, Graph<Country, string>::Vertex *> mapOfVerticesOfContinent;
 		string continentName;
 		int bonusValue;
 
