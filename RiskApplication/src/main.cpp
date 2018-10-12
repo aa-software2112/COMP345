@@ -102,46 +102,46 @@ int main()
 	Player tempPlayer("DiceTester");
 
 	cout << "First player rolls 1 die" << endl;
-	tempPlayer.player_getMyDRF().rollDice(1);
-	cout << tempPlayer.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer.player_getMyDRF()->rollDice(1);
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "First player rolls 2 dice" << endl;
-	tempPlayer.player_getMyDRF().rollDice(2);
-	cout << tempPlayer.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer.player_getMyDRF()->rollDice(2);
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "First player rolls 3 dice" << endl;
-	tempPlayer.player_getMyDRF().rollDice(3);
-	cout << tempPlayer.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer.player_getMyDRF()->rollDice(3);
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
-	tempPlayer.player_getMyDRF().printPlayerDiceStatistics();
+	tempPlayer.player_getMyDRF()->printPlayerDiceStatistics();
 
 	Player tempPlayer2("DiceTester2");
 
 	cout << "Second player rolls 1 die" << endl;
-	tempPlayer2.player_getMyDRF().rollDice(1);
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer2.player_getMyDRF()->rollDice(1);
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "Second player rolls 2 dice" << endl;
-	tempPlayer2.player_getMyDRF().rollDice(2);
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer2.player_getMyDRF()->rollDice(2);
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "Second player rolls 3 dice" << endl;
-	tempPlayer2.player_getMyDRF().rollDice(3);
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[0] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[1] << endl;
-	cout << tempPlayer2.player_getMyDRF().resultsRolled[2] << endl;
+	tempPlayer2.player_getMyDRF()->rollDice(3);
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
+	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
-	tempPlayer2.player_getMyDRF().printPlayerDiceStatistics();
+	tempPlayer2.player_getMyDRF()->printPlayerDiceStatistics();
 
 
 	/************************************************
@@ -159,7 +159,6 @@ int main()
 	Player player2("Joy");
 	Player player3("Anthony");
 	Player player4("Daniel");
-
 
 
 	/* Assigning every country to a player */
@@ -214,6 +213,17 @@ int main()
 
 	cout << endl;
 	cout << endl;
+
+	/* Creating a deck to add cards to my hand */
+	Deck testPlayerDeck(allCountries.size());
+
+	/* Manually adding the first 6 cards to player1's hand (not drawing) to test the reinforce function (has to trade cards for armies at the start) */
+
+	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[0]);
+	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[1]);
+	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[2]);
+	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[3]);
+	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[4]);
 
 
 	/* Test the reinforce function */
@@ -298,18 +308,18 @@ int main()
 	cout << "Deck has " << newDeck.get_numCards() << " cards" << endl;
 
 	/* Manually adding the first 6 cards to player1's hand (not drawing)*/
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[0]);
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[1]);
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[2]);
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[3]);
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[4]);
-	player4.player_getMyHand().addCardToHand(&newDeck.get_deck()[5]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[0]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[1]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[2]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[3]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[4]);
+	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[5]);
 
 	/* Display the current cards in player1's hand */
 	cout << endl;
 	cout << "Player4's hand: " << endl;
-	for(unsigned int d = 0; d < player4.player_getMyHand().getHandOfCards().size();d++) {
-		player4.player_getMyHand().getHandOfCards()[d]->printType();
+	for(unsigned int d = 0; d < player4.player_getMyHand()->getHandOfCards().size();d++) {
+		player4.player_getMyHand()->getHandOfCards()[d]->printType();
 	}
 	cout << endl;
 	/* Testing the exchange function (trading in cards for armies), this will check the player's

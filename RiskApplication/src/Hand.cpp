@@ -18,8 +18,6 @@ Hand::Hand(){
 /* Function that adds a card to a player's hand */
 void Hand::addCardToHand(Card* cardToAdd) {
 	handOfCards.push_back(cardToAdd);
-	std::cout << "Card added!" << endl;
-	handOfCards[0]->printType();
 }
 
 /* Function that removes a card from a player's hand */

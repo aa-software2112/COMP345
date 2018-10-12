@@ -23,8 +23,8 @@ class Player {
 		Player(string name);
 
 		string player_getPlayerName();
-		DiceRollingFacility player_getMyDRF();
-		Hand player_getMyHand();
+		DiceRollingFacility* player_getMyDRF();
+		Hand* player_getMyHand();
 		std::vector<Country*> player_getMyCountries();
 
 		void reinforce(Map *currentMap);

@@ -26,13 +26,13 @@ string Player::player_getPlayerName() {
 }
 
 /* Getter function for the player's DiceRollingFacility object */
-DiceRollingFacility Player::player_getMyDRF() {
-	return this->myDRF;
+DiceRollingFacility* Player::player_getMyDRF() {
+	return &myDRF;
 }
 
 /* Getter function for the player's Hand object */
-Hand Player::player_getMyHand() {
-	return this->myHand;
+Hand* Player::player_getMyHand() {
+	return &myHand;
 }
 
 /* Getter function for the player's collection of countries (vector of country object references) */
@@ -50,13 +50,14 @@ void Player::reinforce(Map* currentMap){
 
 	/* Display player's hand */
 
-	cout << "My current hand:" << myHand.getHandOfCards().size() << endl;
+	cout << "My current hand:" << endl;
 	cout << endl;
 
 	for(unsigned int w = 0; w < myHand.getHandOfCards().size();w++) {
-		cout << "test" << endl;
 		myHand.getHandOfCards()[w]->printType();
 	}
+
+	cout << endl;
 
 	/* Calculating the amount of new armies at the start of the turn */
 	int newArmiesCount = collectionOfCountries.size() / 3;
@@ -431,7 +432,7 @@ void Player::attack(Map *currentMap){
 									defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 									attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 									defendingCountry->country_SetNumArmies(numOfArmiesToMove);
-									cout << playerName << " now owns " << defendingCountry->country_GetName() << "." << endl;
+									cout << playerName << " now owns " << defendingCountry->country_GetName() << "." << endl << endl;
 								}
 							}
 						}
@@ -594,6 +595,7 @@ int Player::exchange(Map *currentMap) {
 			}
 		}
 		currentMap->setsTraded++; // increment the global amount of sets traded
+		cout << "Successfully traded cards for " << 5 * currentMap->setsTraded << " units!" << endl;
 		return 5 * currentMap->setsTraded; // return 5 * the global number of sets traded
 	}
 
@@ -612,6 +614,7 @@ int Player::exchange(Map *currentMap) {
 			}
 		}
 		currentMap->setsTraded++; // increment the global amount of sets traded
+		cout << "Successfully traded cards for " << 5 * currentMap->setsTraded << " units!" << endl;
 		return 5 * currentMap->setsTraded; // return 5 * the global number of sets traded
 	}
 
@@ -631,6 +634,7 @@ int Player::exchange(Map *currentMap) {
 			}
 		}
 		currentMap->setsTraded++; // increment the global amount of sets traded
+		cout << "Successfully traded cards for " << 5 * currentMap->setsTraded << " units!" << endl;
 		return 5 * currentMap->setsTraded; // return 5 * the global number of sets traded
 	}
 	/* If there are at least 1 of each type of card */
@@ -660,6 +664,7 @@ int Player::exchange(Map *currentMap) {
 			}
 		}
 		currentMap->setsTraded++; // increment the global amount of sets traded
+		cout << "Successfully traded cards for " << 5 * currentMap->setsTraded << " units!" << endl;
 		return 5 * currentMap->setsTraded; // return 5 * the global number of sets traded
 	}
 	return 0;
