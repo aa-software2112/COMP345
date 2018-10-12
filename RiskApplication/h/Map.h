@@ -19,11 +19,15 @@ using namespace std;
 
 class Map {
 	public:
+		int setsTraded = 0;
 		/** Constructor **/
 		Map();
 		bool map_AddListToMapConfig(vector<string>& keyValueString);
 		bool map_AddListToContinents(vector<string>& keyValueString);
 		bool map_AddListToCountries(vector<string>& keyValueString);
+		void map_DisplayAllContinentSizes(void);
+		bool map_AllContinentsConnectedSubgraphs(void);
+		bool map_IsValidMap(void);
 		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
 		vector<Country *> map_GetAllCountries(void);
 		bool map_IsConnected(void);
