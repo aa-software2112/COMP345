@@ -2,7 +2,7 @@
  * Card.h
  *
  *  Created on: Oct 10, 2018
- *      Author: Rainily
+ *      Author: Daniel
  */
 
 #ifndef RISKAPPLICATION_H_CARD_H_

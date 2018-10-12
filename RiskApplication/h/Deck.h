@@ -2,7 +2,7 @@
  * Deck.h
  *
  *  Created on: Oct 10, 2018
- *      Author: Rainily
+ *      Author: Daniel
  */
 
 #ifndef RISKAPPLICATION_H_DECK_H_
@@ -16,10 +16,11 @@
 using namespace std;
 
 class Deck {
-public:
+private:
 	int numCards;
 	Card* cards;
 
+public:
 	Deck(int numOfCountries) {
 
 		numCards = numOfCountries;
@@ -78,10 +79,8 @@ public:
 	int get_numCards();
 	void set_cards(Card *deck);
 	Card draw();
+
 };
-
-
-
 
 
 #endif /* RISKAPPLICATION_H_DECK_H_ */

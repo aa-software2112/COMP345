@@ -2,31 +2,34 @@
  * Card.cpp
  *
  *  Created on: Oct 10, 2018
- *      Author: Rainily
+ *      Author: Daniel
  */
 
 #include "Card.h"
 #include "Utilities.h"
 
+/* Default Constructor */
+Card::Card() {
+
+	this->thisCardType = INFANTRY;
+}
+
+/* Card constructor that sets a card's type */
 Card::Card(cardType thisCardType) {
 
 	this->thisCardType = thisCardType;
 
 }
-Card::Card() {
 
-	this->thisCardType = INFANTRY;
-
-}
-
+/* Setter function for a card's type */
 void Card::setType(cardType thisCardType) {
 
 	this->thisCardType = thisCardType;
 
 }
 
+/* Function that prints card's type*/
 void Card::printType() {
-
 	if(this->thisCardType == INFANTRY) {
 		cout << "This is an Infantry Card." << endl;
 	}
@@ -36,14 +39,11 @@ void Card::printType() {
 	else {
 		cout << "This is an Cavalry Card." << endl;
 	}
-
 }
 
+/* Getter function for a card's type */
 cardType Card::getType() {
-
-
 	return this->thisCardType;
-
 }
 
 
