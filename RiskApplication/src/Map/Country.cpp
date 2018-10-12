@@ -116,7 +116,7 @@ void Country::country_SetOwner(Player* player) {
 ostream &operator<<(ostream& strm, const Country& country)
 {
 
-	strm << "COUNTRY_NANE: " << country.countryName << " (x, y): " << "(" << \
+	strm << "COUNTRY_NAME: " << country.countryName << " (x, y): " << "(" << \
 			country.xCoordinate << ","  << country.yCoordinate << ") CONTINENT: " << (*(country.parentContinent)).continent_GetContinentName() << " ARMIES: " << \
 			country.numArmies << "\n" ;
 	return strm;
