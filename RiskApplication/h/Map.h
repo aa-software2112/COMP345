@@ -27,6 +27,7 @@ class Map {
 		bool map_AddListToCountries(vector<string>& keyValueString);
 		void map_DisplayAllContinentSizes(void);
 		bool map_AllContinentsConnectedSubgraphs(void);
+		bool map_IsValidMap(void);
 		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
 		vector<Country *> map_GetAllCountries(void);
 		bool map_IsConnected(void);

@@ -41,7 +41,7 @@ int main()
 	Map * newMap;
 
 	/** Load the map */
-	if ( (newMap = p.mapLoader_LoadMap(mapFiles[1])) == NULL)
+	if ( (newMap = p.mapLoader_LoadMap(mapFiles[0])) == NULL)
 	{
 		print("Could not parse file");
 		return 0;
@@ -53,23 +53,17 @@ int main()
 	/** Display the number of continents */
 
 	print("Map connected?");
-	if (newMap->map_IsConnected())
+
+	if (!newMap->map_IsValidMap())
 	{
-		print("MAP CONNECTED\n");
+		print("MAP IS INVALID - NOT CONNECTED (either whole or subgraph)");
+		return 0;
 	}
 	else
 	{
-		print("MAP NOT CONNECTED\n");
+		print("MAP IS VALID - CONNECTED, AND ALL CONTINENTS' SUBGRAPHS ARE CONNECTED");
 	}
 
-	if(newMap->map_AllContinentsConnectedSubgraphs())
-	{
-		print("ALL CONTINENTS CONNECTED SUBGRAPHS\n");
-	}
-	else
-	{
-		print("CONTINENTS NOT ALL CONNECTED SUBGRAPHS\n");
-	}
 
 	/** Pull all countries - allCountries contains pointers to Country objects, so
 	 * any editing you perform on these countries (with setters) will be directly
