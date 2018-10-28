@@ -1,42 +1,28 @@
 /*
- * CONTINENT.h
+ * template.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_CONTINENT_H_
-#define H_CONTINENT_H_
+#ifndef H_DIRECTORY_H_
+#define H_DIRECTORY_H_
 
-
-#include <map>
-#include <regex>
 #include "Utilities.h"
-#include "Graph.h"
+#include <string>
+#include <vector>
+#include <dirent.h>
 using namespace std;
 
-class Country;
-class Player;
+/** Class used to get all files in a given directory
+ * This is implemented as a static class
+ *  */
+class Directory {
 
-class Continent {
 	public:
-		/** Constructor **/
-		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country * country);
-		void continent_AddLinkToVertex(Graph<Country, string>::Vertex * vertex);
-		void continent_DisplayCountries(void);
-		UINT continent_GetNumberOfCountries(void);
-		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
-		string continent_GetContinentName(void);
-		bool continent_playerOwnsContinent(Player *p);
-	private:
-		friend ostream &operator<<(ostream&, const Continent&);
+		static vector<string> * directory_GetAllFilesInDirectory(string& directoryPath, string& extension);
 
-		/** TODO, implement as Vertex<Country> */
-		map<string, Country *> mapOfCountries;
-		map<string, Graph<Country, string>::Vertex *> mapOfVerticesOfContinent;
-		string continentName;
-		int bonusValue;
+	private:
 
 };
 
@@ -59,15 +45,15 @@ class Continent {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where CONTINENT_LOCAL isn't defined.
+ * exposed to other source files where TEMPLATE_LOCAL isn't defined.
  * */
-#ifdef CONTINENT_LOCAL
+#ifdef DIRECTORY_LOCAL
 
 
 /***************************************************************
  * 						PRIVATE DEFINITIONS
  ***************************************************************/
-
+#define FORWARD_SLASH 		'/'
 /***************************************************************
  * 						PRIVATE TYPEDEFS
  ***************************************************************/
@@ -85,4 +71,4 @@ class Continent {
 
 
 
-#endif /* H_CONTINENT_H_ */
+#endif /* H_DIRECTORY_H_ */

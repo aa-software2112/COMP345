@@ -8,6 +8,7 @@
 #include "Deck.h"
 #include "Card.h"
 
+
 int Deck::get_numCards() {
 
 	return numCards;
@@ -31,3 +32,15 @@ Card* Deck::get_deck(){
 	return this->cards;
 }
 
+ostream& operator<<(ostream& output, Deck &d)
+{
+	/** Iterate over all deck cards */
+	for( int i = 0; i<d.numCards; i++)
+	{
+
+		output << "\t" << d.cards[i] << " ID_" << d.cards[i].card_getId() << endl;
+
+	}
+
+	return output;
+}

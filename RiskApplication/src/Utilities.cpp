@@ -56,6 +56,16 @@ void print(std::vector<std::string> & vector)
 	}
 }
 
+void printWithIndex(std::vector<std::string> & vector)
+{
+	int index = 0;
+	/** Parse results */
+	for (std::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++)
+	{
+		std::cout << "[" << index++ << "] " << *it << "\n";
+	}
+}
+
 /** Splits a string by delimiter and stores tokens in container vector */
 void splitString(std::string& stringToSplit, std::string& delimiter, std::vector<std::string>& container)
 {
@@ -120,3 +130,11 @@ bool isNumeric(std::string& str)
 
     return true;
 }
+
+bool stringContains(std::string& strToSearch, std::string& strToFind)
+{
+	/** Performs the check and returns if substring was found in strToSearch */
+	return strToSearch.find(strToFind) != std::string::npos;
+
+}
+

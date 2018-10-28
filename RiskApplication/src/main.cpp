@@ -14,9 +14,15 @@
 #include "Deck.h"
 #include "Card.h"
 #include "Hand.h"
+#include "RiskGame.h"
 
-int main()
+/**
+ * Code contains all the driver functions used in demonstrating assignment 1
+ * **/
+int assignment1Driver(void)
 {
+
+
 	/************************************************
 	 *
 	 * Map Loader & Graph
@@ -24,7 +30,7 @@ int main()
 	 ***********************************************/
 
 	/** Change this path to comply with your filesystem (make sure there is a trailing forward slash) */
-	string basePathToMapFolder = "C:\\Users\\Anthony Andreoli\\Desktop\\Concordia\\2018 - FALL\\COMP 345\\REPOSITORY\\COMP345\\RiskApplication\\MapFiles/";
+	string basePathToMapFolder = "G://COMP345-develop//COMP345-develop//RiskApplication//MapFiles/";
 
 	string mapFiles[] = {basePathToMapFolder + "World.map", \
 							basePathToMapFolder + "Annys World.map", \
@@ -344,6 +350,18 @@ int main()
 	/* Testing the exchange function (trading in cards for armies), this will check the player's
 	 * hand for a matching set and will return an integer (number of armies given) based on the total number of sets handed in during the game (variable stored in Map for now) */
 	cout << "From player1's current hand, they receive " << player4.exchange(newMap) << " army units." << endl;
+
+	return 0;
+
+}
+
+int main()
+{
+
+	RiskGame game;
+
+	game.riskGame_start();
+
 
 	return 0;
 }

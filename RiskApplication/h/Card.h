@@ -21,14 +21,18 @@ enum cardType {
 class Card {
 
 public:
+	static int CardId;
 	Card(cardType thisCardType);
 	Card();
 
 	void setType(cardType thisCardType);
 	void printType();
 	cardType getType();
+	int card_getId();
+	friend ostream& operator<<(ostream& output, Card &c);
 
 private:
+	int id;
 	cardType thisCardType;
 
 };

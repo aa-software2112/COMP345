@@ -1,45 +1,32 @@
 /*
- * CONTINENT.h
+ * USER_INTERFACE.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_CONTINENT_H_
-#define H_CONTINENT_H_
+#ifndef H_USER_INTERFACE_H_
+#define H_USER_INTERFACE_H_
 
-
-#include <map>
-#include <regex>
 #include "Utilities.h"
-#include "Graph.h"
+#include <vector>
+#include <string>
 using namespace std;
 
-class Country;
-class Player;
+/** Implemented as a static class */
+class UserInterface {
 
-class Continent {
-	public:
-		/** Constructor **/
-		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country * country);
-		void continent_AddLinkToVertex(Graph<Country, string>::Vertex * vertex);
-		void continent_DisplayCountries(void);
-		UINT continent_GetNumberOfCountries(void);
-		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
-		string continent_GetContinentName(void);
-		bool continent_playerOwnsContinent(Player *p);
-	private:
-		friend ostream &operator<<(ostream&, const Continent&);
+public:
+	static int userInterface_getIntegerBetweenRange(string& messageToDisplay, int smallestValue, int largestValue);
+	static int userInterface_getIndexOfList(vector<string>& list, string& messageToDisplay);
+	static int userInterface_getInteger(string& messageToDisplay);
+	static string userInterface_getString(string& messageToDisplay);
+private:
+	static void userInterface_displayInputHeader(void);
+	const static string header;
 
-		/** TODO, implement as Vertex<Country> */
-		map<string, Country *> mapOfCountries;
-		map<string, Graph<Country, string>::Vertex *> mapOfVerticesOfContinent;
-		string continentName;
-		int bonusValue;
 
 };
-
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
@@ -59,9 +46,9 @@ class Continent {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where CONTINENT_LOCAL isn't defined.
+ * exposed to other source files where USER_INTERFACE_LOCAL isn't defined.
  * */
-#ifdef CONTINENT_LOCAL
+#ifdef USER_INTERFACE_LOCAL
 
 
 /***************************************************************
@@ -85,4 +72,4 @@ class Continent {
 
 
 
-#endif /* H_CONTINENT_H_ */
+#endif /* H_USER_INTERFACE_H_ */

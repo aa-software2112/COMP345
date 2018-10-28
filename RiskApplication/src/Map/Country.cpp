@@ -113,12 +113,15 @@ void Country::country_SetOwner(Player* player) {
 	this->owner = player;
 }
 
+/** Forward declaration */
+ostream& operator<<(ostream& output, Player& p);
+
 ostream &operator<<(ostream& strm, const Country& country)
 {
 
-	strm << "COUNTRY_NAME: " << country.countryName << " (x, y): " << "(" << \
+	strm << "COUNTRY_NAME: " << country.countryName << " OWNED BY: " << *(country.owner) <<  " (x, y): " << "(" << \
 			country.xCoordinate << ","  << country.yCoordinate << ") CONTINENT: " << (*(country.parentContinent)).continent_GetContinentName() << " ARMIES: " << \
-			country.numArmies << "\n" ;
+			country.numArmies << "\n" << endl;
 	return strm;
 
 }

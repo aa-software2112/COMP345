@@ -22,6 +22,7 @@ class Map {
 		int setsTraded = 0;
 		/** Constructor **/
 		Map();
+		~Map();
 		bool map_AddListToMapConfig(vector<string>& keyValueString);
 		bool map_AddListToContinents(vector<string>& keyValueString);
 		bool map_AddListToCountries(vector<string>& keyValueString);
@@ -31,6 +32,8 @@ class Map {
 		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
 		vector<Country *> map_GetAllCountries(void);
 		bool map_IsConnected(void);
+		int map_GetNumCountries(void);
+
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */

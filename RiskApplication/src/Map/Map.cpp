@@ -13,6 +13,11 @@ Map::Map()
 
 }
 
+Map::~Map()
+{
+
+}
+
 bool Map::map_AddListToMapConfig(vector<string>& keyValueString)
 {
 	/** Assumes the format is "someKey=SomeValue" */
@@ -332,3 +337,9 @@ void Map::map_DisplayMapConfig(void)
 
 
 }
+
+int Map::map_GetNumCountries(void)
+{
+	return this->mapVertex.size();
+}
+
