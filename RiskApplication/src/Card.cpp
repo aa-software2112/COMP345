@@ -8,15 +8,49 @@
 #include "Card.h"
 #include "Utilities.h"
 
+int Card::CardId = 0;
+
+ostream& operator<<(ostream& output, Card &c)
+{
+	output << "CARD: ";
+
+	if (c.thisCardType == INFANTRY)
+	{
+		output << "INFANTRY";
+
+
+	}
+	else if (c.thisCardType == ARTILLERY)
+	{
+		output << "ARTILLERY";
+	}
+	else if (c.thisCardType == CAVALRY)
+	{
+		output << "CAVALRY";
+	}
+
+	return output;
+}
+
+
+/** Gets the card id */
+int Card::card_getId()
+{
+	return this->id;
+}
+
+
 /* Default Constructor */
 Card::Card() {
 
+	this->id = Card::CardId++;
 	this->thisCardType = INFANTRY;
 }
 
 /* Card constructor that sets a card's type */
 Card::Card(cardType thisCardType) {
 
+	this->id = Card::CardId++;
 	this->thisCardType = thisCardType;
 
 }

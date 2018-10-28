@@ -1,45 +1,56 @@
 /*
- * CONTINENT.h
+ * RISK_GAME.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_CONTINENT_H_
-#define H_CONTINENT_H_
+#ifndef H_RISK_GAME_H_
+#define H_RISK_GAME_H_
 
-
-#include <map>
-#include <regex>
 #include "Utilities.h"
-#include "Graph.h"
+#include "Directory.h"
+#include "UserInterface.h"
+#include "MapLoader.h"
+#include "Map.h"
+#include "Player.h"
+#include "Deck.h"
 using namespace std;
 
-class Country;
-class Player;
+class RiskGame {
 
-class Continent {
-	public:
-		/** Constructor **/
-		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country * country);
-		void continent_AddLinkToVertex(Graph<Country, string>::Vertex * vertex);
-		void continent_DisplayCountries(void);
-		UINT continent_GetNumberOfCountries(void);
-		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
-		string continent_GetContinentName(void);
-		bool continent_playerOwnsContinent(Player *p);
-	private:
-		friend ostream &operator<<(ostream&, const Continent&);
+public:
+	RiskGame();
+	~RiskGame();
+	void riskGame_start(void);
 
-		/** TODO, implement as Vertex<Country> */
-		map<string, Country *> mapOfCountries;
-		map<string, Graph<Country, string>::Vertex *> mapOfVerticesOfContinent;
-		string continentName;
-		int bonusValue;
+private:
+	void riskGame_initializeGame(void);
+	void riskGame_playGame(void);
+	void riskGame_closeGame(void);
+	void riskGame_playerTurn(void);
+
+	/** Stores the map associated with the current game */
+	Map * map;
+
+	/** Holds instance to the players in the game */
+	vector<Player *> players;
+
+	/** Holds the game deck */
+	Deck * deck;
+
+	/** Number of card sets traded */
+	int numCardSetsTraded;
+
+	/** This should be changed depending on where game is compiled
+	 * */
+	string pathToMapFiles = "G://COMP345-develop//COMP345-develop//RiskApplication//MapFiles";
+	string pathToLoadedMap;
+	string mapFileExtension = ".map";
+
+
 
 };
-
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
@@ -59,15 +70,16 @@ class Continent {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where CONTINENT_LOCAL isn't defined.
+ * exposed to other source files where RISK_GAME_LOCAL isn't defined.
  * */
-#ifdef CONTINENT_LOCAL
+#ifdef RISK_GAME_LOCAL
 
 
 /***************************************************************
  * 						PRIVATE DEFINITIONS
  ***************************************************************/
-
+#define	MIN_NUM_PLAYERS		2
+#define MAX_NUM_PLAYERS		6
 /***************************************************************
  * 						PRIVATE TYPEDEFS
  ***************************************************************/
@@ -85,4 +97,4 @@ class Continent {
 
 
 
-#endif /* H_CONTINENT_H_ */
+#endif /* H_RISK_GAME_H_ */

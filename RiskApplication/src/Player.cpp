@@ -6,10 +6,33 @@
  */
 #include <iostream>
 #include "Player.h"
-#include "Country.h"
-#include "Map.h"
-#include <vector>
-#include "Card.h"
+
+ostream& operator<<(ostream& output, Player& p)
+{
+	/** TODO: Should add number of armies to be displayed */
+	output << "Player: " << p.playerName << endl;
+	return output;
+
+}
+
+set<Continent *> * Player::player_getUniqueContinents(void)
+{
+	/** Set of continents */
+	set<Continent *> * uniqueContinents = new set<Continent *>;
+
+	/** Iterate over all countries */
+	for(vector<Country*>::iterator it = collectionOfCountries.begin(); it<collectionOfCountries.end(); it++)
+	{
+		Country *c = *it;
+
+		/** Keeps adding to the set */
+		uniqueContinents->insert(c->country_GetContinent());
+
+	}
+
+	return uniqueContinents;
+}
+
 
 /* Default constructor */
 Player::Player(){
@@ -39,6 +62,21 @@ Hand* Player::player_getMyHand() {
 std::vector<Country*> Player::player_getMyCountries() {
 	return this->collectionOfCountries;
 }
+
+int Player::player_getTotalNumberArmies(void)
+{
+
+	int totalNumArmies = 0;
+
+	for(vector<Country*>::iterator it = this->collectionOfCountries.begin(); it < this->collectionOfCountries.end(); it++)
+	{
+		totalNumArmies += (*(*it)).country_GetNumArmies();
+	}
+
+	return totalNumArmies;
+
+}
+
 
 /* reinforce();
  * The function current requires a Map* parameter because we stored a member called setsTraded inside of the Map Class
@@ -669,5 +707,4 @@ int Player::exchange(Map *currentMap) {
 	}
 	return 0;
 }
-
 

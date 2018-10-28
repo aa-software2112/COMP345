@@ -9,12 +9,16 @@
 #define RISKAPPLICATION_H_PLAYER_H_
 
 #include <vector>
+#include <set>
+#include "Utilities.h"
+using namespace std;
 #include "Country.h"
 #include "Map.h"
 #include "DiceRollingFacility.h"
 #include "Card.h"
 #include "Hand.h"
 
+class Continent;
 
 class Player {
 	public:
@@ -36,13 +40,20 @@ class Player {
 
 		int exchange(Map *currentMap);
 
+		/** Gets the total number of armies owned by a player */
+		int player_getTotalNumberArmies(void);
+
+		/** Gets a set of all unique continents that have countries owned by player */
+		set<Continent *> * player_getUniqueContinents(void);
+
 		Player returnOwner(Country *currentCountry);
+		friend ostream& operator<<(ostream& output, Player& p);
 
 	private:
 		string playerName;
 		DiceRollingFacility myDRF;
 		Hand myHand;
-		std::vector<Country*> collectionOfCountries;
+		vector<Country*> collectionOfCountries;
 };
 
 

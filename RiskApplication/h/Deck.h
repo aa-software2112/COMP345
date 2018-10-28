@@ -8,6 +8,7 @@
 #ifndef RISKAPPLICATION_H_DECK_H_
 #define RISKAPPLICATION_H_DECK_H_
 
+#include "Utilities.h"
 #include "Card.h"
 #include <cstdio>
 #include <algorithm>
@@ -79,6 +80,7 @@ public:
 	int get_numCards();
 	void set_cards(Card *deck);
 	Card draw();
+	friend ostream& operator<<(ostream& output, Deck& d);
 
 };
 
