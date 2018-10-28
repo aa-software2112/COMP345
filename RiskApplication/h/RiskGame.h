@@ -44,7 +44,7 @@ private:
 
 	/** This should be changed depending on where game is compiled
 	 * */
-	string pathToMapFiles = "G://COMP345-develop//COMP345-develop//RiskApplication//MapFiles";
+	string pathToMapFiles = "C://Users//Anthony Andreoli//Desktop//Concordia//2018 - FALL//COMP 345//REPOSITORY//COMP345//RiskApplication//MapFiles/";
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";
 
