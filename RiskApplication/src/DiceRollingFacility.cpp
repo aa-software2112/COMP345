@@ -13,7 +13,12 @@
 
 using namespace std;
 
-void DiceRollingFacility::rollDice(int numDiceRolled){
+DiceRollingFacility::DiceRollingFacility()
+{
+
+}
+
+void DiceRollingFacility::diceRollingFacility_rollDice(int numDiceRolled){
 
 	resultsRolled[0] = 0;
 	resultsRolled[1] = 0;
@@ -111,7 +116,7 @@ void DiceRollingFacility::rollDice(int numDiceRolled){
 	}
 }
 //*****************************************************************************************
-void DiceRollingFacility::printPlayerDiceStatistics() {
+void DiceRollingFacility::diceRollingFacility_printPlayerDiceStatistics() {
 	if(totalRolls == 0) {
 		cout << "This player hasn't rolled any dice yet." << endl;
 	}

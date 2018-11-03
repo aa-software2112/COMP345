@@ -14,21 +14,17 @@
 #include "utilities.h"
 #include <time.h>
 
-
-
 class DiceRollingFacility{
 	public:
-		DiceRollingFacility() {             // Default Constructor
-
-		}
+		DiceRollingFacility();
 
 		int resultsRolled[3];
         /* The following declared values will keep track of how many times each dice value is rolled. */
 		int rolledOne = 0, rolledTwo = 0, rolledThree = 0, rolledFour = 0, rolledFive = 0, rolledSix = 0, totalRolls = 0;
 
-		void rollDice(int numDiceRolled);
+		void diceRollingFacility_rollDice(int numDiceRolled);
 
-		void printPlayerDiceStatistics();       // Displays percentages of all individual values rolled.
+		void diceRollingFacility_printPlayerDiceStatistics();       // Displays percentages of all individual values rolled.
 };
 
 

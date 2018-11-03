@@ -17,8 +17,6 @@ ostream& operator<<(ostream& output, Card &c)
 	if (c.thisCardType == INFANTRY)
 	{
 		output << "INFANTRY";
-
-
 	}
 	else if (c.thisCardType == ARTILLERY)
 	{
@@ -56,14 +54,14 @@ Card::Card(cardType thisCardType) {
 }
 
 /* Setter function for a card's type */
-void Card::setType(cardType thisCardType) {
+void Card::card_setType(cardType thisCardType) {
 
 	this->thisCardType = thisCardType;
 
 }
 
 /* Function that prints card's type*/
-void Card::printType() {
+void Card::card_printType() {
 	if(this->thisCardType == INFANTRY) {
 		cout << "This is an Infantry Card." << endl;
 	}
@@ -76,7 +74,7 @@ void Card::printType() {
 }
 
 /* Getter function for a card's type */
-cardType Card::getType() {
+cardType Card::card_getType() {
 	return this->thisCardType;
 }
 

@@ -11,6 +11,7 @@
 #include <vector>
 #include "Card.h"
 
+class RiskGame;
 class Hand{
 public:
 	Hand();
@@ -18,6 +19,8 @@ public:
 	void removeCardFromHand(Card* cardToRemove);
 	vector<Card*> getHandOfCards();
 	int getNumberOfCards();
+	int exchange(RiskGame* currentGame);
+	void hand_showHand();
 private:
 	std::vector<Card*> handOfCards;
 

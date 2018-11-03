@@ -12,6 +12,7 @@
 #include <set>
 #include "Utilities.h"
 using namespace std;
+#include "RiskGame.h"
 #include "Country.h"
 #include "Map.h"
 #include "DiceRollingFacility.h"
@@ -19,6 +20,7 @@ using namespace std;
 #include "Hand.h"
 
 class Continent;
+class RiskGame;
 
 class Player {
 	public:
@@ -30,30 +32,29 @@ class Player {
 		DiceRollingFacility* player_getMyDRF();
 		Hand* player_getMyHand();
 		std::vector<Country*> player_getMyCountries();
+		bool player_checkCountryOwnership(Country* currentCountry);
 
-		void reinforce(Map *currentMap);
-		void attack(Map *currentMap);
-		void fortify(Map *currentMap);
+		void player_reinforce(RiskGame* currentGame);
+		void player_attack(RiskGame* currentGame);
+		void player_fortify(RiskGame* currentGame);
 
-		void addCountry(Country *newCountry);
-		void removeCountry(Country *newCountry);
-
-		int exchange(Map *currentMap);
+		void player_addCountry(Country *newCountry);
+		void player_removeCountry(Country *newCountry);
 
 		/** Gets the total number of armies owned by a player */
-		int player_getTotalNumberArmies(void);
+		unsigned int player_getTotalNumberArmies(void);
 
 		/** Gets a set of all unique continents that have countries owned by player */
 		set<Continent *> * player_getUniqueContinents(void);
 
-		Player returnOwner(Country *currentCountry);
+		Player player_returnOwner(Country *currentCountry);
 		friend ostream& operator<<(ostream& output, Player& p);
 
 	private:
-		string playerName;
+		string myName;
 		DiceRollingFacility myDRF;
 		Hand myHand;
-		vector<Country*> collectionOfCountries;
+		vector<Country*> myCollectionOfCountries;
 };
 
 

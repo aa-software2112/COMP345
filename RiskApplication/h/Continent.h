@@ -29,6 +29,7 @@ class Continent {
 		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
 		string continent_GetContinentName(void);
 		bool continent_playerOwnsContinent(Player *p);
+		int continent_getBonusValue(void);
 	private:
 		friend ostream &operator<<(ostream&, const Continent&);
 
