@@ -152,11 +152,8 @@ void Player::player_reinforce(RiskGame* currentGame){
 	while(myHand.hand_getHandOfCards().size() > 4) {
 		cout << "Forced Exchange Phase:" << endl;
 		cout << "You have at least 5 cards in your hand, therefore you must trade in a set." << endl;
-<<<<<<< HEAD
 		newArmiesCount = newArmiesCount + this->player_getMyHand()->hand_exchange(currentGame); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
-=======
-		newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // exchange(currentGame) will modify the hand of the player, thus decrementing their hand size
->>>>>>> origin/Assignment-2
+
 	}
 
 	cout << endl;
@@ -174,11 +171,7 @@ void Player::player_reinforce(RiskGame* currentGame){
 
 		if(exchangeAnswer == 1)
 		{
-<<<<<<< HEAD
 			newArmiesCount = newArmiesCount + this->player_getMyHand()->hand_exchange(currentGame);
-=======
-			newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // call exchange()
->>>>>>> origin/Assignment-2
 		}
 		else if(exchangeAnswer == 2)
 		{
