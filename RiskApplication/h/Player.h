@@ -12,6 +12,7 @@
 #include <set>
 #include "Utilities.h"
 using namespace std;
+#include "RiskGame.h"
 #include "Country.h"
 #include "Map.h"
 #include "DiceRollingFacility.h"
@@ -19,10 +20,11 @@ using namespace std;
 #include "Hand.h"
 
 class Continent;
+class RiskGame;
 
 class Player {
 	public:
-		/** Constructor **/
+		/* Constructors */
 		Player();
 		Player(string name);
 
@@ -31,29 +33,31 @@ class Player {
 		Hand* player_getMyHand();
 		std::vector<Country*> player_getMyCountries();
 
-		void reinforce(Map *currentMap);
-		void attack(Map *currentMap);
-		void fortify(Map *currentMap);
-
-		void addCountry(Country *newCountry);
-		void removeCountry(Country *newCountry);
-
-		int exchange(Map *currentMap);
-
-		/** Gets the total number of armies owned by a player */
-		int player_getTotalNumberArmies(void);
-
-		/** Gets a set of all unique continents that have countries owned by player */
+		/* Returns the total number of armies owned by a player */
+		unsigned int player_getTotalNumberArmies(void);
+		/* Returns whether a country belongs to a player */
+		bool player_checkCountryOwnership(Country* currentCountry);
+		/* Returns a set of all unique continents that have countries owned by player */
 		set<Continent *> * player_getUniqueContinents(void);
+		/* Returns the player who own's a specific country */
+		Player player_returnOwner(Country *currentCountry);
 
-		Player returnOwner(Country *currentCountry);
+		/* Functions called during a player's turn */
+		void player_reinforce(RiskGame* currentGame);
+		void player_attack(RiskGame* currentGame);
+		void player_fortify(RiskGame* currentGame);
+
+		/* Mutators for the player's collection of countries */
+		void player_addCountry(Country *newCountry);
+		void player_removeCountry(Country *newCountry);
+
 		friend ostream& operator<<(ostream& output, Player& p);
 
 	private:
-		string playerName;
-		DiceRollingFacility myDRF;
-		Hand myHand;
-		vector<Country*> collectionOfCountries;
+		string myName;	// holds player's name
+		DiceRollingFacility myDRF;	// holds player's own dice rolling facility
+		Hand myHand;	// holds player's hand of cards
+		vector<Country*> myCollectionOfCountries; // holds player's collection of countries
 };
 
 

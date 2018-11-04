@@ -10,6 +10,8 @@
 
 #include <cstdio>
 #include <string>
+#include "Country.h"
+
 using namespace std;
 
 enum cardType {
@@ -22,19 +24,22 @@ class Card {
 
 public:
 	static int CardId;
-	Card(cardType thisCardType);
-	Card();
 
-	void setType(cardType thisCardType);
-	void printType();
-	cardType getType();
+	Card();
+	Card(cardType thisCardType);
+
+	void card_setType(cardType thisCardType);
+
+	cardType card_getType();
 	int card_getId();
+
+	void card_printType();
+
 	friend ostream& operator<<(ostream& output, Card &c);
 
 private:
 	int id;
 	cardType thisCardType;
-
 };
 
 

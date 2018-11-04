@@ -92,3 +92,8 @@ ostream &operator<<(ostream& strm, const Continent& continent)
 
 }
 
+int Continent::continent_getBonusValue(void)
+{
+	return this->bonusValue;
+}
+

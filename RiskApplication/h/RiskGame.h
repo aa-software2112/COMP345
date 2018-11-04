@@ -23,12 +23,32 @@ public:
 	RiskGame();
 	~RiskGame();
 	void riskGame_start(void);
+	vector<Player *> riskGame_getPlayers(void);
+	Map* riskGame_getMap();
+	Deck* riskGame_getDeck();
+	int riskGame_getCardSetsTraded();
+	void riskGame_incrementCardSetsTraded();
+	bool riskGame_checkWinner();
+	void riskGame_showStateOfGame();
+	void riskGame_showStateOfPlayer(Player* currentPlayer);
 
-private:
+	/* Temporarily making these functions public to create drivers */
 	void riskGame_initializeGame(void);
 	void riskGame_playGame(void);
 	void riskGame_closeGame(void);
-	void riskGame_playerTurn(void);
+	bool riskGame_playerTurn(Player* currentPlayer);
+
+	void riskGame_giveAllCountriesToPlayer(Player *currentPlayer);
+	void riskGame_giveAllCountriesButOneToPlayer(Player *firstPlayer, Player *anotherPlayer);
+
+	/** This should be changed depending on where game is compiled
+	 * */
+	string pathToMapFiles;
+private:
+	//void riskGame_initializeGame(void);
+	//void riskGame_playGame(void);
+	//void riskGame_closeGame(void);
+	//bool riskGame_playerTurn(Player* currentPlayer);
 
 	/** Stores the map associated with the current game */
 	Map * map;
@@ -42,9 +62,7 @@ private:
 	/** Number of card sets traded */
 	int numCardSetsTraded;
 
-	/** This should be changed depending on where game is compiled
-	 * */
-	string pathToMapFiles = "C://Users//Anthony Andreoli//Desktop//Concordia//2018 - FALL//COMP 345//REPOSITORY//COMP345//RiskApplication//MapFiles/";
+
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";
 
