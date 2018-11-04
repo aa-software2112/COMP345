@@ -119,8 +119,8 @@ void Player::player_reinforce(RiskGame* currentGame){
 	cout << endl;
 	cout << "Current Hand:" << endl;
 
-	for(unsigned int w = 0; w < myHand.getHandOfCards().size();w++) {
-		myHand.getHandOfCards()[w]->card_printType();
+	for(unsigned int w = 0; w < myHand.hand_getHandOfCards().size();w++) {
+		myHand.hand_getHandOfCards()[w]->card_printType();
 	}
 
 	cout << endl;
@@ -147,10 +147,10 @@ void Player::player_reinforce(RiskGame* currentGame){
 	cout << endl;
 
 	/* If player's hand has 5 or more cards, they MUST exchange for armies */
-	while(myHand.getHandOfCards().size() > 4) {
+	while(myHand.hand_getHandOfCards().size() > 4) {
 		cout << "Forced Exchange Phase:" << endl;
 		cout << "You have at least 5 cards in your hand, therefore you must trade in a set." << endl;
-		newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
+		newArmiesCount = newArmiesCount + this->player_getMyHand()->hand_exchange(currentGame); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
 	}
 
 	cout << endl;
@@ -165,7 +165,7 @@ void Player::player_reinforce(RiskGame* currentGame){
 
 		if(exchangeAnswer == 1)
 		{
-			newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame);
+			newArmiesCount = newArmiesCount + this->player_getMyHand()->hand_exchange(currentGame);
 		}
 		else if(exchangeAnswer == 2)
 		{
@@ -320,9 +320,9 @@ void Player::player_attack(RiskGame* currentGame){
 				numOfDiceDefender = 1;
 			}
 			else {
-				string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, 2 or 3. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
+				string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, or 2. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
 
-				numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 3);
+				numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 2);
 			}
 			/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
 			defendingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceDefender);
@@ -488,7 +488,7 @@ void Player::player_attack(RiskGame* currentGame){
 
 	/* Draw if a country was captured during the attack phase */
 	if(capturedCountry)
-		this->player_getMyHand()->addCardToHand(currentGame->riskGame_getDeck()->deck_draw());
+		this->player_getMyHand()->hand_addCardToHand(currentGame->riskGame_getDeck()->deck_draw());
 
 	cout << endl;
 	cout << "Attack End" << endl << endl;

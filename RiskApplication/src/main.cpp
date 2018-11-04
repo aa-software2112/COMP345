@@ -244,11 +244,11 @@ int assignment1Driver(void)
 
 	/* Manually adding the first 6 cards to player1's hand (not drawing) to test the reinforce function (has to trade cards for armies at the start) */
 
-	player1.player_getMyHand()->addCardToHand(testPlayerDeck.deck_getDeck()[0]);
-	player1.player_getMyHand()->addCardToHand(testPlayerDeck.deck_getDeck()[1]);
-	player1.player_getMyHand()->addCardToHand(testPlayerDeck.deck_getDeck()[2]);
-	player1.player_getMyHand()->addCardToHand(testPlayerDeck.deck_getDeck()[3]);
-	player1.player_getMyHand()->addCardToHand(testPlayerDeck.deck_getDeck()[4]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[0]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[1]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[2]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[3]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[4]);
 
 
 	/* Test the reinforce function */
@@ -333,18 +333,18 @@ int assignment1Driver(void)
 	cout << "Deck has " << newDeck.deck_getDeckSize() << " cards" << endl;
 
 	/* Manually adding the first 6 cards to player1's hand (not drawing)*/
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[0]);
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[1]);
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[2]);
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[3]);
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[4]);
-	player4.player_getMyHand()->addCardToHand(newDeck.deck_getDeck()[5]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[0]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[1]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[2]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[3]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[4]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[5]);
 
 	/* Display the current cards in player1's hand */
 	cout << endl;
 	cout << "Player4's hand: " << endl;
-	for(unsigned int d = 0; d < player4.player_getMyHand()->getHandOfCards().size();d++) {
-		player4.player_getMyHand()->getHandOfCards()[d]->card_printType();
+	for(unsigned int d = 0; d < player4.player_getMyHand()->hand_getHandOfCards().size();d++) {
+		player4.player_getMyHand()->hand_getHandOfCards()[d]->card_printType();
 	}
 	cout << endl;
 	/* Testing the exchange function (trading in cards for armies), this will check the player's
@@ -365,12 +365,13 @@ enum Assignment2_PartToTest {
 int main()
 {
 	/** Set the path to map files before running tests */
-	Assignment2_PartToTest partToTest = MAIN_GAME_LOOP;
-
 	RiskGame driver;
 
 	driver.pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
 
+
+	/** Select type of test */
+	Assignment2_PartToTest partToTest = MAIN_GAME_LOOP;
 
 	switch(partToTest)
 	{
