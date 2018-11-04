@@ -80,9 +80,9 @@ bool Player::player_checkCountryOwnership(Country* currentCountry)
 	return playerOwnsThisCountry;
 }
 
+/* Getter function for the sum of player's armies */
 unsigned int Player::player_getTotalNumberArmies(void)
 {
-
 	int totalNumArmies = 0;
 
 	for(unsigned int i = 0; i < this->myCollectionOfCountries.size(); i++)
@@ -119,28 +119,31 @@ void Player::player_reinforce(RiskGame* currentGame){
 	cout << endl;
 	cout << "Current Hand:" << endl;
 
+	/* Displaying the cards in a player's hand */
 	for(unsigned int w = 0; w < myHand.getHandOfCards().size();w++) {
 		myHand.getHandOfCards()[w]->card_printType();
 	}
 
 	cout << endl;
 
-	/* Calculating the amount of new armies at the start of the turn */
+	/* Calculating the base amount of new armies at the start of the turn */
 	int newArmiesCount = myCollectionOfCountries.size() / 3;
 
 	/* Players receive at least 3 armies per turn */
 	if(newArmiesCount < 3)
 		newArmiesCount = 3;
 
+	/* Put of all the unique continents where the player owns at least 1 country on into a vector */
 	set<Continent *> setOfUniqueContinents = *this->player_getUniqueContinents();
 
 	for(set<Continent *>::iterator it = setOfUniqueContinents.begin(); it != setOfUniqueContinents.end(); it++)
 	{
+		/* If this condition is true, that means player owns the current iterated continent */
 		if((*(*it)).continent_playerOwnsContinent(this)) {
-			int continentBonus = (*(*it)).continent_getBonusValue();
+			int continentBonus = (*(*it)).continent_getBonusValue();	// get the bonus value from the respective continent object
 			string continentName = (*(*it)).continent_GetContinentName();
 			cout << "Reinforcement Army Bonus! " << continentBonus << " additional army units for completely controlling a continent - " << continentName << "." << endl;
-			newArmiesCount = newArmiesCount + continentBonus;
+			newArmiesCount = newArmiesCount + continentBonus;	// increment the player's new army count by the continent bonus
 		}
 	}
 
@@ -150,30 +153,33 @@ void Player::player_reinforce(RiskGame* currentGame){
 	while(myHand.getHandOfCards().size() > 4) {
 		cout << "Forced Exchange Phase:" << endl;
 		cout << "You have at least 5 cards in your hand, therefore you must trade in a set." << endl;
-		newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
+		newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // exchange(currentGame) will modify the hand of the player, thus decrementing their hand size
 	}
 
 	cout << endl;
-	bool exchangePhaseDoneFlag = false;
+
+
+	bool exchangePhaseDoneFlag = false;	// flag used to keep exchanging until a player wishes not to
 
 	while(!exchangePhaseDoneFlag)
 	{
 		cout << "Optional Exchange Phase:" << endl;
-		string exchangeMessage = "Would you like to exchange a set of cards?\nEnter 0, for no\nEnter 1, for yes\nEnter 2, to see your personal board\nEnter 3 to see the global board";
 
+		/* Prompt the user whether he wants to exchange cards or not */
+		string exchangeMessage = "Would you like to exchange a set of cards?\nEnter 0, for no\nEnter 1, for yes\nEnter 2, to see your personal board\nEnter 3 to see the global board";
 		int exchangeAnswer = UserInterface::userInterface_getIntegerBetweenRange(exchangeMessage, 0, 3);
 
 		if(exchangeAnswer == 1)
 		{
-			newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame);
+			newArmiesCount = newArmiesCount + this->player_getMyHand()->exchange(currentGame); // call exchange()
 		}
 		else if(exchangeAnswer == 2)
 		{
-			currentGame->riskGame_showStateOfPlayer(this);
+			currentGame->riskGame_showStateOfPlayer(this);	// show player's board
 		}
 		else if(exchangeAnswer == 3)
 		{
-			currentGame->riskGame_showStateOfGame();
+			currentGame->riskGame_showStateOfGame(); // show the whole board
 		}
 		else
 		{
@@ -181,26 +187,23 @@ void Player::player_reinforce(RiskGame* currentGame){
 		}
 	}
 
-	/* Display all countries owned by player */
-
 	/* This loop will run as long as the player did not place all their additional reinforcement units */
 	while(newArmiesCount != 0){
 		cout << "List of my countries:" << endl << endl;
 
+		/* Display the whole board */
 		currentGame->riskGame_showStateOfGame();
 
 		/* Printing out the player's collection of countries with their respective index in the player's collection */
 		currentGame->riskGame_showStateOfPlayer(this);
 
-		/* Prompt the player the enter the index of the country they would like to reinforce */
+		/* Prompt the player to enter the index of the country they would like to reinforce */
 
 		string newArmyLocationMessage = "Where would you like place your new army unit(s)? (" + std::to_string(newArmiesCount) + " left) Enter the country index.";
-
 		int newArmyLocationIndex = UserInterface::userInterface_getIntegerBetweenRange(newArmyLocationMessage, 0, myCollectionOfCountries.size());
 
-		/* Prompt the player the enter the index of the country they would like to reinforce */
+		/* Prompt the player to enter the number of units they would like to place on this country */
 		string newArmyAmountMessage = "How many army unit(s) would you like to place here? (" + std::to_string(newArmiesCount) + " unit(s) left!)";
-
 		int newArmyAmountPlaced = UserInterface::userInterface_getIntegerBetweenRange(newArmyAmountMessage, 0, newArmiesCount);
 
 		/* Add the armies to the appropriate country */
@@ -223,7 +226,7 @@ void Player::player_attack(RiskGame* currentGame){
 
 
 	bool attacking = true; // flag variable needed to conduct continuous attacks
-	bool capturedCountry = false;
+	bool capturedCountry = false; // flag variable needed to check if a player captured at least 1 country during their whole attack phase
 
 	while (attacking){
 		cout << "Here are your possible attacks:" << endl << endl;
@@ -240,14 +243,17 @@ void Player::player_attack(RiskGame* currentGame){
 				for (unsigned int y = 0; y < vectorOfAdjacentCountries.size(); y++) {
 					/* Check if the current country is an enemy country */
 					if (vectorOfAdjacentCountries[y]->country_GetOwner() != this) {
-						/* Print out a line confirming the possibility to perform this attack */
+
+						/* Inner for loop needed to keep track of global shared/global indexes instead of personal indexes */
 						for(unsigned int a = 0; a < currentGame->riskGame_getMap()->map_GetAllCountries().size(); a++)
 						{
 							if(currentGame->riskGame_getMap()->map_GetAllCountries()[a] == myCollectionOfCountries[x])
 							{
+								/* Inner for loop needed to keep track of global shared/global indexes instead of personal indexes */
 								for(unsigned int b = 0; b < currentGame->riskGame_getMap()->map_GetAllCountries().size(); b++)
 								{
 									if(currentGame->riskGame_getMap()->map_GetAllCountries()[b] == vectorOfAdjacentCountries[y]) {
+										/* Print out a line confirming the possibility to perform this attack */
 										cout << "[" << a << "] " << myCollectionOfCountries[x]->country_GetName() << " (" << myCollectionOfCountries[x]->country_GetNumArmies() << " units) may attack [" << b << "] "  << vectorOfAdjacentCountries[y]->country_GetName() << " (" << vectorOfAdjacentCountries[y]->country_GetNumArmies() << " units)." << endl;
 									}
 								}
@@ -263,7 +269,6 @@ void Player::player_attack(RiskGame* currentGame){
 		/* Prompt the player if they want to perform an attack */
 
 		string attackMessage = "Do you wish to attack? Enter 0 for no or 1 for yes.";
-
 		int attackInput = UserInterface::userInterface_getIntegerBetweenRange(attackMessage, 0, 1);
 
 		if(attackInput == 0){
@@ -273,8 +278,7 @@ void Player::player_attack(RiskGame* currentGame){
 			int attackingCountryIndex;
 			int defendingCountryIndex;
 
-			/* Prompt the player to enter the name of the attack country then the name of the defending country (did not implement error checking, therefore the strings must be enter appropriately */
-
+			/* Prompt the user for the attacking country index and the defending country index (did not implement error checking for this, there they must enter the appropriate indexes) */
 			cout << "Which country do you wish to attack with? Enter its index." << endl;
 			cin >> attackingCountryIndex;
 
@@ -283,7 +287,6 @@ void Player::player_attack(RiskGame* currentGame){
 
 			/* Create a vector that will hold all countries in the game */
 			vector<Country *> vectorOfAllCountries = currentGame->riskGame_getMap()->map_GetAllCountries();
-
 
 			/* Print out the state of these countries */
 			cout << endl;
@@ -304,9 +307,7 @@ void Player::player_attack(RiskGame* currentGame){
 				numOfDiceAttacker = 1;
 			}
 			else {
-
 				string attackDiceMessage = "Attacker, how many dice would you like to roll? Enter 1, 2 or 3. (REMINDER: " + std::to_string(attackingCountry->country_GetNumArmies()) + " units on your country)";
-
 				numOfDiceAttacker = UserInterface::userInterface_getIntegerBetweenRange(attackDiceMessage, 1, 3);
 			}
 
@@ -321,9 +322,9 @@ void Player::player_attack(RiskGame* currentGame){
 			}
 			else {
 				string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, 2 or 3. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
-
 				numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 3);
 			}
+
 			/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
 			defendingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceDefender);
 
@@ -352,12 +353,16 @@ void Player::player_attack(RiskGame* currentGame){
 			int numOfArmiesToMove = 0; // This will hold the number of armies to move if the attacker captures a country */
 
 			/* Logic block behind attacking from one country to another */
+			/* This outer if/else if algorithm determines which code block to run depending on the number of dice rolled by the attacker and defender */
 			if(numOfDiceAttacker == 1 && numOfDiceDefender == 1) {
 				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
 					cout << "The attacker won the battle." << endl;
 					cout << "The defender has no more units on their country." << endl;
+
+					/* Note: Attacker's must leave behind at least 1 unit */
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
+
 					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
@@ -385,8 +390,12 @@ void Player::player_attack(RiskGame* currentGame){
 				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
 					cout << "The attacker won the battle." << endl;
 					cout << "The defender has no more units on their country." << endl;
+
+					/* Note: Attacker's must leave behind at least 1 unit */
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
+
+
 					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
@@ -421,8 +430,11 @@ void Player::player_attack(RiskGame* currentGame){
 
 				if(defendingCountry->country_GetNumArmies() == 0) {
 					cout << "The defender has no more units on their country." << endl;
+
+					/* Note: Attacker's must leave behind at least 1 unit */
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
+
 					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
@@ -436,8 +448,11 @@ void Player::player_attack(RiskGame* currentGame){
 				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
 					cout << "The attacker won the battle." << endl;
 					cout << "The defender has no more units on their country." << endl;
+
+					/* Note: Attacker's must leave behind at least 1 unit */
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
+
 					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
@@ -472,8 +487,11 @@ void Player::player_attack(RiskGame* currentGame){
 
 				if(defendingCountry->country_GetNumArmies() == 0) {
 					cout << "The defender has no more units on their country." << endl;
+
+					/* Note: Attacker's must leave behind at least 1 unit */
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
+
 					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
@@ -514,14 +532,16 @@ void Player::player_fortify(RiskGame* currentGame){
 			for (unsigned int y = 0; y < vectorOfAdjacentCountries.size(); y++) {
 				/* Check if the current country is an ally country */
 				if (vectorOfAdjacentCountries[y]->country_GetOwner() == this) {
-					/* Print out a line confirming the possibility to perform this fortify */
+					/* Inner for loop needed to keep track of global shared/global indexes instead of personal indexes */
 					for(unsigned int a = 0; a < currentGame->riskGame_getMap()->map_GetAllCountries().size(); a++)
 					{
 						if(currentGame->riskGame_getMap()->map_GetAllCountries()[a] == myCollectionOfCountries[x])
 						{
+							/* Inner for loop needed to keep track of global shared/global indexes instead of personal indexes */
 							for(unsigned int b = 0; b < currentGame->riskGame_getMap()->map_GetAllCountries().size(); b++)
 							{
 								if(currentGame->riskGame_getMap()->map_GetAllCountries()[b] == vectorOfAdjacentCountries[y]) {
+									/* Print out a line confirming the possibility to perform this fortify */
 									cout << "[" << a << "] " << myCollectionOfCountries[x]->country_GetName() << " (" << myCollectionOfCountries[x]->country_GetNumArmies() << " units) may fortify [" << b << "] " << vectorOfAdjacentCountries[y]->country_GetName() << " (" << vectorOfAdjacentCountries[y]->country_GetNumArmies() << " units)." << endl;
 								}
 							}
@@ -537,14 +557,13 @@ void Player::player_fortify(RiskGame* currentGame){
 	/* Prompt the user if they wish to perform a fortification*/
 
 	string fortifyMessage = "Do you wish to fortify? Enter 0 for no or 1 for yes.";
-
 	int fortifyInput = UserInterface::userInterface_getIntegerBetweenRange(fortifyMessage, 0, 1);
 
 	if(fortifyInput == 1){
 		int fromCountry;
 		int toCountry;
 
-		/* Prompt the player to enter the name of the attack country then the name of the defending country (did not implement error checking, therefore the strings must be enter appropriately */
+		/* Prompt the player to enter the index of the attack country then the index of the defending country (did not implement error checking for this, there they must enter the appropriate indexes) */
 		cout << "Which country do you wish to fortify from?" << endl;
 		cin >> fromCountry;
 
@@ -555,10 +574,10 @@ void Player::player_fortify(RiskGame* currentGame){
 		vector<Country *> vectorOfAllCountries = currentGame->riskGame_getMap()->map_GetAllCountries();
 
 
+		/* PERSONAL NOTE: this whole section should be able to be redone using the UI class */
 		bool fortifyNumberFlag = false;
 
 		while (!fortifyNumberFlag) {
-
 			int numOfArmiesToMove = 0;
 			cout << "How many army units would you like to move? (There are " << vectorOfAllCountries[fromCountry]->country_GetNumArmies() << " units on " << vectorOfAllCountries[fromCountry]->country_GetName() << ")" << endl;
 			cin >> numOfArmiesToMove;

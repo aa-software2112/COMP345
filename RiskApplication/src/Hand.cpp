@@ -54,16 +54,16 @@ void Hand::hand_showHand() {
 
 int Hand::exchange(RiskGame *currentGame) {
 
-	/* Display player's hand */
+	int armyBonus = 0;	// initialize army bonus
 
-	int armyBonus = 0;
+	bool doneExchanging = false;	// flag used to perform continuous exchanges (if possible)
 
-	bool doneExchanging = false;
-
+	/* Variables that store the number of each type of card in the current player's hand */
 	int infantryCountHand = 0;
 	int cavalryCountHand = 0;
 	int artilleryCountHand = 0;
 
+	/* Counting cards... */
 	for(int i = 0; i < handOfCards.size(); i++) {
 		if(handOfCards[i]->card_getType() == INFANTRY)
 			infantryCountHand++;
@@ -73,30 +73,35 @@ int Hand::exchange(RiskGame *currentGame) {
 			artilleryCountHand++;
 	}
 
+	/* Condition used to assure that a player has a possible exchange */
 	if((infantryCountHand < 1 || cavalryCountHand < 1 || artilleryCountHand < 1) && ((infantryCountHand < 3) && (cavalryCountHand < 3) && (artilleryCountHand < 3)))
 	{
+		/* If the they get here, that means they have no possible set to trade in */
 		doneExchanging = true;
 		cout << "ERROR: You do not have any valid sets!"<< endl;
 	}
 
 	while (!doneExchanging)
 	{
+		/* Display the player's hand */
 		hand_showHand();
 
+		/* Prompt the player for the first card */
 		string selectFirstCardMessage = "Enter the index of the first card you would like to exchange.";
-
 		int firstCardIndex = UserInterface::userInterface_getIntegerBetweenRange(selectFirstCardMessage, 0, handOfCards.size());
 
+		/* Prompt the player for the second card */
 		string selectSecondCardMessage = "Enter the index of  the second card you would like to exchange. (Must be different from the first card!)";
-
 		int secondCardIndex = UserInterface::userInterface_getIntegerBetweenRange(selectSecondCardMessage, 0, handOfCards.size());
 
+		/* Prompt the player for the third card */
 		string selectThirdCardMessage = "Enter the index of  the third card you would like to exchange. (Must be different from the first card and the second card!)";
-
 		int thirdCardIndex = UserInterface::userInterface_getIntegerBetweenRange(selectThirdCardMessage, 0, handOfCards.size());
 
+		/* Condition used to check whether all the indexes are different */
 		if((firstCardIndex == secondCardIndex) || firstCardIndex == thirdCardIndex || secondCardIndex == thirdCardIndex)
 			cout << "ERROR: Please make sure you enter a different index for every card!" << endl;
+		/* Condition used to check whether all the given combination of indexes give a valid set of cards to exchange */
 		else if(((handOfCards[firstCardIndex]->card_getType() != handOfCards[secondCardIndex]->card_getType()) && (handOfCards[firstCardIndex]->card_getType() != handOfCards[thirdCardIndex]->card_getType()) && (handOfCards[secondCardIndex]->card_getType() != handOfCards[thirdCardIndex]->card_getType())) ||
 				(handOfCards[firstCardIndex]->card_getType() == INFANTRY && handOfCards[secondCardIndex]->card_getType() == CAVALRY && handOfCards[thirdCardIndex]->card_getType() == ARTILLERY) ||
 				(handOfCards[firstCardIndex]->card_getType() == INFANTRY && handOfCards[secondCardIndex]->card_getType() == ARTILLERY && handOfCards[thirdCardIndex]->card_getType() == CAVALRY) ||
@@ -106,7 +111,7 @@ int Hand::exchange(RiskGame *currentGame) {
 				(handOfCards[firstCardIndex]->card_getType() == CAVALRY && handOfCards[secondCardIndex]->card_getType() == ARTILLERY && handOfCards[thirdCardIndex]->card_getType() == ARTILLERY))
 		{
 			/* Algorithm needed to remove the cards from the player's hand (highest index first to avoid index issues) */
-
+			/***********************************************************************************************************/
 			int highestIndex;
 			int midIndex;
 			int lowestIndex;
@@ -159,12 +164,14 @@ int Hand::exchange(RiskGame *currentGame) {
 			handOfCards.erase(handOfCards.begin() + midIndex);
 			handOfCards.erase(handOfCards.begin() + lowestIndex);
 
-			/* Recount cards */
+			/***********************************************************************************************************/
 
+			/* Recount cards */
 			infantryCountHand = 0;
 			cavalryCountHand = 0;
 			artilleryCountHand = 0;
 
+			/* Recounting... */
 			for(unsigned int i = 0; i < handOfCards.size(); i++) {
 				if(handOfCards[i]->card_getType() == INFANTRY)
 					infantryCountHand++;
@@ -173,16 +180,20 @@ int Hand::exchange(RiskGame *currentGame) {
 				else
 					artilleryCountHand++;
 			}
+
 			cout << endl;
-			currentGame->riskGame_incrementCardSetsTraded();
-			int bonusFromTrade = 5 * currentGame->riskGame_getCardSetsTraded();
+
+			currentGame->riskGame_incrementCardSetsTraded(); // increment global sets traded counter
+
+			int bonusFromTrade = 5 * currentGame->riskGame_getCardSetsTraded(); // calculate the army bonus from the exchange (different variable because multiple trades can happen during one session)
 			armyBonus = armyBonus + bonusFromTrade;
 			cout << "Reinforcement Army Bonus! " << bonusFromTrade << " additional army units for exchanging a set of cards." << endl;
 
+			/* Condition that checks whether the player has a possible exchange with their new hand*/
 			if((infantryCountHand > 0 && cavalryCountHand > 0 && artilleryCountHand > 0) || ((infantryCountHand > 3) || (cavalryCountHand > 3) || (artilleryCountHand > 3)))
 			{
+				/* If so, prompt if they want to make anotehr trade */
 				string exchangeAgainMessage = "Would you like to exchange another set of cards? (Enter 1 for yes or 0 for no)";
-
 				int exchangeAgain = UserInterface::userInterface_getIntegerBetweenRange(exchangeAgainMessage, 0, 1);
 
 				if(exchangeAgain == 0)
@@ -194,6 +205,7 @@ int Hand::exchange(RiskGame *currentGame) {
 				doneExchanging = true;
 			cout << endl;
 		}
+		/* If code gets to this else statement, the combination of indexes do not represent a valid set to trade-in */
 		else
 			cout << "ERROR: This is not a valid combination of cards!" << endl << endl;
 	}
