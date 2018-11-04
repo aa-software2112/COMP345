@@ -438,7 +438,6 @@ int main()
 			break;
 
 	}
-	//game.riskGame_start();
 
 	return 0;
 }
