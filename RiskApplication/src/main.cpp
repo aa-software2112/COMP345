@@ -363,12 +363,13 @@ int main()
 	 * 2) The right number of players is created, a deck with the right number of cards is created.
 	 */
 
-	/*
+
 	RiskGame partOneDriver;
 
+	cout << "HERE" << endl;
 	partOneDriver.riskGame_initializeGame();
-	partOneDriver.riskGame_showStateOfGame();
-	 */
+	//partOneDriver.riskGame_showStateOfGame();
+
 
 	/* ***************************** PART 2 ***************************** */
 
@@ -415,13 +416,13 @@ int main()
 
 	/* Driver for part 4,5,6 - Reinforcement, Attack, Fortificatin Phase:
 	 */
-
+	/*
 	RiskGame partFourDriver;
 
 	partFourDriver.riskGame_initializeGame();
 	partFourDriver.riskGame_giveAllCountriesButOneToPlayer(partFourDriver.riskGame_getPlayers()[0], partFourDriver.riskGame_getPlayers()[1]);
 	partFourDriver.riskGame_playGame();
-
+	*/
 	//game.riskGame_start();
 
 	return 0;

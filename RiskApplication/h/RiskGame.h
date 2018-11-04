@@ -61,7 +61,7 @@ private:
 
 	/** This should be changed depending on where game is compiled
 	 * */
-	string pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
+	string pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";
 

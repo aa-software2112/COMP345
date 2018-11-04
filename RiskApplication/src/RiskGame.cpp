@@ -101,44 +101,41 @@ void RiskGame::riskGame_initializeGame(void)
 
 	vector<string> * listOfMapFiles = Directory::directory_GetAllFilesInDirectory(this->pathToMapFiles, this->mapFileExtension);
 
-	string mapSelectionString = "Select a map file to load... ";
+	/** Keep loading maps until a valid one is chosen */
+	while(true)
+	{
+		string mapSelectionString = "Select a map file to load... ";
 
-	int index = UserInterface::userInterface_getIndexOfList((*listOfMapFiles), mapSelectionString);
+		int index = UserInterface::userInterface_getIndexOfList((*listOfMapFiles), mapSelectionString);
 
-	this->pathToLoadedMap = (*listOfMapFiles)[index];
+		this->pathToLoadedMap = (*listOfMapFiles)[index];
+
+		MapLoader mapLoader;
+
+		/** Load the map */
+		if ( (this->map = mapLoader.mapLoader_LoadMap(this->pathToLoadedMap)) == NULL)
+		{
+			print("Could not parse file");
+			continue;
+		}
+
+		/** Check that map is connected */
+		if (!this->map->map_IsValidMap())
+		{
+			print("MAP IS INVALID - NOT CONNECTED (either whole or subgraph)");
+			continue;
+		}
+		else
+		{
+			print("MAP IS VALID - CONNECTED, AND ALL CONTINENTS' SUBGRAPHS ARE CONNECTED");
+			break;
+		}
+	}
 
 	/** Destruct */
 
 	delete listOfMapFiles;
 	listOfMapFiles = NULL;
-
-	/**
-	 *************************
-	 *************************
-	 * 		MAP LOADING  	 *
-	 *************************
-	 *************************
-	 */
-
-	MapLoader mapLoader;
-
-	/** Load the map */
-	if ( (this->map = mapLoader.mapLoader_LoadMap(this->pathToLoadedMap)) == NULL)
-	{
-		print("Could not parse file");
-		return;
-	}
-
-	/** Check that map is connected */
-	if (!this->map->map_IsValidMap())
-	{
-		print("MAP IS INVALID - NOT CONNECTED (either whole or subgraph)");
-		return;
-	}
-	else
-	{
-		print("MAP IS VALID - CONNECTED, AND ALL CONTINENTS' SUBGRAPHS ARE CONNECTED");
-	}
 
 	/**
 	 *************************
@@ -206,6 +203,8 @@ void RiskGame::riskGame_initializeGame(void)
 
 	/**Randomize the order of play of the players*/
 	srand(time(NULL));
+
+	/** Automatically shuffles the iterator */
 	random_shuffle(players.begin(), players.end());
 
 
@@ -222,18 +221,32 @@ void RiskGame::riskGame_initializeGame(void)
 	 *************************
 	 */
 
+	/** Stores the total number of countries in the map */
 	int numCountryLeft = this->map->map_GetNumCountries();
 
+	/** Stores all the countries in the map as a vector */
 	vector<Country *> allCountries = this->map->map_GetAllCountries();
 
-	/**Randomly assigns countries to each player one by one in a round-robin fashion*/
+	/** While there are not any countries left to assign,
+	 * randomly assign countries to each player one by one in a round-robin fashion
+	 * */
 	while(numCountryLeft != 0){
-		for(unsigned int i = 0; i < players.size(); i ++){
+
+		for(unsigned int i = 0; i < players.size(); i ++)
+		{
+			/** All country assignments are done - break */
 			if(numCountryLeft == 0)
 				break;
 
+			/** Randomly choose the next country to assign to players[i] */
 			int countryIndex = rand() % allCountries.size();
 
+			/**
+			 * Set owner of country,
+			 * Add Country to set of Countries a player owns,
+			 * Start the country with 1 army
+			 * Remove the country from the list of countries to allocate
+			 */
 			allCountries[countryIndex]->country_SetOwner(players[i]);
 			players[i]->player_addCountry(allCountries[countryIndex]);
 			allCountries[countryIndex]->country_SetNumArmies(1);
@@ -244,20 +257,33 @@ void RiskGame::riskGame_initializeGame(void)
 
 	cout << endl;
 
-	for(int m = 0; m < map->map_GetNumCountries(); m++){
+	/** Display owner of each country
+	 * The proof of concept is in how the owner (player) is called (through the country itself)
+	 * */
+	for(int m = 0; m < map->map_GetNumCountries(); m++)
+	{
 		cout << this->map->map_GetAllCountries()[m]->country_GetName() << " belongs to " << this->map->map_GetAllCountries()[m]->country_GetOwner()->player_getPlayerName() << endl;
 	}
 
 	cout << endl;
 
-	/** Display each player's countries */
-	for(unsigned int i = 0; i < players.size(); i ++) {
+	/**
+	 * Display each player's countries - these
+	 * are the set of countries stored within each player -
+	 * they should match the previous output
+	 *  */
+	for(unsigned int i = 0; i < players.size(); i ++)
+	{
 		cout << players[i]->player_getPlayerName() << "'s Countries: " << endl;
+
+		/** Get all countries owned by the current players[i] */
 		vector <Country*> currentPlayerCountries = players[i]->player_getMyCountries();
 
+		/** Display all countries */
 		for(unsigned int i = 0; i < currentPlayerCountries.size();i++) {
 			cout << currentPlayerCountries[i]->country_GetName() << endl;
 		}
+
 		cout << endl << endl;
 	}
 
@@ -272,8 +298,11 @@ void RiskGame::riskGame_initializeGame(void)
 
 	/** The number of armies for each player */
 	UINT A;
+
+	/** A boolean array describing when a given player is done placing their armies */
 	bool* placedArmiesFlag;
 
+	/** Allocating the number of armies necessary for each player */
 	switch(players.size()){
 	case 2: A = 40;
 			placedArmiesFlag = new bool(2);
@@ -300,46 +329,78 @@ void RiskGame::riskGame_initializeGame(void)
 	while(!donePlacingArmies)
 	{
 		donePlacingArmies = true;
+
+		/**
+		 * Iterate over each player, and add a single army to a country
+		 * of their choice
+		 */
 		for(unsigned int i = 0; i < players.size(); i++)
 		{
+			/**
+			 * If the player has not added "A" number of armies yet,
+			 * prompt them to add another one to their set of countries
+			 */
 			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A - players[i]->player_getMyCountries().size())
 			{
+				/**
+				 * Display current state of user's countries & armies
+				 */
 				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - players[i]->player_getTotalNumberArmies() << " unit(s) left to place!):" << endl;
-				for(unsigned int g = 0; g < players[i]->player_getMyCountries().size(); g++){
+
+
+				for(unsigned int g = 0; g < players[i]->player_getMyCountries().size(); g++)
+				{
 
 					cout << "[" << g << "] " << players[i]->player_getMyCountries()[g]->country_GetName() << " Number of Armies: " << players[i]->player_getMyCountries()[g]->country_GetNumArmies() << endl;
 
 				}
+
 				cout << endl;
+
+				/** Prompt user for which country to add an army to */
 				string armyPlacing = "Which country would you like to place armies on? (Enter index) ";
+
 				int countryIndex = UserInterface::userInterface_getIntegerBetweenRange(armyPlacing, 0, players[i]->player_getMyCountries().size());
+
+				/** Add a single army to player's country*/
 				players[i]->player_getMyCountries()[countryIndex]->country_SetNumArmies(players[i]->player_getMyCountries()[countryIndex]->country_GetNumArmies() + 1);
 			}
+			/** Player is done adding armies - set boolean */
 			else
 			{
 				placedArmiesFlag[i] = true;
 			}
+
 		}
 
+		/** Check if all players are done */
 		for(unsigned int j = 0; j < players.size(); j++)
 		{
 			if(placedArmiesFlag[j] == false)
 				donePlacingArmies = false;
 		}
+
 	}
 
+	/** Destruct */
 	delete [] placedArmiesFlag;
-
+	placedArmiesFlag = NULL;
 
 	/** Print each player's countries with the number of army placed */
-	for(unsigned int i = 0; i < players.size(); i++){
+	for(unsigned int i = 0; i < players.size(); i++)
+	{
 		int armyPlaced = 0;
+
 		cout << players[i]->player_getPlayerName() << ": " << endl;
+
+		/** Get all countries */
 		vector <Country*> currentPlayerCountries = players[i]->player_getMyCountries();
 
-		for(unsigned int i = 0; i < currentPlayerCountries.size(); i++){
-
+		/** Display all countries owned by player, with its number of armies */
+		for(unsigned int i = 0; i < currentPlayerCountries.size(); i++)
+		{
 			cout << currentPlayerCountries[i]->country_GetName() << " - Number of Armies: " << currentPlayerCountries[i]->country_GetNumArmies() << endl;
+
 			armyPlaced += currentPlayerCountries[i]->country_GetNumArmies();
 		}
 
