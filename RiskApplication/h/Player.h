@@ -51,9 +51,6 @@ class Player {
 		void player_addCountry(Country *newCountry);
 		void player_removeCountry(Country *newCountry);
 
-		/** Gets a set of all unique continents that have countries owned by player */
-		set<Continent *> * player_getUniqueContinents(void);
-
 		friend ostream& operator<<(ostream& output, Player& p);
 
 	private:

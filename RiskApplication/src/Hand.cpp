@@ -18,12 +18,12 @@ Hand::Hand(){
 }
 
 /* Function that adds a card to a player's hand */
-void Hand::addCardToHand(Card* cardToAdd) {
+void Hand::hand_addCardToHand(Card* cardToAdd) {
 	handOfCards.push_back(cardToAdd);
 }
 
 /* Function that removes a card from a player's hand */
-void Hand::removeCardFromHand(Card* cardToRemove) {
+void Hand::hand_removeCardFromHand(Card* cardToRemove) {
 	for(unsigned int i = 0; i < handOfCards.size(); i++) {
 		if(cardToRemove == handOfCards[i]) {
 			handOfCards.erase(handOfCards.begin() + i);
@@ -32,12 +32,12 @@ void Hand::removeCardFromHand(Card* cardToRemove) {
 }
 
 /* Function that returns a player's hand (vector of Card object references) */
-vector<Card *> Hand::getHandOfCards() {
+vector<Card *> Hand::hand_getHandOfCards() {
 	return handOfCards;
 }
 
 /* Function that returns the number of cards in a player's hand */
-int Hand::getNumberOfCards() {
+int Hand::hand_getNumberOfCards() {
 	return handOfCards.size();
 }
 
@@ -52,7 +52,7 @@ void Hand::hand_showHand() {
 	cout << endl;
 }
 
-int Hand::exchange(RiskGame *currentGame) {
+int Hand::hand_exchange(RiskGame *currentGame) {
 
 	int armyBonus = 0;	// initialize army bonus
 

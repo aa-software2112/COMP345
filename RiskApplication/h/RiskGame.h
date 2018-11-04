@@ -41,6 +41,9 @@ public:
 	void riskGame_giveAllCountriesToPlayer(Player *currentPlayer);
 	void riskGame_giveAllCountriesButOneToPlayer(Player *firstPlayer, Player *anotherPlayer);
 
+	/** This should be changed depending on where game is compiled
+	 * */
+	string pathToMapFiles;
 private:
 	//void riskGame_initializeGame(void);
 	//void riskGame_playGame(void);
@@ -59,9 +62,7 @@ private:
 	/** Number of card sets traded */
 	int numCardSetsTraded;
 
-	/** This should be changed depending on where game is compiled
-	 * */
-	string pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
+
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";
 
