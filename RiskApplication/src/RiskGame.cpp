@@ -360,7 +360,7 @@ void RiskGame::riskGame_initializeGame(void)
 				/** Prompt user for which country to add an army to */
 				string armyPlacing = "Which country would you like to place armies on? (Enter index) ";
 
-				int countryIndex = UserInterface::userInterface_getIntegerBetweenRange(armyPlacing, 0, players[i]->player_getMyCountries().size());
+				int countryIndex = UserInterface::userInterface_getIntegerBetweenRange(armyPlacing, 0, players[i]->player_getMyCountries().size() - 1);
 
 				/** Add a single army to player's country*/
 				players[i]->player_getMyCountries()[countryIndex]->country_SetNumArmies(players[i]->player_getMyCountries()[countryIndex]->country_GetNumArmies() + 1);
@@ -412,78 +412,135 @@ void RiskGame::riskGame_initializeGame(void)
 
 }
 
+/** This is the second function called from riskGame_startGame()
+ *  to actually play the game of risk. For demo purposes, this function can be called
+ *  on its own after the game has been initialized.
+ *
+ */
 void RiskGame::riskGame_playGame(void)
 {
 	bool winnerFound = false;
 
+	/**
+	 *  Keep playing the game until a winner exists;
+	 *  a single player owns all countries
+	 * */
 	while(!winnerFound)
 	{
+		/** A player takes their turn;
+		 * if there is a winner before the player takes their turn,
+		 * the game will end
+		 */
 		for(unsigned int i = 0; i < players.size(); i++)
 		{
 			winnerFound = riskGame_playerTurn(players[i]);
 		}
 	}
 
+	/** Find the winning player based on the one with ownership of
+	 * all countries */
+
 	Player* winner;
+
 	for(unsigned int j = 0; j < players.size(); j++)
 	{
+		/** The player that owns all countries is stored */
 		if(players[j]->player_getMyCountries().size() == this->riskGame_getMap()->map_GetNumCountries())
+		{
 			winner = players[j];
+			break;
+		}
+
 	}
 
+	/** Display the winning player */
 	cout << winner->player_getPlayerName() << " has won the game!";
 }
 
+/** Last function called from riskGame_startGame(), when game is over
+ * (there was a winner) */
 void RiskGame::riskGame_closeGame(void)
 {
 	delete this;
 }
 
+/** Displays for each country, its continent, number of armies, and owner */
 void RiskGame::riskGame_showStateOfGame()
 {
+
 	cout << "Global board:" << endl << endl;
+
 	for(int i = 0; i < this->map->map_GetNumCountries(); i++)
+	{
 		cout << "[" << i << "] " << this->map->map_GetAllCountries()[i]->country_GetName() << " (" << this->map->map_GetAllCountries()[i]->country_GetContinent()->continent_GetContinentName() << ") - " << this->map->map_GetAllCountries()[i]->country_GetNumArmies() << " army units - " << this->map->map_GetAllCountries()[i]->country_GetOwner()->player_getPlayerName() << endl;
+	}
+
 	cout << endl;
 }
 
+/** Displays for a given player its owned countries, their continents, number of armies,
+ * and the player's name */
 void RiskGame::riskGame_showStateOfPlayer(Player* currentPlayer)
 {
 	cout << currentPlayer->player_getPlayerName() << "'s personal board:" << endl << endl;
+
 	for(unsigned int i = 0; i < currentPlayer->player_getMyCountries().size(); i++)
+	{
 		cout << "[" << i << "] " << currentPlayer->player_getMyCountries()[i]->country_GetName() << " (" << currentPlayer->player_getMyCountries()[i]->country_GetContinent()->continent_GetContinentName() << ") - " << currentPlayer->player_getMyCountries()[i]->country_GetNumArmies() << " army units - " << currentPlayer->player_getMyCountries()[i]->country_GetOwner()->player_getPlayerName() << endl;
+	}
+
 	cout << endl;
 }
 
-
+/** This is a function used for DEMOING purposes only;
+ * it gives a single player ownership of all countries so that the functionality of
+ * the "player turn" can be shown to allocate a winner immediately.
+ */
 void RiskGame::riskGame_giveAllCountriesToPlayer(Player* currentPlayer)
 {
+	/** Iterates over all players */
 	for(unsigned int j = 0; j < players.size(); j++)
 	{
+		/** Iterates over all countries */
 		for(unsigned int x = 0; x < map->map_GetNumCountries(); x++)
 		{
+			/** Removes ownership of all countries from every player */
 			players[j]->player_removeCountry(map->map_GetAllCountries()[x]);
 		}
 	}
 
+	/** Assign all countries to the current player */
 	for(unsigned int i = 0; i < map->map_GetNumCountries(); i++)
+	{
 		currentPlayer->player_addCountry(map->map_GetAllCountries()[i]);
+	}
 }
 
+/** This is a function used for DEMOING purposes only;
+ * it gives a single player ownership of all countries except for one,
+ * to show that the game will recognize that there has not been a winner yet
+ */
 void RiskGame::riskGame_giveAllCountriesButOneToPlayer(Player* firstPlayer, Player* anotherPlayer)
 {
+	/** Iterates over all players */
 	for(unsigned int j = 0; j < players.size(); j++)
 	{
+		/** Iterates over all countries */
 		for(unsigned int x = 0; x < map->map_GetNumCountries(); x++)
 		{
+			/** Removes ownership of all countries from every player */
 			players[j]->player_removeCountry(map->map_GetAllCountries()[x]);
 		}
 	}
 
-	for(unsigned int i = 0; i < map->map_GetNumCountries() - 1; i++)
-		firstPlayer->player_addCountry(map->map_GetAllCountries()[i]);
 
-	// Assigning the last country to another player
+	/** Assign all countries to the current player except for one */
+	for(unsigned int i = 0; i < map->map_GetNumCountries() - 1; i++)
+	{
+		firstPlayer->player_addCountry(map->map_GetAllCountries()[i]);
+	}
+
+	/** Assigning the last country to another player */
 	anotherPlayer->player_addCountry(map->map_GetAllCountries()[map->map_GetNumCountries() - 1]);
 
 }

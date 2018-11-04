@@ -355,74 +355,88 @@ int assignment1Driver(void)
 
 }
 
+enum Assignment2_PartToTest {
+	GAME_START,
+	GAME_STARTUP_PHASE,
+	MAIN_GAME_LOOP,
+	REINFORCEMENT_ATTACK_FORTIFICATION_PHASE
+};
+
 int main()
-{	/* ***************************** PART 1 ***************************** */
+{
+	/** Set the path to map files before running tests */
+	Assignment2_PartToTest partToTest = MAIN_GAME_LOOP;
 
-	/* Driver for part 1 - Game Start:
-	 * 1) Different valid maps can be loaded and their validity is verified (i.e. it is a connected graph, etc), and invalid maps are gracefully rejected
-	 * 2) The right number of players is created, a deck with the right number of cards is created.
-	 */
+	RiskGame driver;
 
-
-	RiskGame partOneDriver;
-
-	cout << "HERE" << endl;
-	partOneDriver.riskGame_initializeGame();
-	//partOneDriver.riskGame_showStateOfGame();
+	driver.pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
 
 
-	/* ***************************** PART 2 ***************************** */
-
-	/* Driver for part 2 - Startup Phase:
-	 * 1) All countries in the map have been assigned to one and only one player
-	 * 2) All players have eventually placed the right number of armies on their own countries after army placement is over.
-	 */
-
-	/*
-	RiskGame partTwoDriver;
-
-	partTwoDriver.riskGame_initializeGame();
-	partTwoDriver.riskGame_showStateOfGame();
-	*/
-
-	/* ***************************** PART 3 ***************************** */
-
-	/* Driver for part 3 - Main Game Loop:
-	 * 1) Every player gets turns in a round-robin fashion and that their reinforcement(), attack() and fortification() methods are called
-	 * 2) The game ends when a player controls all the countries (the driver should explicitly give all the countries to one player.
-	 */
-	/*
-	RiskGame partThreeDriver;
-
-	partThreeDriver.riskGame_initializeGame();
-	*/
-
-	/* Used to run the main game loop across all players once, (normally riskGame_playGame() would be called which would make the rotation loop until a winner is found */
-	/*
-	for(unsigned int i = 0; i < partThreeDriver.riskGame_getPlayers().size(); i++)
+	switch(partToTest)
 	{
-		bool temporaryBool; // needed because riskGame_playerTurn() returns a boolean (winner found or not)
-		temporaryBool = partThreeDriver.riskGame_playerTurn(partThreeDriver.riskGame_getPlayers()[i]);
+
+		/** Both tests are the same */
+		case GAME_START ... GAME_STARTUP_PHASE:
+
+		/* ***************************** PART 1 ***************************** */
+
+		/* Driver for part 1 - Game Start:
+		 * 1) Different valid maps can be loaded and their validity is verified (i.e. it is a connected graph, etc), and invalid maps are gracefully rejected
+		 * 2) The right number of players is created, a deck with the right number of cards is created.
+		 */
+
+		/* ***************************** PART 2 ***************************** */
+
+		/* Driver for part 2 - Startup Phase:
+		 * 1) All countries in the map have been assigned to one and only one player
+		 * 2) All players have eventually placed the right number of armies on their own countries after army placement is over.
+		 */
+
+
+			driver.riskGame_initializeGame();
+			driver.riskGame_showStateOfGame();
+			break;
+
+		/* ***************************** PART 3 ***************************** */
+
+		/* Driver for part 3 - Main Game Loop:
+		 * 1) Every player gets turns in a round-robin fashion and that their reinforcement(), attack() and fortification() methods are called
+		 * 2) The game ends when a player controls all the countries (the driver should explicitly give all the countries to one player.
+		 */
+		case MAIN_GAME_LOOP:
+
+			driver.riskGame_initializeGame();
+
+			/* Used to run the main game loop across all players once,
+			 * (normally riskGame_playGame() would be called which would make the rotation loop until a winner is found */
+			for(unsigned int i = 0; i < driver.riskGame_getPlayers().size(); i++)
+			{
+				driver.riskGame_playerTurn(driver.riskGame_getPlayers()[i]);
+			}
+
+			/* Assign all countries to the first player to trigger the win condition */
+			driver.riskGame_giveAllCountriesToPlayer(driver.riskGame_getPlayers()[0]);
+			driver.riskGame_playGame();
+
+			break;
+
+		/* ***************************** PART 4,5,6 ***************************** */
+
+		/* Driver for part 4,5,6 - Reinforcement, Attack, Fortification Phase:
+		 */
+
+		case REINFORCEMENT_ATTACK_FORTIFICATION_PHASE:
+
+
+			driver.riskGame_initializeGame();
+			driver.riskGame_giveAllCountriesButOneToPlayer(driver.riskGame_getPlayers()[0], driver.riskGame_getPlayers()[1]);
+			driver.riskGame_playGame();
+			break;
+
+		default:
+			break;
+
 	}
-	*/
-
-	/* Assign all countries to the first player to trigger the win condition */
-	/*
-	partThreeDriver.riskGame_giveAllCountriesToPlayer(partThreeDriver.riskGame_getPlayers()[0]);
-	partThreeDriver.riskGame_playGame();
-
-	 */
-	/* ***************************** PART 4,5,6 ***************************** */
-
-	/* Driver for part 4,5,6 - Reinforcement, Attack, Fortificatin Phase:
-	 */
-	/*
-	RiskGame partFourDriver;
-
-	partFourDriver.riskGame_initializeGame();
-	partFourDriver.riskGame_giveAllCountriesButOneToPlayer(partFourDriver.riskGame_getPlayers()[0], partFourDriver.riskGame_getPlayers()[1]);
-	partFourDriver.riskGame_playGame();
-	*/
 	//game.riskGame_start();
 
 	return 0;
