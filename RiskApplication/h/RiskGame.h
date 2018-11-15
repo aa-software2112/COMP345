@@ -15,9 +15,11 @@
 #include "Map.h"
 #include "Player.h"
 #include "Deck.h"
+#include "Subject.h"
+#include "Observer.h"
 using namespace std;
 
-class RiskGame {
+class RiskGame: public Observer {
 
 public:
 	RiskGame();
@@ -41,14 +43,15 @@ public:
 	void riskGame_giveAllCountriesToPlayer(Player *currentPlayer);
 	void riskGame_giveAllCountriesButOneToPlayer(Player *firstPlayer, Player *anotherPlayer);
 
+	virtual void observer_Update(void);
+	void riskGame_setSubject(Player *subject);
+
 	/** This should be changed depending on where game is compiled
 	 * */
 	string pathToMapFiles;
 private:
-	//void riskGame_initializeGame(void);
-	//void riskGame_playGame(void);
-	//void riskGame_closeGame(void);
-	//bool riskGame_playerTurn(Player* currentPlayer);
+	/** The reference to the player subject */
+	Player *subject;
 
 	/** Stores the map associated with the current game */
 	Map * map;

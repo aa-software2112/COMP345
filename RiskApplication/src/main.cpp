@@ -448,14 +448,38 @@ int assignment2Driver(void)
 
 int main()
 {
-	RiskGame *r;
+	RiskGame *r = new RiskGame();
 
-	/** Example of strategy assignment */
+	/** Example of strategy assignment;
+	 * You would do this upon creating players (when in the initialize
+	 * phase of the game)
+	 *  */
 	Player * p1 = new Player();
 
 	p1->player_setPhaseStrategy(new HumanPhaseStrategy());
 
 	p1->player_exampleAttackWithStrategy(r);
+
+	/** Example of part 2 observer pattern */
+
+	/** Pretend this is the code of the attack phases */
+	/** Just before attack phase is called, set the player about to attack (same for other
+	 * two phases)
+	 */
+	r->riskGame_setSubject(p1);
+
+	/** Now during attack, call notify on the player, and the observer will display what you
+	 * ask it (see the observer_Update() function in RiskGame.c )
+	 */
+	p1->subject_Notify();
+
+	/** Make some changes in player */
+
+	/** Display new state of player */
+	p1->subject_Notify()
+
+	/** Attack phase over */
+
 
 }
 

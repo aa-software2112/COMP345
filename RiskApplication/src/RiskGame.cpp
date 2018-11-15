@@ -2,6 +2,30 @@
 #define RISK_GAME_LOCAL
 #include "RiskGame.h"
 
+
+/** Set the subject that the observer will listen to;
+ *
+ * in this case, everytime a new player is making a move, the subject should be set
+ * using this function (we need this since we can only have one subject per observer)
+ *  */
+void RiskGame::riskGame_setSubject(Player *subject)
+{
+	this->subject = subject;
+
+	this->subject->subject_Attach(this);
+
+}
+
+/** This is the function that is called by the player subject in order
+ * to view the state of they player's phase; note the example print statement below
+ */
+void RiskGame::observer_Update()
+{
+
+	cout << this->subject->player_getPlayerName() << endl;
+	cout << "In Risk Game Observer: observer_Update()" << endl;
+}
+
 RiskGame::RiskGame()
 {
 	this->map = NULL;
