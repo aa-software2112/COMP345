@@ -17,6 +17,8 @@
 #include "Utilities.h"
 using namespace std;
 
+class Player;
+
 class Map {
 	public:
 		int setsTraded = 0;
@@ -34,6 +36,10 @@ class Map {
 		bool map_IsConnected(void);
 		int map_GetNumCountries(void);
 
+		/** This is for the observer to call, in order to get the state of the map
+		 * in terms of player ownership of countries
+		 */
+		map<Player *, vector<Country *> *> map_getPlayerToCountryMapping(void);
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */

@@ -476,7 +476,7 @@ int main()
 	/** Make some changes in player */
 
 	/** Display new state of player */
-	p1->subject_Notify()
+	p1->subject_Notify();
 
 	/** Attack phase over */
 
