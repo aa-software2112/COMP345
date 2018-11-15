@@ -15,11 +15,12 @@
 #include "Country.h"
 #include "Graph.h"
 #include "Utilities.h"
+#include "Subject.h"
 using namespace std;
 
 class Player;
 
-class Map {
+class Map: public Subject {
 	public:
 		int setsTraded = 0;
 		/** Constructor **/
@@ -39,7 +40,7 @@ class Map {
 		/** This is for the observer to call, in order to get the state of the map
 		 * in terms of player ownership of countries
 		 */
-		map<Player *, vector<Country *> *> map_getPlayerToCountryMapping(void);
+		map<Player *, vector<Country *> *> * map_GetPlayerToCountryMapping(void);
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */

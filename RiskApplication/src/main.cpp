@@ -16,6 +16,7 @@
 #include "Hand.h"
 #include "RiskGame.h"
 #include "PhaseStrategy.h"
+#include "GameStatisticsObserver.h"
 
 /**
  * Code contains all the driver functions used in demonstrating assignment 1
@@ -450,6 +451,9 @@ int main()
 {
 	RiskGame *r = new RiskGame();
 
+	r->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+
+
 	/** Example of strategy assignment;
 	 * You would do this upon creating players (when in the initialize
 	 * phase of the game)
@@ -479,6 +483,23 @@ int main()
 	p1->subject_Notify();
 
 	/** Attack phase over */
+
+	/** This is an example of the game statistics viewer */
+	/** Set up the map and the players first - required so that the
+	 * statistics view actually has something to display*/
+	r->riskGame_initializeGame();
+
+	/** Create the observer, and set its subject - the game's map */
+	GameStatisticsObserver statsObserver;
+
+	/** The subject is the map; set it in the observer */
+	statsObserver.gameStatObs_setSubject(r->riskGame_getMap());
+
+	/** Have the map notify the stats observer;
+	 * see what is printed to the screen
+	 *  */
+	r->riskGame_getMap()->subject_Notify();
+
 
 
 }
