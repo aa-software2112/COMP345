@@ -15,6 +15,7 @@
 #include "Card.h"
 #include "Hand.h"
 #include "RiskGame.h"
+#include "PhaseStrategy.h"
 
 /**
  * Code contains all the driver functions used in demonstrating assignment 1
@@ -355,6 +356,9 @@ int assignment1Driver(void)
 
 }
 
+/**
+ * Code contains all the driver functions used in demonstrating assignment 2
+ * **/
 enum Assignment2_PartToTest {
 	GAME_START,
 	GAME_STARTUP_PHASE,
@@ -362,7 +366,7 @@ enum Assignment2_PartToTest {
 	REINFORCEMENT_ATTACK_FORTIFICATION_PHASE
 };
 
-int main()
+int assignment2Driver(void)
 {
 	/** Set the path to map files before running tests */
 	RiskGame driver;
@@ -440,6 +444,19 @@ int main()
 	}
 
 	return 0;
+}
+
+int main()
+{
+	RiskGame *r;
+
+	/** Example of strategy assignment */
+	Player * p1 = new Player();
+
+	p1->player_setPhaseStrategy(new HumanPhaseStrategy());
+
+	p1->player_exampleAttackWithStrategy(r);
+
 }
 
 
