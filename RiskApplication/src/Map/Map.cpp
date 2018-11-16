@@ -347,7 +347,7 @@ int Map::map_GetNumCountries(void)
 map<Player *, vector<Country *> *> * Map::map_GetPlayerToCountryMapping(void)
 {
 	/** Creates the initial map */
-	map<Player *, vector<Country *> *> * playerToCountryMap;
+	map<Player *, vector<Country *> *> * playerToCountryMap = new map<Player *, vector<Country *> *>;
 
 	/** Iterate through each country */
 	for(map<string, Country*>::iterator it = mapCountries.begin(); it != mapCountries.end(); it++)
