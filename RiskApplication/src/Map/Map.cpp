@@ -343,3 +343,35 @@ int Map::map_GetNumCountries(void)
 	return this->mapVertex.size();
 }
 
+
+map<Player *, vector<Country *> *> * Map::map_GetPlayerToCountryMapping(void)
+{
+	/** Creates the initial map */
+	map<Player *, vector<Country *> *> * playerToCountryMap = new map<Player *, vector<Country *> *>;
+
+	/** Iterate through each country */
+	for(map<string, Country*>::iterator it = mapCountries.begin(); it != mapCountries.end(); it++)
+	{
+		/** Capture the country */
+		Country * c = (it)->second;
+
+		/** Capture the player that owns it */
+		Player * p = c->country_GetOwner();
+
+		/** Check that the player already exists, if not, create the vector in memory */
+		if (playerToCountryMap->count(p) == 0)
+		{
+			(*playerToCountryMap)[p] = new vector<Country *>;
+		}
+
+
+		/** Add the country to the player map */
+		(*playerToCountryMap)[p]->push_back(c);
+
+
+	}
+
+	return playerToCountryMap;
+
+}
+

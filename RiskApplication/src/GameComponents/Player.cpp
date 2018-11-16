@@ -10,6 +10,22 @@
 #include "Continent.h"
 #include "DiceRollingFacility.h"
 
+/** Sets the strategy for all phases
+ * inside of attack, fortify, and reinforce, must make a call to
+ * this->player_PhaseStrategy->(see PhaseStrategy.h for options)
+ */
+void Player::player_setPhaseStrategy(PhaseStrategy *phaseStrategy)
+{
+	this->player_PhaseStrategy = phaseStrategy;
+}
+
+void Player::player_exampleAttackWithStrategy(RiskGame * rg)
+{
+	cout << "HERE" << endl;
+
+	this->player_PhaseStrategy->phaseStrategy_Attack(this, rg);
+}
+
 
 ostream& operator<<(ostream& output, Player& p)
 {
