@@ -19,6 +19,11 @@ void Player::player_setPhaseStrategy(PhaseStrategy *phaseStrategy)
 	this->player_PhaseStrategy = phaseStrategy;
 }
 
+PhaseStrategy* Player::player_getPhaseStrategy()
+{
+	return this->player_PhaseStrategy;
+}
+
 void Player::player_exampleAttackWithStrategy(RiskGame * rg)
 {
 	cout << "HERE" << endl;
@@ -635,4 +640,13 @@ void Player::player_removeCountry(Country *currentCountry){
 	}
 }
 
+void Player::player_setCurrentPhase(phaseType phase)
+{
+	this->currentPhase = phase;
+}
+
+phaseType Player::player_getCurrentPhase()
+{
+	return this->currentPhase;
+}
 

@@ -24,6 +24,12 @@ using namespace std;
 class Continent;
 class RiskGame;
 
+enum phaseType {
+	REINFORCE = 0,
+	ATTACK = 1,
+	FORTIFY = 2
+};
+
 /** The player is a subject of some observer; note,
  * you may need to add a few variables to preserve the state of
  * the current phase (to help the observer know what to print);
@@ -65,6 +71,12 @@ class Player: public Subject {
 		 * you can delete it once you're done with understanding the concept
 		 */
 		void player_exampleAttackWithStrategy(RiskGame * rg);
+		PhaseStrategy* player_getPhaseStrategy();
+
+
+		void player_setCurrentPhase(phaseType phase);
+		phaseType player_getCurrentPhase();
+
 
 		friend ostream& operator<<(ostream& output, Player& p);
 
@@ -74,12 +86,38 @@ class Player: public Subject {
 		friend HumanPhaseStrategy;
 		friend AggressivePhaseStrategy;
 		friend BenevolentPhaseStrategy;
+
+		/** Members used to hold information that will be passed during phases
+		 *
+		 */
+
+		// Reinforce
+		int totalReinforcementCount;
+		Country* reinforcingCountry;
+		int amountToReinforce;
+
+		// Attack
+		Country* attackingCountry;
+		Country* attackedCountry;
+		int attackingCountryArmies;
+		int attackedCountryArmies;
+		bool attackOutcomeVictory;
+		bool successfulInvasion;
+
+		// Fortify
+		Country* fortifyingCountry;
+		Country* fortifiedCountry;
+		int fortifyingCountryArmies;
+		int fortifiedCountryArmies;
+		int amountToFortify;
+
 	private:
 		PhaseStrategy *player_PhaseStrategy;
 		string myName;	// holds player's name
 		DiceRollingFacility myDRF;	// holds player's own dice rolling facility
 		Hand myHand;	// holds player's hand of cards
 		vector<Country*> myCollectionOfCountries; // holds player's collection of countries
+		phaseType currentPhase;
 };
 
 

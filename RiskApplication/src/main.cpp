@@ -451,8 +451,9 @@ int main()
 {
 	RiskGame *r = new RiskGame();
 
-	r->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+	r->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles";
 
+	r->riskGame_start();
 
 	/** Example of strategy assignment;
 	 * You would do this upon creating players (when in the initialize

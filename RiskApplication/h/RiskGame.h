@@ -45,6 +45,7 @@ public:
 
 	virtual void observer_Update(void);
 	void riskGame_setSubject(Player *subject);
+	void riskGame_removeObserver(Player *subject);
 
 	/** This should be changed depending on where game is compiled
 	 * */

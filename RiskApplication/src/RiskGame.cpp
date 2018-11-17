@@ -16,14 +16,47 @@ void RiskGame::riskGame_setSubject(Player *subject)
 
 }
 
+void RiskGame::riskGame_removeObserver(Player *subject)
+{
+	this->subject->subject_Detach(this);
+}
+
 /** This is the function that is called by the player subject in order
  * to view the state of they player's phase; note the example print statement below
  */
 void RiskGame::observer_Update()
 {
+	cout << endl << "*** START OF OBSERVER UPDATE ***" << endl << endl;
+	cout << this->subject->player_getPlayerName() << "'s turn!" << endl;
+	if(this->subject->player_getCurrentPhase() == REINFORCE)
+	{
+		cout << "Fortification Phase - " << this->subject->totalReinforcementCount << " unit(s) left to place!" << endl;
+		cout << this->subject->player_getPlayerName() << " added " << this->subject->amountToReinforce << " units to " << this->subject->reinforcingCountry->country_GetName() << endl;
+	}
+	else if(this->subject->player_getCurrentPhase() == ATTACK)
+	{
+		cout << "Attack Phase" << endl;
+		cout << this->subject->player_getPlayerName() << " attacked " << this->subject->attackedCountry->country_GetName() << "(" << this->subject->attackedCountryArmies << " units) from " << this->subject->attackingCountry->country_GetName() << "(" << this->subject->attackingCountryArmies << " units)" << endl;
 
-	cout << this->subject->player_getPlayerName() << endl;
-	cout << "In Risk Game Observer: observer_Update()" << endl;
+		if(this->subject->attackOutcomeVictory == true)
+		{
+			if(this->subject->successfulInvasion == true)
+				cout << "The attacker won the battle, but defending unit(s) still remain!" << endl;
+			else
+				cout << "The attacker won the battle, the defending country was successfully captured!" << endl;
+		}
+		else
+		{
+			cout << "The defending country won the battle!" << endl;
+		}
+	}
+	else
+	{
+		cout << "Fortify Phase" << endl;
+		cout << this->subject->player_getPlayerName() << " sent " << this->subject->amountToFortify << " units from " << this->subject->fortifyingCountry->country_GetName() << " (" << this->subject->fortifyingCountryArmies << " units) to " << this->subject->fortifiedCountry->country_GetName() << "(" << this->subject->fortifiedCountryArmies << " units)" << endl;
+	}
+
+	cout << endl << "*** END OF OBSERVER UPDATE ***" << endl << endl;
 }
 
 RiskGame::RiskGame()
@@ -106,9 +139,27 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 	if(riskGame_checkWinner())
 		return true;
 
-	currentPlayer->player_reinforce(this);
-	currentPlayer->player_attack(this);
-	currentPlayer->player_fortify(this);
+	this->riskGame_setSubject(currentPlayer);
+
+	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI";
+
+	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 2);
+
+	if(strategyIndex == 0)
+		currentPlayer->player_setPhaseStrategy(new HumanPhaseStrategy());
+	else if(strategyIndex == 1)
+		currentPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
+	else
+		currentPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
+
+	currentPlayer->player_setCurrentPhase(REINFORCE);
+	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
+	currentPlayer->player_setCurrentPhase(ATTACK);
+	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Attack(currentPlayer, this);
+	currentPlayer->player_setCurrentPhase(FORTIFY);
+	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
+
+	this->riskGame_removeObserver(currentPlayer);
 
 	return false;
 }
