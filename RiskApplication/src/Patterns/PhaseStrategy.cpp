@@ -9,6 +9,7 @@
  * */
 void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	cout << "- HUMAN STRATEGY -" << endl;
 	cout << "ATTACK PHASE" << endl;
 	cout << "Attack Start" << endl;
 
@@ -489,7 +490,7 @@ void HumanPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void HumanPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
-
+	cout << "- HUMAN STRATEGY -" << endl;
 	cout << "FORTIFICATION PHASE" << endl;
 	cout << "Fortification Start" << endl << endl;
 
@@ -612,16 +613,196 @@ void AggressivePhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void BenevolentPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	cout << "- BENEVOLENT STRATEGY -" << endl;
+	cout << "ATTACK PHASE:" << endl;
+	cout << "Attack Start" << endl << endl;
+
+	cout << "As a benevolent, you do not wish to attack at this time." << endl;
+
+	cout << endl;
+	cout << "Attack End " << endl << endl;
 	return;
 }
 
 void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	cout << "- BENEVOLENT STRATEGY -" << endl;
+	cout << "REINFORCEMENT PHASE:" << endl;
+	cout << "Reinforcement Start" << endl << endl;
+
+	/* Display player's hand */
+	cout << "Current Hand: " << endl;
+
+	for (unsigned int b = 0; b < p->myHand.hand_getHandOfCards().size(); b++){
+		p->myHand.hand_getHandOfCards()[b]->card_printType();
+	}
+
+	cout << endl;
+
+	/* Calculating the base amount of new armies at the start of the turn */
+	int newArmiesCount = p->myCollectionOfCountries.size() / 3;
+
+	/* Players receive at least 3 armies per turn */
+	if(newArmiesCount < 3)
+		newArmiesCount = 3;
+
+	/* Put of all the unique continents where the player owns at least 1 country on into a vector */
+	set<Continent *> setOfUniqueContinents = *p->player_getUniqueContinents();
+
+	for(set<Continent *>::iterator it = setOfUniqueContinents.begin(); it != setOfUniqueContinents.end(); it++)
+	{
+		/* If this condition is true, that means player owns the current iterated continent */
+		if((*(*it)).continent_playerOwnsContinent(p)) {
+			int continentBonus = (*(*it)).continent_getBonusValue();	// get the bonus value from the respective continent object
+			string continentName = (*(*it)).continent_GetContinentName();
+			cout << "Reinforcement Army Bonus! " << continentBonus << " additional army units for completely controlling a continent - " << continentName << "." << endl;
+			newArmiesCount = newArmiesCount + continentBonus;	// increment the player's new army count by the continent bonus
+		}
+	}
+
+	cout << endl;
+
+	/* If player's hand has 5 or more cards, they MUST exchange for armies */
+	while(p->myHand.hand_getHandOfCards().size() > 4) {
+		cout << "Forced Exchange Phase:" << endl;
+		cout << "You have at least 5 cards in your hand, therefore you must trade in a set." << endl;
+		newArmiesCount = newArmiesCount + p->myHand.hand_exchange(rg); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
+
+	}
+	cout << endl;
+
+
+	bool exchangePhaseDoneFlag = false;	// flag used to keep exchanging until a player wishes not to
+
+	while(!exchangePhaseDoneFlag)
+	{
+		cout << "Optional Exchange Phase:" << endl;
+
+		/* Prompt the user whether he wants to exchange cards or not */
+		string exchangeMessage = "Would you like to exchange a set of cards?\nEnter 0, for no\nEnter 1, for yes\nEnter 2, to see your personal board\nEnter 3 to see the global board";
+		int exchangeAnswer = UserInterface::userInterface_getIntegerBetweenRange(exchangeMessage, 0, 3);
+
+		if(exchangeAnswer == 1)
+		{
+			newArmiesCount = newArmiesCount + p->myHand.hand_exchange(rg);
+		}
+		else if(exchangeAnswer == 2)
+		{
+			rg->riskGame_showStateOfPlayer(p);	// show player's board
+		}
+		else if(exchangeAnswer == 3)
+		{
+			rg->riskGame_showStateOfGame(); // show the whole board
+		}
+		else
+		{
+			exchangePhaseDoneFlag = true;
+		}
+	}
+
+	/* This loop will run as long as the player did not place all their additional reinforcement units */
+	while(newArmiesCount != 0){
+
+		/* Variables sent to observers */
+		p->totalReinforcementCount = newArmiesCount;
+
+		unsigned int minNumOfArmies = 1;	// smallest minNumOfArmies is 1 by default
+
+		/* Code block that calculates the smallest number of army units on one country in the player's collection */
+		for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
+		{
+			if (p->myCollectionOfCountries[i]->country_GetNumArmies() < minNumOfArmies)
+			{
+				minNumOfArmies = p->myCollectionOfCountries[i]->country_GetNumArmies();
+			}
+		}
+
+		/* Code block that adds 1 unit to the first occurence of country that has the minimum amount of army units */
+		for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
+		{
+			if (p->myCollectionOfCountries[i]->country_GetNumArmies() == minNumOfArmies)
+			{
+				cout << p->myCollectionOfCountries[i]->Country::country_GetName() + " is the weakest country." << endl;
+				newArmiesCount--;
+				cout << "Placing one army unit on " << p->myCollectionOfCountries[i]->country_GetName() << ". (" << newArmiesCount <<  " left to place)";
+				p->myCollectionOfCountries[i]->country_SetNumArmies(p->myCollectionOfCountries[i]->country_GetNumArmies() + 1);
+
+				/* Variables sent to observers */
+				p->reinforcingCountry = p->myCollectionOfCountries[i];
+				p->amountToReinforce = 1;
+				break;
+			}
+		}
+
+		/* Notify all observers */
+		p->subject_Notify();
+	}
+
+	cout << endl;
+	cout << "Reinforcement End" << endl << endl;
+
 	return;
 }
 
 void BenevolentPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
-	return;
+	cout << "- BENEVOLENT STRATEGY -" << endl;
+	cout << "FORTIFICATION PHASE" << endl;
+	cout << "Fortification Start" << endl << endl;
+
+	vector<Country *> vectorOfAllWeakestCountries; // this vector will hold all the "weakest" countries
+
+	unsigned int minNumOfArmies = 1;
+
+	/* Code block that calculates the smallest number of army units on one country in the player's collection */
+	for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
+	{
+		if (p->myCollectionOfCountries[i]->country_GetNumArmies() < minNumOfArmies)
+		{
+			minNumOfArmies = p->myCollectionOfCountries[i]->country_GetNumArmies();
+		}
+	}
+
+	/* Code block that will add all the weakest countries in a player's collection into vectorOfAllWeakestCountries */
+	for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
+	{
+		if (p->myCollectionOfCountries[i]->country_GetNumArmies() == minNumOfArmies)
+		{
+			vectorOfAllWeakestCountries.push_back(p->myCollectionOfCountries[i]);
+		}
+	}
+
+	/* "Comparison" Algorithm */
+
+	for(unsigned int x = 0; x < vectorOfAllWeakestCountries.size(); x++)
+	{
+		/* This vector will hold all adjacent countries of a specific country */
+		vector<Country *> vectorOfAdjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(vectorOfAllWeakestCountries[x]);
+
+		for(int y = 0; y < vectorOfAdjacentCountries.size(); y++)
+		{
+			/* Verify that the current adjacent country is owned by the same player */
+			if(vectorOfAdjacentCountries[y]->country_GetOwner() == p)
+			{
+				/* Condition that decides whether a unit should be sent from this (adjacent) country to the original country */
+				if(vectorOfAllWeakestCountries[x]->country_GetNumArmies() < vectorOfAdjacentCountries[y]->country_GetNumArmies() - 1)
+				{
+					/* Variables sent to observers */
+					p->fortifyingCountry = vectorOfAdjacentCountries[y];
+					p->fortifiedCountry = vectorOfAllWeakestCountries[x];
+					p->fortifyingCountryArmies = vectorOfAdjacentCountries[y]->country_GetNumArmies();
+					p->fortifiedCountryArmies = vectorOfAllWeakestCountries[x]->country_GetNumArmies();
+					p->amountToFortify = 1;
+
+					vectorOfAllWeakestCountries[x]->country_SetNumArmies(vectorOfAllWeakestCountries[x]->country_GetNumArmies() - 1);
+					vectorOfAdjacentCountries[y]->country_SetNumArmies(vectorOfAdjacentCountries[y]->country_GetNumArmies() + 1);
+
+					/* Notify all observers */
+					p->subject_Notify();
+					return;
+				}
+			}
+		}
+	}
 }
 

@@ -36,7 +36,7 @@ void RiskGame::observer_Update()
 	else if(this->subject->player_getCurrentPhase() == ATTACK)
 	{
 		cout << "Attack Phase" << endl;
-		cout << this->subject->player_getPlayerName() << " attacked " << this->subject->attackedCountry->country_GetName() << "(" << this->subject->attackedCountryArmies << " units) from " << this->subject->attackingCountry->country_GetName() << "(" << this->subject->attackingCountryArmies << " units)" << endl;
+		cout << this->subject->player_getPlayerName() << " attacked " << this->subject->attackedCountry->country_GetName() << "(" << this->subject->attackedCountryArmies << " unit(s)) from " << this->subject->attackingCountry->country_GetName() << "(" << this->subject->attackingCountryArmies << " unit(s))" << endl;
 
 		if(this->subject->attackOutcomeVictory == true)
 		{
@@ -53,7 +53,7 @@ void RiskGame::observer_Update()
 	else
 	{
 		cout << "Fortify Phase" << endl;
-		cout << this->subject->player_getPlayerName() << " sent " << this->subject->amountToFortify << " units from " << this->subject->fortifyingCountry->country_GetName() << " (" << this->subject->fortifyingCountryArmies << " units) to " << this->subject->fortifiedCountry->country_GetName() << "(" << this->subject->fortifiedCountryArmies << " units)" << endl;
+		cout << this->subject->player_getPlayerName() << " sent " << this->subject->amountToFortify << " units from " << this->subject->fortifyingCountry->country_GetName() << " (" << this->subject->fortifyingCountryArmies << " units) to " << this->subject->fortifiedCountry->country_GetName() << " (" << this->subject->fortifiedCountryArmies << " units)" << endl;
 	}
 
 	cout << endl << "*** END OF OBSERVER UPDATE ***" << endl << endl;
@@ -141,6 +141,7 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 
 	this->riskGame_setSubject(currentPlayer);
 
+	cout << "-------------------- " << currentPlayer->player_getPlayerName() << "'s turn! -------------------- " << endl;
 	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI";
 
 	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 2);
