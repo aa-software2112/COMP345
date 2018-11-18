@@ -650,3 +650,11 @@ phaseType Player::player_getCurrentPhase()
 	return this->currentPhase;
 }
 
+void Player::player_transferMaxArmy(Country *fromCountry, Country *toCountry){
+
+	toCountry->country_SetNumArmies(toCountry->country_GetNumArmies() + fromCountry->country_GetNumArmies() + 1);
+	fromCountry->country_SetNumArmies(1);
+
+	return;
+}
+

@@ -211,3 +211,83 @@ int Hand::hand_exchange(RiskGame *currentGame) {
 	}
 	return armyBonus;
 }
+int Hand::hand_autoExchange(RiskGame *currentGame) {
+
+	int armyBonus = 0;	// initialize army bonus
+
+	/* Variables that store the number of each type of card in the current player's hand */
+	int infantryCountHand = 0;
+	int cavalryCountHand = 0;
+	int artilleryCountHand = 0;
+	vector <int> indexInfantry;
+	vector <int> indexCalvary;
+	vector <int> indexArtillery;
+	bool doneExchanging = false;
+
+	/* Counting cards... */
+	for(int i = 0; i < handOfCards.size(); i++) {
+		if(handOfCards[i]->card_getType() == INFANTRY){
+			infantryCountHand++;
+			indexInfantry.push_back(i);
+		}
+		else if(handOfCards[i]->card_getType() == CAVALRY){
+			cavalryCountHand++;
+			indexCalvary.push_back(i);
+		}
+		else{
+			artilleryCountHand++;
+			indexArtillery.push_back(i);
+		}
+	}
+	if((infantryCountHand < 1 || cavalryCountHand < 1 || artilleryCountHand < 1) && ((infantryCountHand < 3) && (cavalryCountHand < 3) && (artilleryCountHand < 3)))
+	{
+		cout << "ERROR: You do not have any valid sets!"<< endl;
+		doneExchanging = true;
+	}
+	else if(infantryCountHand == 1 || cavalryCountHand == 1 || artilleryCountHand == 1)
+	{
+		handOfCards.erase(handOfCards.begin() + indexInfantry[0]);
+		handOfCards.erase(handOfCards.begin() + indexCalvary[0]);
+		handOfCards.erase(handOfCards.begin() + indexArtillery[0]);
+		indexInfantry.erase(indexInfantry.begin());
+		indexCalvary.erase(indexCalvary.begin());
+		indexArtillery.erase(indexArtillery.begin());
+
+	}
+	else if(infantryCountHand == 3)
+	{
+		handOfCards.erase(handOfCards.begin() + indexInfantry[0]);
+		indexInfantry.erase(indexInfantry.begin());
+		handOfCards.erase(handOfCards.begin() + indexInfantry[0]);
+		indexInfantry.erase(indexInfantry.begin());
+		handOfCards.erase(handOfCards.begin() + indexInfantry[0]);
+		indexInfantry.erase(indexInfantry.begin());
+	}
+	else if(cavalryCountHand == 3)
+	{
+		handOfCards.erase(handOfCards.begin() + indexCalvary[0]);
+		indexCalvary.erase(indexCalvary.begin());
+		handOfCards.erase(handOfCards.begin() + indexCalvary[0]);
+		indexCalvary.erase(indexCalvary.begin());
+		handOfCards.erase(handOfCards.begin() + indexCalvary[0]);
+		indexCalvary.erase(indexCalvary.begin());
+	}
+	else if(artilleryCountHand == 3)
+	{
+		handOfCards.erase(handOfCards.begin() + indexArtillery[0]);
+		indexArtillery.erase(indexArtillery.begin());
+		handOfCards.erase(handOfCards.begin() + indexArtillery[0]);
+		indexArtillery.erase(indexArtillery.begin());
+		handOfCards.erase(handOfCards.begin() + indexArtillery[0]);
+		indexArtillery.erase(indexArtillery.begin());
+	}
+	cout << endl;
+	if(doneExchanging == false){
+		currentGame->riskGame_incrementCardSetsTraded(); // increment global sets traded counter
+
+		int bonusFromTrade = 5 * currentGame->riskGame_getCardSetsTraded(); // calculate the army bonus from the exchange (different variable because multiple trades can happen during one session)
+		armyBonus = armyBonus + bonusFromTrade;
+		cout << "Reinforcement Army Bonus! " << bonusFromTrade << " additional army units for exchanging a set of cards." << endl;
+	}
+	return armyBonus;
+}
