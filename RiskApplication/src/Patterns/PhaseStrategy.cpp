@@ -599,6 +599,73 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	cout << "- AGGRESSIVE STRATEGY -" << endl;
+	cout << "REINFORCEMENT PHASE:" << endl;
+
+	cout << "Reinforcement Start" << endl;
+
+	/* Calculating the base amount of new armies at the start of the turn */
+	int newArmiesCount = p->myCollectionOfCountries.size() / 3;
+
+	/* Players receive at least 3 armies per turn */
+	if(newArmiesCount < 3)
+		newArmiesCount = 3;
+
+	/* Put of all the unique continents where the player owns at least 1 country on into a vector */
+	set<Continent *> setOfUniqueContinents = *p->player_getUniqueContinents();
+
+	for(set<Continent *>::iterator it = setOfUniqueContinents.begin(); it != setOfUniqueContinents.end(); it++)
+	{
+		/* If this condition is true, that means player owns the current iterated continent */
+		if((*(*it)).continent_playerOwnsContinent(p)) {
+			int continentBonus = (*(*it)).continent_getBonusValue();	// get the bonus value from the respective continent object
+			string continentName = (*(*it)).continent_GetContinentName();
+			cout << "Reinforcement Army Bonus! " << continentBonus << " additional army units for completely controlling a continent - " << continentName << "." << endl;
+			newArmiesCount = newArmiesCount + continentBonus;	// increment the player's new army count by the continent bonus
+		}
+	}
+
+	cout << endl;
+
+
+	cout << "Exchange Phase:" << endl;
+	/* Exchange if it is possible */
+	newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
+	cout << endl;
+
+	/*Find the strongest country */
+	/* Index (Country) with the highest amount of armies */
+	int maxIndex = 0;
+	/* Iterate until we find a country with an amount of armies higher than the current max index */
+	for(int i = 1; i < p->player_getMyCountries().size(); i++)
+	{
+		if(p->player_getMyCountries()[i]->country_GetNumArmies() > p->player_getMyCountries()[maxIndex]->country_GetNumArmies())
+			maxIndex = i;
+	}
+
+	/* Variables sent to observers */
+	p->totalReinforcementCount = newArmiesCount;
+
+	cout << "List of my countries:" << endl << endl;
+
+	/* Display the whole board */
+	rg->riskGame_showStateOfGame();
+
+	/* Printing out the player's collection of countries with their respective index in the player's collection */
+	rg->riskGame_showStateOfPlayer(p);
+	/* Variables sent to observers */
+	p->reinforcingCountry = p->myCollectionOfCountries[maxIndex];
+	p->amountToReinforce = newArmiesCount;
+
+	/* Add the armies to the appropriate country */
+	p->myCollectionOfCountries[maxIndex]->country_SetNumArmies(p->myCollectionOfCountries[maxIndex]->country_GetNumArmies() + newArmiesCount);
+
+	/* Notify all observers */
+	p->subject_Notify();
+
+	cout << endl;
+	cout << "Reinforcement End" << endl << endl;
+
 	return;
 }
 
