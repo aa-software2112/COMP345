@@ -21,6 +21,7 @@ public:
 	int hand_getNumberOfCards();
 	int hand_exchange(RiskGame* currentGame);
 	void hand_showHand();
+	int hand_autoExchange(RiskGame *currentGame);
 private:
 	std::vector<Card*> handOfCards;
 

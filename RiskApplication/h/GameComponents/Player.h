@@ -63,6 +63,7 @@ class Player: public Subject {
 		/* Mutators for the player's collection of countries */
 		void player_addCountry(Country *newCountry);
 		void player_removeCountry(Country *newCountry);
+		void player_transferMaxArmy(Country *fromCountry, Country *toCountry);
 
 		/** For setting the strategy of this player */
 		void player_setPhaseStrategy(PhaseStrategy *phaseStrategy);
