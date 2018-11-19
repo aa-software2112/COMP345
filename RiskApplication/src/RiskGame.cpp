@@ -1,6 +1,7 @@
 
 #define RISK_GAME_LOCAL
 #include "RiskGame.h"
+#include "GameStatisticsObserver.h"
 
 
 /** Set the subject that the observer will listen to;
@@ -28,11 +29,14 @@ void RiskGame::observer_Update()
 {
 	cout << endl << "*** START OF OBSERVER UPDATE ***" << endl << endl;
 	cout << this->subject->player_getPlayerName() << "'s turn!" << endl;
+
+	/* Message sent if the player is in the reinforce phase */
 	if(this->subject->player_getCurrentPhase() == REINFORCE)
 	{
-		cout << "Fortification Phase - " << this->subject->totalReinforcementCount << " unit(s) left to place!" << endl;
+		cout << "Reinforcement Phase - " << this->subject->totalReinforcementCount << " unit(s) left to place!" << endl;
 		cout << this->subject->player_getPlayerName() << " added " << this->subject->amountToReinforce << " units to " << this->subject->reinforcingCountry->country_GetName() << endl;
 	}
+	/* Message sent if the player is in the attack phase */
 	else if(this->subject->player_getCurrentPhase() == ATTACK)
 	{
 		cout << "Attack Phase" << endl;
@@ -50,6 +54,7 @@ void RiskGame::observer_Update()
 			cout << "The defending country won the battle!" << endl;
 		}
 	}
+	/* Message sent if the player is in the fortify phase */
 	else
 	{
 		cout << "Fortify Phase" << endl;
@@ -66,7 +71,6 @@ RiskGame::RiskGame()
 	this->deck = NULL;
 
 	numCardSetsTraded = 0;
-
 }
 
 RiskGame::~RiskGame()
@@ -136,16 +140,21 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 	 * calling reinforce, attack, and fortification phases -
 	 * to be called from the riskGame_playGame() function
 	 */
+	/* Condition that checks if a winner is found */
 	if(riskGame_checkWinner())
 		return true;
 
+	/* Attaching this game to the current player (subject) */
 	this->riskGame_setSubject(currentPlayer);
 
+
+	/* Prompt the user which type of strategy they would like to use this turn */
 	cout << "-------------------- " << currentPlayer->player_getPlayerName() << "'s turn! -------------------- " << endl;
 	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI";
 
 	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 2);
 
+	/* Set the player's strategy accordingly */
 	if(strategyIndex == 0)
 		currentPlayer->player_setPhaseStrategy(new HumanPhaseStrategy());
 	else if(strategyIndex == 1)
@@ -153,6 +162,7 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 	else
 		currentPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
 
+	/* Call the appropriate functions in order (reinforce, attack, fortify) */
 	currentPlayer->player_setCurrentPhase(REINFORCE);
 	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
 	currentPlayer->player_setCurrentPhase(ATTACK);
@@ -160,6 +170,7 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 	currentPlayer->player_setCurrentPhase(FORTIFY);
 	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
 
+	/* Detach the game (observer) from the player (subject) */
 	this->riskGame_removeObserver(currentPlayer);
 
 	return false;
@@ -212,6 +223,9 @@ void RiskGame::riskGame_initializeGame(void)
 
 	delete listOfMapFiles;
 	listOfMapFiles = NULL;
+
+	/** The subject is the map; set it in the observer */
+	statsObserver.gameStatObs_setSubject(this->riskGame_getMap());
 
 	/**
 	 *************************

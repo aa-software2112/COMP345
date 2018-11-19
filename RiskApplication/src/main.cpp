@@ -449,60 +449,62 @@ int assignment2Driver(void)
 
 int main()
 {
+
+	/* PART 1: Player Strategy Pattern
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * During every turn, you are given the option to choose which strategy you would like to adapt.
+	 *
+	 * (1) different players can be assigned different strategies that lead to different behavior
+	 * for the reinforcement, attack, and fortification phases using the strategy pattern;
+	 * (2) the strategy adopted by a player can be changed dynamically during play,
+	 * (3) the human player makes decisions according to user interaction, and computer players make decisions automatically,
+	 * which are both implemented using the strategy pattern.
+	 */
+
+
+	/* PART 2: Phase Observer
+	 *
+	 * (1) the information displayed by the phase view is cleared every time the phase is changing
+	 * (2) the phase view is displaying the correct player:phase information as soon as the phase changes;
+	 * (3) the phase view displays relevant information which is different for every phase.
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * Playout the turns, and you will be able to see (in the observer update) whose turn it is and other relevant info
+	 */
+
+
 	RiskGame *r = new RiskGame();
 
 	r->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles";
 
-	r->riskGame_start();
+	/* Uncomment this to test Part 3 */
+	// r->riskGame_start();
 
-	/** Example of strategy assignment;
-	 * You would do this upon creating players (when in the initialize
-	 * phase of the game)
-	 *  */
-	Player * p1 = new Player();
-
-	p1->player_setPhaseStrategy(new HumanPhaseStrategy());
-
-	p1->player_exampleAttackWithStrategy(r);
-
-	/** Example of part 2 observer pattern */
-
-	/** Pretend this is the code of the attack phases */
-	/** Just before attack phase is called, set the player about to attack (same for other
-	 * two phases)
+	/* PART 3: Game Statistics Observer
+	 *
+	 * (1) the game statistics view updates itself every time a country has been conquered by a player;
+	 * (2) the game statistics updates itself when a player has been eliminated and removes this player from the view;
+	 * (3) as soon as a player owns all the countries, the game statistics view updates itself and displays a celebratory message
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * Playout the turns, and you will be able to see (in the observer update) whose turn it is and other relevant info
 	 */
-	r->riskGame_setSubject(p1);
-
-	/** Now during attack, call notify on the player, and the observer will display what you
-	 * ask it (see the observer_Update() function in RiskGame.c )
-	 */
-	p1->subject_Notify();
-
-	/** Make some changes in player */
-
-	/** Display new state of player */
-	p1->subject_Notify();
-
-	/** Attack phase over */
-
-	/** This is an example of the game statistics viewer */
-	/** Set up the map and the players first - required so that the
-	 * statistics view actually has something to display*/
-	r->riskGame_initializeGame();
-
-	/** Create the observer, and set its subject - the game's map */
-	GameStatisticsObserver statsObserver;
-
-	/** The subject is the map; set it in the observer */
-	statsObserver.gameStatObs_setSubject(r->riskGame_getMap());
-
-	/** Have the map notify the stats observer;
-	 * see what is printed to the screen
-	 *  */
-	r->riskGame_getMap()->subject_Notify();
 
 
+	/* For (1), just play out the game for a bit, whenever a country is captured, a message from Game Statistics Observer should be printed */
 
+	/* For (2), (3) */
+
+	RiskGame *driver = new RiskGame();
+
+	driver->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles";
+
+	driver->riskGame_initializeGame();
+
+	/* Assign all countries to the first player to trigger the win condition */
+	driver->riskGame_giveAllCountriesButOneToPlayer(driver->riskGame_getPlayers()[0], driver->riskGame_getPlayers()[1]);
+	driver->riskGame_playGame();
 }
 
 

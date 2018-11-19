@@ -650,9 +650,10 @@ phaseType Player::player_getCurrentPhase()
 	return this->currentPhase;
 }
 
+/* Used to send the max possible units from one country to another */
 void Player::player_transferMaxArmy(Country *fromCountry, Country *toCountry){
 
-	toCountry->country_SetNumArmies(toCountry->country_GetNumArmies() + fromCountry->country_GetNumArmies() + 1);
+	toCountry->country_SetNumArmies(toCountry->country_GetNumArmies() + fromCountry->country_GetNumArmies() - 1);
 	fromCountry->country_SetNumArmies(1);
 
 	return;

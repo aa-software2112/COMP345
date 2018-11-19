@@ -17,6 +17,7 @@
 #include "Deck.h"
 #include "Subject.h"
 #include "Observer.h"
+#include "GameStatisticsObserver.h"
 using namespace std;
 
 class RiskGame: public Observer {
@@ -46,6 +47,9 @@ public:
 	virtual void observer_Update(void);
 	void riskGame_setSubject(Player *subject);
 	void riskGame_removeObserver(Player *subject);
+
+	/** Create the observer, and set its subject - the game's map */
+	GameStatisticsObserver statsObserver;
 
 	/** This should be changed depending on where game is compiled
 	 * */

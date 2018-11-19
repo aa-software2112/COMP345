@@ -3,6 +3,7 @@
 #include "PhaseStrategy.h"
 #include "Player.h"
 #include "RiskGame.h"
+#include "GameStatisticsObserver.h"
 
 /** Implement the following functions for Human attacks,
  * reinforcements and fortifications
@@ -170,6 +171,10 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
+
+					cout << endl;
+					rg->riskGame_getMap()->subject_Notify();
+					cout << endl;
 				}
 				else {
 					cout << "The defender won the battle." << endl;
@@ -216,6 +221,10 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
+
+					cout << endl;
+					rg->riskGame_getMap()->subject_Notify();
+					cout << endl;
 				}
 				else {
 					cout << "The defender won the battle." << endl;
@@ -262,6 +271,10 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
+
+					cout << endl;
+					rg->riskGame_getMap()->subject_Notify();
+					cout << endl;
 				}
 				else
 				{
@@ -289,6 +302,10 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
+
+					cout << endl;
+					rg->riskGame_getMap()->subject_Notify();
+					cout << endl;
 				}
 				else {
 					cout << "The defender won the battle." << endl;
@@ -335,6 +352,10 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
+
+					cout << endl;
+					rg->riskGame_getMap()->subject_Notify();
+					cout << endl;
 				}
 				else
 				{
@@ -579,10 +600,9 @@ void HumanPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 				p->amountToFortify = numOfArmiesToMove;
 			}
 		}
+		/* Notify all observers */
+		p->subject_Notify();
 	}
-
-	/* Notify all observers */
-	p->subject_Notify();
 
 	cout << endl;
 	cout << "Fortification End" << endl << endl;
@@ -594,256 +614,225 @@ void HumanPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
-
-		cout << "ATTACK PHASE" << endl;
+	cout << "- AGRESSIVE STRATEGY -" << endl;
+	cout << "ATTACK PHASE" << endl;
 	cout << "Attack Start" << endl;
-	/*Find the strongest country */
-	/* Index (Country) with the highest amount of armies */
-	int maxIndex = 0;
-	bool capturedCountry = false;
-	/* Iterate until we find a country with an amount of armies higher than the current max index */
-	for(int i = 1; i < p->player_getMyCountries().size(); i++)
+
+	bool capturedCountry = false; // flag used to determine if a country was captured this turn
+	bool attackPossible = true; // flag used to determine whether an attack is possible
+
+	while(attackPossible)
 	{
-		if(p->player_getMyCountries()[i]->country_GetNumArmies() > p->player_getMyCountries()[maxIndex]->country_GetNumArmies())
-			maxIndex = i;
-	}
+		attackPossible = false; // set to false by default
 
-	/* Get enemy adjacent countries to the player's strongest country */
-	vector <Country *> adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[maxIndex]);
-	do{
-		for(int i = 0; i < adjacentCountriesToStrongest.size(); i ++)
+		/* This loop will change attackPossible to true if the current player can make any possible attack */
+		for(int i = 0; i < p->myCollectionOfCountries.size(); i++)
 		{
-			if(adjacentCountriesToStrongest[i]->country_GetOwner() == p)
+			if(p->myCollectionOfCountries[i]->country_GetNumArmies() > 1)
 			{
-				adjacentCountriesToStrongest.erase(adjacentCountriesToStrongest.begin() + i);
-			}
-		}
+				vector <Country *> adjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->myCollectionOfCountries[i]);
 
-		int globalIndexOfStrongest = 0;
-		vector <int> globalEnemyIndex;
-		for(int i = 0; i < rg->riskGame_getMap()->map_GetAllCountries().size(); i++){
-			if(rg->riskGame_getMap()->map_GetAllCountries()[i] == p->player_getMyCountries()[maxIndex])
-			{
-				globalIndexOfStrongest = i;
-			}
-			for(int j = 0; j < adjacentCountriesToStrongest.size(); j++)
-			{
-				if(rg->riskGame_getMap()->map_GetAllCountries()[i] == adjacentCountriesToStrongest[j])
+				for(int n = 0; n < adjacentCountries.size(); n++)
 				{
-					globalEnemyIndex.push_back(i);
-				}
-			}
-		}
-		for(int i = 0; i < globalEnemyIndex.size(); i++)
-		{
-			cout << "[" << globalIndexOfStrongest << "] "  << rg->riskGame_getMap()->map_GetAllCountries()[globalIndexOfStrongest]->country_GetName() <<  " can attack " <<"[" << globalEnemyIndex[i] << "] " << rg->riskGame_getMap()->map_GetAllCountries()[globalEnemyIndex[i]]->country_GetName() << endl;
-		}
-		int attackingCountryIndex = globalIndexOfStrongest;
-		int defendingCountryIndex = globalEnemyIndex[0];
-
-		/* Create a vector that will hold all countries in the game */
-		vector<Country *> vectorOfAllCountries = rg->riskGame_getMap()->map_GetAllCountries();
-
-		/* Print out the state of these countries */
-		cout << endl;
-		cout << "Attacking: " << vectorOfAllCountries[attackingCountryIndex]->country_GetName() << " has " << vectorOfAllCountries[attackingCountryIndex]->country_GetNumArmies() << " armies and belongs to " << vectorOfAllCountries[attackingCountryIndex]->country_GetOwner()->player_getPlayerName() << endl;
-		cout << "Defending: " << vectorOfAllCountries[defendingCountryIndex]->country_GetName() << " has " << vectorOfAllCountries[defendingCountryIndex]->country_GetNumArmies() << " armies and belongs to " << vectorOfAllCountries[defendingCountryIndex]->country_GetOwner()->player_getPlayerName()  << endl;
-
-		/* Variables sent to observers */
-		p->attackingCountry = vectorOfAllCountries[attackingCountryIndex];
-		p->attackedCountry = vectorOfAllCountries[defendingCountryIndex];
-		p->attackingCountryArmies = vectorOfAllCountries[attackingCountryIndex]->country_GetNumArmies();
-		p->attackedCountryArmies = vectorOfAllCountries[defendingCountryIndex]->country_GetNumArmies();
-
-		/* Preparing variables to perform the attacking process */
-
-		Country* attackingCountry = vectorOfAllCountries[attackingCountryIndex];
-		Country* defendingCountry = vectorOfAllCountries[defendingCountryIndex];
-		int numOfDiceAttacker;
-		int numOfDiceDefender;
-
-		/* Prompting the attacking player how many dice they wish to roll */
-		if(attackingCountry->country_GetNumArmies() == 2) {
-			cout << endl;
-			cout << "The attacker can only roll one die, as they only have two army units on the attacking country." << endl << endl;;
-			numOfDiceAttacker = 1;
-		}
-		else {
-			cout << "Attacker will roll 3 dice (REMINDER: " + std::to_string(attackingCountry->country_GetNumArmies()) + " units on your country)";
-			numOfDiceAttacker = 3;
-		}
-
-		/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
-		attackingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceAttacker);
-
-		/* Prompting the defending player how many dice they wish to roll */
-		if(defendingCountry->country_GetNumArmies() == 1) {
-			cout << endl;
-			cout << "The defender can only roll one die, as they only have one army unit on the defending country." << endl << endl;;
-			numOfDiceDefender = 1;
-		}
-
-		else {
-			string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, or 2. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
-
-			numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 2);
-
-		}
-
-		/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
-		defendingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceDefender);
-
-		/* Print out the dice rolling results */
-		cout << endl;
-		cout << "************************** DICE ROLL **************************" << endl << endl;
-		cout << endl;
-		cout << "Attacker rolled " << numOfDiceAttacker << " die/dice." << endl;
-		cout << "Defender rolled " << numOfDiceDefender << " die/dice." << endl;
-
-		cout << endl;
-
-		cout << "Attacker's dice: " << endl;
-		cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] << endl;
-		cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] << endl;
-		cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[2] << endl;
-
-		cout << endl;
-
-		cout << "Defender's dice: " << endl;
-		cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[0] << endl;
-		cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[1] << endl;
-		cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[2] << endl;
-
-
-		int numOfArmiesToMove = 0; // This will hold the number of armies to move if the attacker captures a country */
-		/* Logic block behind attacking from one country to another */
-		/* This outer if/else if algorithm determines which code block to run depending on the number of dice rolled by the attacker and defender */
-		if(numOfDiceAttacker == 1 && numOfDiceDefender == 1) {
-			if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
-				cout << "The attacker won the battle." << endl;
-				cout << "The defender has no more units on their country." << endl;
-
-				/* Note: Attacker's must leave behind at least 1 unit */
-				cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << ". Attacker has " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
-				numOfArmiesToMove = 1;
-
-				defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
-				defendingCountry->country_SetNumArmies(numOfArmiesToMove);
-				cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
-				capturedCountry = true;
-				defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
-				attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
-
-				p->attackOutcomeVictory = true;
-				p->successfulInvasion = true;
-				}
-			else {
-				cout << "The defender won the battle." << endl;
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-
-				p->attackOutcomeVictory = false;
-			}
-		}
-		else if(numOfDiceAttacker == 1 && numOfDiceDefender == 2) {
-			if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
-				cout << "The attacker won the battle." << endl;
-				defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
-
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = true;
-				p->successfulInvasion = false;
-			}
-			else {
-				cout << "The defender won the battle." << endl;
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = false;
-			}
-		}
-		else if(numOfDiceAttacker == 2 && numOfDiceDefender == 1) {
-			if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
-				cout << "The attacker won the battle." << endl;
-				cout << "The defender has no more units on their country." << endl;
-
-				/* Note: Attacker's must leave behind at least 1 unit */
-				cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
-				cin >> numOfArmiesToMove;
-
-
-				defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
-				defendingCountry->country_SetNumArmies(numOfArmiesToMove);
-				cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
-				capturedCountry = true;
-				defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
-				attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
-
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = true;
-				p->successfulInvasion = true;
-			}
-			else {
-				cout << "The defender won the battle." << endl;
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = false;
-				}
-			}
-			else if (numOfDiceAttacker == 2 && numOfDiceDefender == 2) {
-				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
-					cout << "The attacker won the first battle." << endl;
-					defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
-				}
-				else {
-					cout << "The defender won the first battle." << endl;
-					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-				}
-
-				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[1]) {
-					cout << "The attacker won the second battle." << endl;
-					defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
-				}
-				else {
-					cout << "The defender won the second battle." << endl;
-					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-				}
-
-				if(defendingCountry->country_GetNumArmies() == 0) {
-					cout << "The defender has no more units on their country." << endl;
-
-					/* Note: Attacker's must leave behind at least 1 unit */
-					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
-					numOfArmiesToMove = 1;
-
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
-					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
-					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
-					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
-					capturedCountry = true;
-					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
-					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
-
-					/* Variables sent to observers */
-					p->attackOutcomeVictory = true;
-					p->successfulInvasion = true;
-					}
-					else
+					if(adjacentCountries[n]->country_GetOwner() != p)
 					{
-						/* Variables sent to observers */
-						p->attackOutcomeVictory = false;
+						attackPossible = true;
 					}
 				}
-				else if(numOfDiceAttacker == 3 && numOfDiceDefender == 1) {
+			}
+		}
+
+		/* If attackPossible is false, then the loop stops */
+		if(!attackPossible)
+			break;
+
+		/* This loop will iterate through all the countries in the current player's collection */
+		for(int r = 0; r < p->myCollectionOfCountries.size(); r++)
+		{
+
+			/* Get enemy adjacent countries to the player's strongest country */
+			vector <Country *> adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[r]);
+			vector <Country *> adjacentCountriesToStrongestCOPY = adjacentCountriesToStrongest; // copy used to keep track of original indexes (due to deleting inside a vector)
+
+			for(int i = 0; i < adjacentCountriesToStrongestCOPY.size(); i ++)
+			{
+				/* If an adjacent country is current owned by the same player */
+				if(adjacentCountriesToStrongestCOPY[i]->country_GetOwner() == p)
+				{
+					/* Find the respective country inside the original vector */
+					for(int m = 0; m < adjacentCountriesToStrongest.size(); m++)
+					{
+						if(adjacentCountriesToStrongestCOPY[i] == adjacentCountriesToStrongest[m])
+						{
+							/* Erase that country from the original vector (this will be used to iterate through all the countries to attack) */
+							adjacentCountriesToStrongest.erase(adjacentCountriesToStrongest.begin() + m);
+						}
+					}
+				}
+			}
+
+			/* Keep attacking until, the current country has no more countries to attack or if the current country doesn't have enough armies to perform the attack  */
+			while(adjacentCountriesToStrongest.size() != 0 && p->player_getMyCountries()[r]->country_GetNumArmies() > 1)
+			{
+				int globalIndexOfStrongest; // this will hold the global index of the strongest country
+
+				/* This loop will find the global index of the strongest country */
+				for(int i = 0; i < rg->riskGame_getMap()->map_GetAllCountries().size(); i++){
+					if(rg->riskGame_getMap()->map_GetAllCountries()[i] == p->player_getMyCountries()[r])
+					{
+						globalIndexOfStrongest = i;
+					}
+				}
+
+				int attackingCountryIndex = globalIndexOfStrongest;
+				int defendingCountryIndex;
+
+				/* Find and set the current defending country's global index*/
+				for(int i = 0; i < rg->riskGame_getMap()->map_GetAllCountries().size(); i++){
+					if(rg->riskGame_getMap()->map_GetAllCountries()[i] == adjacentCountriesToStrongest[0])
+					{
+						defendingCountryIndex = i;
+					}
+				}
+
+				cout << "Attacking global Index: " << attackingCountryIndex << endl;
+				cout << "Defending global Index: " << defendingCountryIndex << endl;
+
+				/* Create a vector that will hold all countries in the game */
+				vector<Country *> vectorOfAllCountries = rg->riskGame_getMap()->map_GetAllCountries();
+
+				/* Print out the state of these countries */
+				cout << endl;
+				cout << "Attacking: " << vectorOfAllCountries[attackingCountryIndex]->country_GetName() << " has " << vectorOfAllCountries[attackingCountryIndex]->country_GetNumArmies() << " armies and belongs to " << vectorOfAllCountries[attackingCountryIndex]->country_GetOwner()->player_getPlayerName() << endl;
+				cout << "Defending: " << vectorOfAllCountries[defendingCountryIndex]->country_GetName() << " has " << vectorOfAllCountries[defendingCountryIndex]->country_GetNumArmies() << " armies and belongs to " << vectorOfAllCountries[defendingCountryIndex]->country_GetOwner()->player_getPlayerName()  << endl;
+
+				/* Variables sent to observers */
+				p->attackingCountry = vectorOfAllCountries[attackingCountryIndex];
+				p->attackedCountry = vectorOfAllCountries[defendingCountryIndex];
+				p->attackingCountryArmies = vectorOfAllCountries[attackingCountryIndex]->country_GetNumArmies();
+				p->attackedCountryArmies = vectorOfAllCountries[defendingCountryIndex]->country_GetNumArmies();
+
+				/* Preparing variables to perform the attacking process */
+
+				Country* attackingCountry = vectorOfAllCountries[attackingCountryIndex];
+				Country* defendingCountry = vectorOfAllCountries[defendingCountryIndex];
+				int numOfDiceAttacker;
+				int numOfDiceDefender;
+
+				/* Prompting the attacking player how many dice they wish to roll */
+				if(attackingCountry->country_GetNumArmies() == 2) {
+					cout << endl;
+					cout << "The attacker can only roll one die, as they only have two army units on the attacking country." << endl << endl;;
+					numOfDiceAttacker = 1;
+				}
+				else {
+					cout << "Attacker will roll 3 dice (REMINDER: " + std::to_string(attackingCountry->country_GetNumArmies()) + " units on your country)" << endl << endl;
+					numOfDiceAttacker = 3;
+				}
+
+				/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
+				attackingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceAttacker);
+
+				/* Prompting the defending player how many dice they wish to roll */
+				if(defendingCountry->country_GetNumArmies() == 1) {
+					cout << endl;
+					cout << "The defender can only roll one die, as they only have one army unit on the defending country." << endl << endl;;
+					numOfDiceDefender = 1;
+				}
+
+				else {
+					string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, or 2. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
+
+					numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 2);
+
+				}
+
+				/* Roll the appropriate number of dice in the attacking player's DiceRollingFacility object */
+				defendingCountry->country_GetOwner()->myDRF.diceRollingFacility_rollDice(numOfDiceDefender);
+
+				/* Print out the dice rolling results */
+				cout << endl;
+				cout << "************************** DICE ROLL **************************" << endl << endl;
+				cout << endl;
+				cout << "Attacker rolled " << numOfDiceAttacker << " die/dice." << endl;
+				cout << "Defender rolled " << numOfDiceDefender << " die/dice." << endl;
+
+				cout << endl;
+
+				cout << "Attacker's dice: " << endl;
+				cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] << endl;
+				cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] << endl;
+				cout << attackingCountry->country_GetOwner()->myDRF.resultsRolled[2] << endl;
+
+				cout << endl;
+
+				cout << "Defender's dice: " << endl;
+				cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[0] << endl;
+				cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[1] << endl;
+				cout << defendingCountry->country_GetOwner()->myDRF.resultsRolled[2] << endl;
+
+
+				int numOfArmiesToMove = 0; // This will hold the number of armies to move if the attacker captures a country */
+				/* Logic block behind attacking from one country to another */
+				/* This outer if/else if algorithm determines which code block to run depending on the number of dice rolled by the attacker and defender */
+				if(numOfDiceAttacker == 1 && numOfDiceDefender == 1) {
 					if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
 						cout << "The attacker won the battle." << endl;
 						cout << "The defender has no more units on their country." << endl;
 
 						/* Note: Attacker's must leave behind at least 1 unit */
-						cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << ". Attacker has " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
+						cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
 						numOfArmiesToMove = 1;
+
+						defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
+						defendingCountry->country_SetNumArmies(numOfArmiesToMove);
+						cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
+						capturedCountry = true;
+						defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
+						attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+
+						p->attackOutcomeVictory = true;
+						p->successfulInvasion = true;
+
+						/* Notify GameStatisticsObserver */
+						cout << endl;
+						rg->riskGame_getMap()->subject_Notify();
+						cout << endl;
+						}
+					else {
+						cout << "The defender won the battle." << endl;
+						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+
+						p->attackOutcomeVictory = false;
+					}
+				}
+				else if(numOfDiceAttacker == 1 && numOfDiceDefender == 2) {
+					if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
+						cout << "The attacker won the battle." << endl;
+						defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
+
+						/* Variables sent to observers */
+						p->attackOutcomeVictory = true;
+						p->successfulInvasion = false;
+					}
+					else {
+						cout << "The defender won the battle." << endl;
+						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+
+						/* Variables sent to observers */
+						p->attackOutcomeVictory = false;
+					}
+				}
+				else if(numOfDiceAttacker == 2 && numOfDiceDefender == 1) {
+					if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
+						cout << "The attacker won the battle." << endl;
+						cout << "The defender has no more units on their country." << endl;
+
+						/* Note: Attacker's must leave behind at least 1 unit */
+						cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
+						numOfArmiesToMove = 1;
+
 
 						defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
@@ -856,6 +845,11 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 						/* Variables sent to observers */
 						p->attackOutcomeVictory = true;
 						p->successfulInvasion = true;
+
+						/* Notify GameStatisticsObserver */
+						cout << endl;
+						rg->riskGame_getMap()->subject_Notify();
+						cout << endl;
 					}
 					else {
 						cout << "The defender won the battle." << endl;
@@ -863,59 +857,169 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 						/* Variables sent to observers */
 						p->attackOutcomeVictory = false;
+						}
+					}
+					else if (numOfDiceAttacker == 2 && numOfDiceDefender == 2) {
+						if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
+							cout << "The attacker won the first battle." << endl;
+							defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
+						}
+						else {
+							cout << "The defender won the first battle." << endl;
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+						}
+
+						if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[1]) {
+							cout << "The attacker won the second battle." << endl;
+							defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
+						}
+						else {
+							cout << "The defender won the second battle." << endl;
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+						}
+
+						if(defendingCountry->country_GetNumArmies() == 0) {
+							cout << "The defender has no more units on their country." << endl;
+
+							/* Note: Attacker's must leave behind at least 1 unit */
+							cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
+							numOfArmiesToMove = 1;
+
+							defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
+							defendingCountry->country_SetNumArmies(numOfArmiesToMove);
+							cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
+							capturedCountry = true;
+							defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
+							attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+
+							/* Variables sent to observers */
+							p->attackOutcomeVictory = true;
+							p->successfulInvasion = true;
+
+							/* Notify GameStatisticsObserver */
+							cout << endl;
+							rg->riskGame_getMap()->subject_Notify();
+							cout << endl;
+							}
+							else
+							{
+								/* Variables sent to observers */
+								p->attackOutcomeVictory = false;
+							}
+						}
+						else if(numOfDiceAttacker == 3 && numOfDiceDefender == 1) {
+							if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
+								cout << "The attacker won the battle." << endl;
+								cout << "The defender has no more units on their country." << endl;
+
+								/* Note: Attacker's must leave behind at least 1 unit */
+								cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
+								numOfArmiesToMove = 1;
+
+								defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+								attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
+								defendingCountry->country_SetNumArmies(numOfArmiesToMove);
+								cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
+								capturedCountry = true;
+								defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
+								attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+
+								/* Variables sent to observers */
+								p->attackOutcomeVictory = true;
+								p->successfulInvasion = true;
+
+								/* Notify GameStatisticsObserver */
+								cout << endl;
+								rg->riskGame_getMap()->subject_Notify();
+								cout << endl;
+							}
+							else {
+								cout << "The defender won the battle." << endl;
+								attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+
+								/* Variables sent to observers */
+								p->attackOutcomeVictory = false;
+							}
+						}
+					else if (numOfDiceAttacker == 3 && numOfDiceDefender == 2) {
+						p->attackOutcomeVictory = true;
+						if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
+							cout << "The attacker won the first battle." << endl;
+							defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
+						}
+						else {
+							cout << "The defender won the first battle." << endl;
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+							/* Variables sent to observers */
+							p->attackOutcomeVictory = false;
+						}
+
+						if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[1]){
+							cout << "The attacker won the second battle." << endl;
+							defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
+						}
+						else {
+							cout << "The defender won the second battle." << endl;
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
+							/* Variables sent to observers */
+							p->attackOutcomeVictory = false;
+						}
+
+						if(defendingCountry->country_GetNumArmies() == 0) {
+							cout << " gg..." << endl;
+							cout << "The defender has no more units on their country." << endl;
+
+							/* Note: Attacker's must leave behind at least 1 unit */
+							cout << "Attacker would like to move 1 unit to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
+							numOfArmiesToMove = 1;
+
+							defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
+							defendingCountry->country_SetNumArmies(numOfArmiesToMove);
+							cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl << endl;
+							defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
+							attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+
+							/* Variables sent to observers */
+							p->attackOutcomeVictory = true;
+							p->successfulInvasion = true;
+
+							/* Notify GameStatisticsObserver */
+							cout << endl;
+							rg->riskGame_getMap()->subject_Notify();
+							cout << endl;
+						}
+				}
+				/* Get enemy adjacent countries to the player's strongest country */
+				adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[r]);
+
+				vector <Country *> adjacentCountriesToStrongestCOPY2 = adjacentCountriesToStrongest;
+				for(int i = 0; i < adjacentCountriesToStrongestCOPY2.size(); i ++)
+				{
+					if(adjacentCountriesToStrongestCOPY2[i]->country_GetOwner() == p)
+					{
+						for(int m = 0; m < adjacentCountriesToStrongest.size(); m++)
+						{
+							if(adjacentCountriesToStrongestCOPY2[i] == adjacentCountriesToStrongest[m])
+							{
+								adjacentCountriesToStrongest.erase(adjacentCountriesToStrongest.begin() + m);
+							}
+						}
 					}
 				}
-				else if (numOfDiceAttacker == 3 && numOfDiceDefender == 2) {
-					if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[0] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[0]) {
-						cout << "The attacker won the first battle." << endl;
-						defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
-				}
-				else {
-					cout << "The defender won the first battle." << endl;
-					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-				}
-
-				if(attackingCountry->country_GetOwner()->myDRF.resultsRolled[1] > defendingCountry->country_GetOwner()->myDRF.resultsRolled[1]){
-					cout << "The attacker won the second battle." << endl;
-					defendingCountry->country_SetNumArmies(defendingCountry->country_GetNumArmies() - 1);
-				}
-				else {
-					cout << "The defender won the second battle." << endl;
-					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - 1);
-				}
-
-				if(defendingCountry->country_GetNumArmies() == 0) {
-					cout << "The defender has no more units on their country." << endl;
-
-				/* Note: Attacker's must leave behind at least 1 unit */
-				cout << "Attacker would like to moe 1 unit to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << ". Attacker has " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
-				numOfArmiesToMove = 1;
-
-				defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
-				attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
-				defendingCountry->country_SetNumArmies(numOfArmiesToMove);
-				cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl << endl;
-				capturedCountry = true;
-				defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
-				attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
-
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = true;
-				p->successfulInvasion = true;
-			}
-			else
-			{
-				/* Variables sent to observers */
-				p->attackOutcomeVictory = false;
+				/* Notify all observers */
+				p->subject_Notify();
 			}
 		}
-	}while(rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[maxIndex]).size()!= adjacentCountriesToStrongest.size() && p->player_getMyCountries()[maxIndex]->country_GetNumArmies()> 1);
-	/* Notify all observers */
-	p->subject_Notify();
+	}
 
+	/* Draw if a country was captured during the attack phase */
+	if(capturedCountry)
+		p->myHand.hand_addCardToHand(rg->riskGame_getDeck()->deck_draw());
 
-
-	return;
+	cout << endl;
+	cout << "Attack End" << endl << endl;
 }
 
 void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
@@ -948,7 +1052,6 @@ void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 	cout << endl;
 
-
 	cout << "Exchange Phase:" << endl;
 	/* Exchange if it is possible */
 	newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
@@ -966,8 +1069,6 @@ void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 	/* Variables sent to observers */
 	p->totalReinforcementCount = newArmiesCount;
-
-	cout << "List of my countries:" << endl << endl;
 
 	/* Display the whole board */
 	rg->riskGame_showStateOfGame();
@@ -992,6 +1093,55 @@ void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void AggressivePhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	bool fortyingPossible = false;
+	cout << "- AGGRESSIVE STRATEGY -" << endl;
+	cout << "FORTIFICATION PHASE" << endl;
+	cout << "Fortification Start" << endl << endl;
+	/* Find the strongest country */
+	/* Index (Country) with the highest amount of armies */
+	int maxIndex = 0;
+	/* Iterate until we find a country with an amount of armies higher than the current max index */
+	for(int i = 1; i < p->player_getMyCountries().size(); i++)
+	{
+		if(p->player_getMyCountries()[i]->country_GetNumArmies() > p->player_getMyCountries()[maxIndex]->country_GetNumArmies())
+			maxIndex = i;
+	}
+
+	/* This vector will store all adjacent countries of the strongest one */
+	vector <Country *> adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[maxIndex]);
+
+	for(int i = 0; i < adjacentCountriesToStrongest.size(); i ++)
+	{
+		/* Filter out the countries that are not owned by the same player */
+		if(adjacentCountriesToStrongest[i]->country_GetOwner() == p)
+		{
+			/* Filter out the countries that do not have enough units to send */
+			if(adjacentCountriesToStrongest[i]->country_GetNumArmies() > 2)
+			{
+				/* Algorithm to transfer units from one country to another */
+				p->fortifyingCountryArmies = adjacentCountriesToStrongest[i]->country_GetNumArmies();
+				p->fortifiedCountryArmies = p->player_getMyCountries()[maxIndex]->country_GetNumArmies();
+				p->player_transferMaxArmy(adjacentCountriesToStrongest[i], p->player_getMyCountries()[maxIndex]);
+				p->fortifyingCountry = adjacentCountriesToStrongest[i];
+				p->fortifiedCountry = p->player_getMyCountries()[maxIndex];
+				cout << "Successfully sent " << (adjacentCountriesToStrongest[i]->country_GetNumArmies() - 1)  << " army units from " << adjacentCountriesToStrongest[i]->country_GetName() << " to " << p->player_getMyCountries()[maxIndex]->country_GetName();
+				/* Variables sent to observers */
+				p->amountToFortify = adjacentCountriesToStrongest[i]->country_GetNumArmies() - 1;
+				/* Notify all observers */
+				p->subject_Notify();
+				fortyingPossible = true;
+				break; // can only fortify once
+			}
+		}
+	}
+	if(fortyingPossible ==  false){
+		cout << "NO FORTIFICATION POSSIBLE!" << endl << endl;
+
+	}
+
+	cout << endl;
+	cout << "Fortification End" << endl << endl;
+
 	return;
 }
 
@@ -1004,7 +1154,8 @@ void BenevolentPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 	cout << "ATTACK PHASE:" << endl;
 	cout << "Attack Start" << endl << endl;
 
-	cout << "As a benevolent, you do not wish to attack at this time." << endl;
+	/* A benevolent strategist does not attack */
+	cout << "As a benevolent strategist, you do not wish to attack at this time." << endl;
 
 	cout << endl;
 	cout << "Attack End " << endl << endl;
@@ -1049,43 +1200,10 @@ void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 	cout << endl;
 
-	/* If player's hand has 5 or more cards, they MUST exchange for armies */
-	while(p->myHand.hand_getHandOfCards().size() > 4) {
-		cout << "Forced Exchange Phase:" << endl;
-		cout << "You have at least 5 cards in your hand, therefore you must trade in a set." << endl;
-		newArmiesCount = newArmiesCount + p->myHand.hand_exchange(rg); // exchange(currentMap) will modify the hand of the player, thus decrementing their hand size
-
-	}
+	cout << "Exchange Phase:" << endl;
+	/* Exchange if it is possible */
+	newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
 	cout << endl;
-
-
-	bool exchangePhaseDoneFlag = false;	// flag used to keep exchanging until a player wishes not to
-
-	while(!exchangePhaseDoneFlag)
-	{
-		cout << "Optional Exchange Phase:" << endl;
-
-		/* Prompt the user whether he wants to exchange cards or not */
-		string exchangeMessage = "Would you like to exchange a set of cards?\nEnter 0, for no\nEnter 1, for yes\nEnter 2, to see your personal board\nEnter 3 to see the global board";
-		int exchangeAnswer = UserInterface::userInterface_getIntegerBetweenRange(exchangeMessage, 0, 3);
-
-		if(exchangeAnswer == 1)
-		{
-			newArmiesCount = newArmiesCount + p->myHand.hand_exchange(rg);
-		}
-		else if(exchangeAnswer == 2)
-		{
-			rg->riskGame_showStateOfPlayer(p);	// show player's board
-		}
-		else if(exchangeAnswer == 3)
-		{
-			rg->riskGame_showStateOfGame(); // show the whole board
-		}
-		else
-		{
-			exchangePhaseDoneFlag = true;
-		}
-	}
 
 	/* This loop will run as long as the player did not place all their additional reinforcement units */
 	while(newArmiesCount != 0){
@@ -1104,7 +1222,7 @@ void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 			}
 		}
 
-		/* Code block that adds 1 unit to the first occurence of country that has the minimum amount of army units */
+		/* Code block that adds 1 unit to the first occurrence of country that has the minimum amount of army units */
 		for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
 		{
 			if (p->myCollectionOfCountries[i]->country_GetNumArmies() == minNumOfArmies)
