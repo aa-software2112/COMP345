@@ -1211,10 +1211,10 @@ void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 		/* Variables sent to observers */
 		p->totalReinforcementCount = newArmiesCount;
 
-		unsigned int minNumOfArmies = 1;	// smallest minNumOfArmies is 1 by default
+		unsigned int minNumOfArmies = p->myCollectionOfCountries[0]->country_GetNumArmies();	// smallest minNumOfArmies is 1 by default
 
 		/* Code block that calculates the smallest number of army units on one country in the player's collection */
-		for(unsigned int i = 0; i < p->myCollectionOfCountries.size(); i++)
+		for(unsigned int i = 1; i < p->myCollectionOfCountries.size(); i++)
 		{
 			if (p->myCollectionOfCountries[i]->country_GetNumArmies() < minNumOfArmies)
 			{
