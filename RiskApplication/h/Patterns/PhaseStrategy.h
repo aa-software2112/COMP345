@@ -32,6 +32,24 @@ public:
 
 };
 
+class RandomPhaseStrategy: public PhaseStrategy {
+
+public:
+	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
+	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
+	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+
+};
+
+class CheaterPhaseStrategy: public PhaseStrategy {
+
+public:
+	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
+	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
+	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+
+};
+
 class HumanPhaseStrategy: public PhaseStrategy {
 
 public:

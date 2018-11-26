@@ -476,7 +476,7 @@ int main()
 
 	RiskGame *r = new RiskGame();
 
-	r->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles";
+	r->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
 
 	/* Uncomment this to test Part 3 */
 	// r->riskGame_start();
@@ -498,7 +498,7 @@ int main()
 
 	RiskGame *driver = new RiskGame();
 
-	driver->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles";
+	driver->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
 
 	driver->riskGame_initializeGame();
 

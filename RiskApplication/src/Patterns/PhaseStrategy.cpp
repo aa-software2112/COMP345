@@ -5,6 +5,44 @@
 #include "RiskGame.h"
 #include "GameStatisticsObserver.h"
 
+
+/** Implement the following functions for Random attacks,
+ * reinforcements and fortifications
+ * */
+void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+void RandomPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+void RandomPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+/** Implement the following functions for Cheater attacks,
+ * reinforcements and fortifications
+ * */
+void CheaterPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+void CheaterPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+void CheaterPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
+{
+	return;
+}
+
+
 /** Implement the following functions for Human attacks,
  * reinforcements and fortifications
  * */
@@ -1310,4 +1348,8 @@ void BenevolentPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 		}
 	}
 }
+
+
+
+
 
