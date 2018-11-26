@@ -10,6 +10,26 @@ Continent::Continent(string continentName, int bonusValue)
 
 }
 
+bool Continent::continent_playerOwnsContinent(Player *p)
+{
+
+
+	for (map<string,Country*>::iterator it=mapOfCountries.begin(); it!=mapOfCountries.end(); ++it)
+	{
+		Country * c = (it->second);
+
+		/** Player does not own this country */
+		if (c->country_GetOwner() != p)
+		{
+			return false;
+		}
+
+	}
+
+	return true;
+}
+
+
 void Continent::continent_AddLinkToCountry(Country * country)
 {
 
@@ -70,5 +90,10 @@ ostream &operator<<(ostream& strm, const Continent& continent)
 	strm << "CONTINENT_NAME: " << continent.continentName << " BONUS_VALUE: " << continent.bonusValue << "\n" ;
 	return strm;
 
+}
+
+int Continent::continent_getBonusValue(void)
+{
+	return this->bonusValue;
 }
 

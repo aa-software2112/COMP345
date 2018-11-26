@@ -1,48 +1,38 @@
 /*
- * CONTINENT.h
+ * SUBJECT.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_CONTINENT_H_
-#define H_CONTINENT_H_
+#ifndef H_SUBJECT_H_
+#define H_SUBJECT_H_
 
-
-#include <map>
-#include <regex>
 #include "Utilities.h"
-#include "Graph.h"
 using namespace std;
 
-class Country;
+#include <list>
 
-class Continent {
-	public:
-		/** Constructor **/
-		Continent(string continentName, int bonusValue);
-		void continent_AddLinkToCountry(Country * country);
-		void continent_AddLinkToVertex(Graph<Country, string>::Vertex * vertex);
-		void continent_DisplayCountries(void);
-		UINT continent_GetNumberOfCountries(void);
-		set<Graph<Country, string>::Vertex *> continent_GetVerticesAsSet(void);
-		string continent_GetContinentName(void);
-
-	private:
-		friend ostream &operator<<(ostream&, const Continent&);
-
-		/** TODO, implement as Vertex<Country> */
-		map<string, Country *> mapOfCountries;
-		map<string, Graph<Country, string>::Vertex *> mapOfVerticesOfContinent;
-		string continentName;
-		int bonusValue;
-
-};
-
+class Observer;
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
  ***************************************************************/
+class Subject {
+
+	/** The subject of all observers */
+public:
+	virtual void subject_Attach(Observer *o);
+	virtual void subject_Detach(Observer *o);
+	virtual void subject_Notify();
+	Subject();
+	virtual ~Subject();
+private:
+	list<Observer*> * subject_Observers;
+
+};
+
+
 
 /***************************************************************
  * 						PUBLIC TYPEDEFS
@@ -58,9 +48,9 @@ class Continent {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where CONTINENT_LOCAL isn't defined.
+ * exposed to other source files where SUBJECT_LOCAL isn't defined.
  * */
-#ifdef CONTINENT_LOCAL
+#ifdef SUBJECT_LOCAL
 
 
 /***************************************************************
@@ -84,4 +74,4 @@ class Continent {
 
 
 
-#endif /* H_CONTINENT_H_ */
+#endif /* H_SUBJECT_H_ */

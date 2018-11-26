@@ -1,24 +1,48 @@
 /*
- * UTILITIES.h
+ * GAME_STATISTICS_OBSERVER.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_UTILITIES_H_
-#define H_UTILITIES_H_
+#ifndef H_GAME_STATISTICS_OBSERVER_H_
+#define H_GAME_STATISTICS_OBSERVER_H_
 
+#include "Utilities.h"
+#include "Observer.h"
+#include "Map.h"
 #include <iostream>
-#include <vector>
+#include <iomanip>
+using namespace std;
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
  ***************************************************************/
 
+/** This class is the observer of the Map class; it will obtain the
+ * status of the current map by calling map_getPlayerToCountryMapping()
+ * which returns a map of player pointers to a list of countries it owns, from which
+ * the percentage map ownership can be easily calculated.
+ */
+class GameStatisticsObserver: public Observer {
+
+public:
+	virtual void observer_Update(void);
+	void gameStatObs_setSubject(Map *m);
+
+private:
+	/** The subject of map type */
+	Map *subject;
+
+
+};
+
+
+
 /***************************************************************
  * 						PUBLIC TYPEDEFS
  ***************************************************************/
-typedef unsigned int UINT;
+
 /***************************************************************
  * 						PUBLIC GLOBALS
  ***************************************************************/
@@ -26,24 +50,18 @@ typedef unsigned int UINT;
 /***************************************************************
  * 						PUBLIC FUNCTIONS
  ***************************************************************/
-void print(const std::string& str);
-void print(std::vector<std::string>& vector);
-void splitString(std::string& stringToSplit, std::string& delimiter, std::vector<std::string>& container);
-bool isNumeric(std::string& str);
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where UTILITIES_LOCAL isn't defined.
+ * exposed to other source files where GAME_STATISTICS_OBSERVER_LOCAL isn't defined.
  * */
-#ifdef UTILITIES_LOCAL
+#ifdef GAME_STATISTICS_OBSERVER_LOCAL
 
 
 /***************************************************************
  * 						PRIVATE DEFINITIONS
  ***************************************************************/
-void removeLeadingWhitespace(std::string& stringToParse);
-void removeTrailingWhitespace(std::string& stringToParse);
-void removeEdgeWhitespace(std::string& stringToParse);
+
 /***************************************************************
  * 						PRIVATE TYPEDEFS
  ***************************************************************/
@@ -61,4 +79,4 @@ void removeEdgeWhitespace(std::string& stringToParse);
 
 
 
-#endif /* H_UTILITIES_H_ */
+#endif /* H_GAME_STATISTICS_OBSERVER_H_ */

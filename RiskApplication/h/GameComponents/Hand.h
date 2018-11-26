@@ -11,13 +11,17 @@
 #include <vector>
 #include "Card.h"
 
+class RiskGame;
 class Hand{
 public:
 	Hand();
-	void addCardToHand(Card* cardToAdd);
-	void removeCardFromHand(Card* cardToRemove);
-	vector<Card*> getHandOfCards();
-	int getNumberOfCards();
+	void hand_addCardToHand(Card* cardToAdd);
+	void hand_removeCardFromHand(Card* cardToRemove);
+	vector<Card*> hand_getHandOfCards();
+	int hand_getNumberOfCards();
+	int hand_exchange(RiskGame* currentGame);
+	void hand_showHand();
+	int hand_autoExchange(RiskGame *currentGame);
 private:
 	std::vector<Card*> handOfCards;
 

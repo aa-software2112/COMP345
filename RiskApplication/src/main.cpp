@@ -14,9 +14,17 @@
 #include "Deck.h"
 #include "Card.h"
 #include "Hand.h"
+#include "RiskGame.h"
+#include "PhaseStrategy.h"
+#include "GameStatisticsObserver.h"
 
-int main()
+/**
+ * Code contains all the driver functions used in demonstrating assignment 1
+ * **/
+int assignment1Driver(void)
 {
+
+
 	/************************************************
 	 *
 	 * Map Loader & Graph
@@ -24,7 +32,7 @@ int main()
 	 ***********************************************/
 
 	/** Change this path to comply with your filesystem (make sure there is a trailing forward slash) */
-	string basePathToMapFolder = "C:\\Users\\Anthony Andreoli\\Desktop\\Concordia\\2018 - FALL\\COMP 345\\REPOSITORY\\COMP345\\RiskApplication\\MapFiles/";
+	string basePathToMapFolder = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
 
 	string mapFiles[] = {basePathToMapFolder + "World.map", \
 							basePathToMapFolder + "Annys World.map", \
@@ -121,46 +129,46 @@ int main()
 	Player tempPlayer("DiceTester");
 
 	cout << "First player rolls 1 die" << endl;
-	tempPlayer.player_getMyDRF()->rollDice(1);
+	tempPlayer.player_getMyDRF()->diceRollingFacility_rollDice(1);
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "First player rolls 2 dice" << endl;
-	tempPlayer.player_getMyDRF()->rollDice(2);
+	tempPlayer.player_getMyDRF()->diceRollingFacility_rollDice(2);
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "First player rolls 3 dice" << endl;
-	tempPlayer.player_getMyDRF()->rollDice(3);
+	tempPlayer.player_getMyDRF()->diceRollingFacility_rollDice(3);
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer.player_getMyDRF()->resultsRolled[2] << endl;
 
-	tempPlayer.player_getMyDRF()->printPlayerDiceStatistics();
+	tempPlayer.player_getMyDRF()->diceRollingFacility_printPlayerDiceStatistics();
 
 	Player tempPlayer2("DiceTester2");
 
 	cout << "Second player rolls 1 die" << endl;
-	tempPlayer2.player_getMyDRF()->rollDice(1);
+	tempPlayer2.player_getMyDRF()->diceRollingFacility_rollDice(1);
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "Second player rolls 2 dice" << endl;
-	tempPlayer2.player_getMyDRF()->rollDice(2);
+	tempPlayer2.player_getMyDRF()->diceRollingFacility_rollDice(2);
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
 	cout << "Second player rolls 3 dice" << endl;
-	tempPlayer2.player_getMyDRF()->rollDice(3);
+	tempPlayer2.player_getMyDRF()->diceRollingFacility_rollDice(3);
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[0] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[1] << endl;
 	cout << tempPlayer2.player_getMyDRF()->resultsRolled[2] << endl;
 
-	tempPlayer2.player_getMyDRF()->printPlayerDiceStatistics();
+	tempPlayer2.player_getMyDRF()->diceRollingFacility_printPlayerDiceStatistics();
 
 
 	/************************************************
@@ -187,22 +195,22 @@ int main()
 		allCountries[z]->country_SetNumArmies(1); // Initiating the number of armies of each country to 1
 
 		if(rotate == 0) {
-			player1.addCountry(allCountries[z]);
+			player1.player_addCountry(allCountries[z]);
 			allCountries[z]->country_SetOwner(&player1);
 			rotate++;
 		} else if (rotate == 1)
 		{
-			player2.addCountry(allCountries[z]);
+			player2.player_addCountry(allCountries[z]);
 			allCountries[z]->country_SetOwner(&player2);
 			rotate++;
 		}
 		else if (rotate == 2) {
-			player3.addCountry(allCountries[z]);
+			player3.player_addCountry(allCountries[z]);
 			allCountries[z]->country_SetOwner(&player3);
 			rotate++;
 		}
 		else {
-			player4.addCountry(allCountries[z]);
+			player4.player_addCountry(allCountries[z]);
 			allCountries[z]->country_SetOwner(&player4);
 			rotate = 0;
 		}
@@ -238,15 +246,15 @@ int main()
 
 	/* Manually adding the first 6 cards to player1's hand (not drawing) to test the reinforce function (has to trade cards for armies at the start) */
 
-	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[0]);
-	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[1]);
-	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[2]);
-	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[3]);
-	player1.player_getMyHand()->addCardToHand(&testPlayerDeck.get_deck()[4]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[0]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[1]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[2]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[3]);
+	player1.player_getMyHand()->hand_addCardToHand(testPlayerDeck.deck_getDeck()[4]);
 
 
 	/* Test the reinforce function */
-	player1.reinforce(newMap);
+	//player1.reinforce(newMap);
 
 	/* Showing the current state of the board (Name of country, number of armies on it and owner) */
 	for(unsigned int z = 0; z < allCountries.size(); z++){
@@ -254,7 +262,7 @@ int main()
 	}
 
 	/* Test the attack function */
-	player1.attack(newMap);
+	//player1.attack(newMap);
 
 	/* Showing the current state of the board (Name of country, number of armies on it and owner) */
 	for(unsigned int z = 0; z < allCountries.size(); z++){
@@ -276,7 +284,7 @@ int main()
 	allCountries[18]->country_SetNumArmies(5);
 
 	/* Test the fortify function */
-	player1.fortify(newMap);
+	//player1.fortify(newMap);
 
 	cout << endl;
 	cout << endl;
@@ -303,49 +311,200 @@ int main()
 	Deck newDeck(allCountries.size());
 
 	/* Printing type of each card in deck */
-	for (int i = 0; i < newDeck.get_numCards(); i++) {
+	for (int i = 0; i < newDeck.deck_getDeckSize(); i++) {
 
-		newDeck.get_deck()[i].printType();
+		newDeck.deck_getDeck()[i]->card_printType();
 
 	}
 
 	cout << endl;
 
 	/* Print out the number of cards in the deck */
-	cout << "Deck has " << newDeck.get_numCards() << " cards" << endl;
+	cout << "Deck has " << newDeck.deck_getDeckSize() << " cards" << endl;
 
 	cout << endl;
 
 	cout << "Drawing top card..." << endl;
 
 	/* Draw the top card of the deck and print out its type */
-	newDeck.draw().printType();
+	newDeck.deck_draw()->card_printType();
 
 	cout << endl;
 
 	/* Print out the new number of cards in the deck after drawing the top card */
-	cout << "Deck has " << newDeck.get_numCards() << " cards" << endl;
+	cout << "Deck has " << newDeck.deck_getDeckSize() << " cards" << endl;
 
 	/* Manually adding the first 6 cards to player1's hand (not drawing)*/
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[0]);
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[1]);
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[2]);
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[3]);
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[4]);
-	player4.player_getMyHand()->addCardToHand(&newDeck.get_deck()[5]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[0]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[1]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[2]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[3]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[4]);
+	player4.player_getMyHand()->hand_addCardToHand(newDeck.deck_getDeck()[5]);
 
 	/* Display the current cards in player1's hand */
 	cout << endl;
 	cout << "Player4's hand: " << endl;
-	for(unsigned int d = 0; d < player4.player_getMyHand()->getHandOfCards().size();d++) {
-		player4.player_getMyHand()->getHandOfCards()[d]->printType();
+	for(unsigned int d = 0; d < player4.player_getMyHand()->hand_getHandOfCards().size();d++) {
+		player4.player_getMyHand()->hand_getHandOfCards()[d]->card_printType();
 	}
 	cout << endl;
 	/* Testing the exchange function (trading in cards for armies), this will check the player's
 	 * hand for a matching set and will return an integer (number of armies given) based on the total number of sets handed in during the game (variable stored in Map for now) */
-	cout << "From player1's current hand, they receive " << player4.exchange(newMap) << " army units." << endl;
+	//cout << "From player1's current hand, they receive " << player4.exchange(newMap) << " army units." << endl;
 
 	return 0;
+
+}
+
+/**
+ * Code contains all the driver functions used in demonstrating assignment 2
+ * **/
+enum Assignment2_PartToTest {
+	GAME_START,
+	GAME_STARTUP_PHASE,
+	MAIN_GAME_LOOP,
+	REINFORCEMENT_ATTACK_FORTIFICATION_PHASE
+};
+
+int assignment2Driver(void)
+{
+	/** Set the path to map files before running tests */
+	RiskGame driver;
+
+	driver.pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+
+
+	/** Select type of test */
+	Assignment2_PartToTest partToTest = MAIN_GAME_LOOP;
+
+	switch(partToTest)
+	{
+
+		/** Both tests are the same */
+		case GAME_START ... GAME_STARTUP_PHASE:
+
+		/* ***************************** PART 1 ***************************** */
+
+		/* Driver for part 1 - Game Start:
+		 * 1) Different valid maps can be loaded and their validity is verified (i.e. it is a connected graph, etc), and invalid maps are gracefully rejected
+		 * 2) The right number of players is created, a deck with the right number of cards is created.
+		 */
+
+		/* ***************************** PART 2 ***************************** */
+
+		/* Driver for part 2 - Startup Phase:
+		 * 1) All countries in the map have been assigned to one and only one player
+		 * 2) All players have eventually placed the right number of armies on their own countries after army placement is over.
+		 */
+
+
+			driver.riskGame_initializeGame();
+			driver.riskGame_showStateOfGame();
+			break;
+
+		/* ***************************** PART 3 ***************************** */
+
+		/* Driver for part 3 - Main Game Loop:
+		 * 1) Every player gets turns in a round-robin fashion and that their reinforcement(), attack() and fortification() methods are called
+		 * 2) The game ends when a player controls all the countries (the driver should explicitly give all the countries to one player.
+		 */
+		case MAIN_GAME_LOOP:
+
+			driver.riskGame_initializeGame();
+
+			/* Used to run the main game loop across all players once,
+			 * (normally riskGame_playGame() would be called which would make the rotation loop until a winner is found */
+			for(unsigned int i = 0; i < driver.riskGame_getPlayers().size(); i++)
+			{
+				driver.riskGame_playerTurn(driver.riskGame_getPlayers()[i]);
+			}
+
+			/* Assign all countries to the first player to trigger the win condition */
+			driver.riskGame_giveAllCountriesToPlayer(driver.riskGame_getPlayers()[0]);
+			driver.riskGame_playGame();
+
+			break;
+
+		/* ***************************** PART 4,5,6 ***************************** */
+
+		/* Driver for part 4,5,6 - Reinforcement, Attack, Fortification Phase:
+		 */
+
+		case REINFORCEMENT_ATTACK_FORTIFICATION_PHASE:
+
+
+			driver.riskGame_initializeGame();
+			driver.riskGame_giveAllCountriesButOneToPlayer(driver.riskGame_getPlayers()[0], driver.riskGame_getPlayers()[1]);
+			driver.riskGame_playGame();
+			break;
+
+		default:
+			break;
+
+	}
+
+	return 0;
+}
+
+int main()
+{
+
+	/* PART 1: Player Strategy Pattern
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * During every turn, you are given the option to choose which strategy you would like to adapt.
+	 *
+	 * (1) different players can be assigned different strategies that lead to different behavior
+	 * for the reinforcement, attack, and fortification phases using the strategy pattern;
+	 * (2) the strategy adopted by a player can be changed dynamically during play,
+	 * (3) the human player makes decisions according to user interaction, and computer players make decisions automatically,
+	 * which are both implemented using the strategy pattern.
+	 */
+
+
+	/* PART 2: Phase Observer
+	 *
+	 * (1) the information displayed by the phase view is cleared every time the phase is changing
+	 * (2) the phase view is displaying the correct player:phase information as soon as the phase changes;
+	 * (3) the phase view displays relevant information which is different for every phase.
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * Playout the turns, and you will be able to see (in the observer update) whose turn it is and other relevant info
+	 */
+
+
+	RiskGame *r = new RiskGame();
+
+	r->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+
+	/* Uncomment this to test Part 3 */
+	// r->riskGame_start();
+
+	/* PART 3: Game Statistics Observer
+	 *
+	 * (1) the game statistics view updates itself every time a country has been conquered by a player;
+	 * (2) the game statistics updates itself when a player has been eliminated and removes this player from the view;
+	 * (3) as soon as a player owns all the countries, the game statistics view updates itself and displays a celebratory message
+	 *
+	 * This driver can be proven through basic gameplay.
+	 * Playout the turns, and you will be able to see (in the observer update) whose turn it is and other relevant info
+	 */
+
+
+	/* For (1), just play out the game for a bit, whenever a country is captured, a message from Game Statistics Observer should be printed */
+
+	/* For (2), (3) */
+
+	RiskGame *driver = new RiskGame();
+
+	driver->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+
+	driver->riskGame_initializeGame();
+
+	/* Assign all countries to the first player to trigger the win condition */
+	driver->riskGame_giveAllCountriesButOneToPlayer(driver->riskGame_getPlayers()[0], driver->riskGame_getPlayers()[1]);
+	driver->riskGame_playGame();
 }
 
 

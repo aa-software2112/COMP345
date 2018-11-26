@@ -24,7 +24,6 @@ typename Graph<V, E>::Vertex * Graph<V, E>::graph_InsertVertex(V * element)
 template <class V, class E>
 void Graph<V, E>::graph_DisplayGraph()
 {
-	int i = 0; // unused?
 
 	/** For each vertex u */
 	for(unsigned i = 0; i<this->vertices.size(); i++)

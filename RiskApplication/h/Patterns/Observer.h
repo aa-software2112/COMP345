@@ -1,52 +1,35 @@
 /*
- * MAP.h
+ * OBSERVER.h
  *
  *  Created on: Sep. 23, 2018
  *      Author: Anthony Andreoli
  */
 
-#ifndef H_MAP_H_
-#define H_MAP_H_
+#ifndef H_OBSERVER_H_
+#define H_OBSERVER_H_
 
-#include <map>
-#include <regex>
-#include <locale>
-#include "Continent.h"
-#include "Country.h"
-#include "Graph.h"
 #include "Utilities.h"
 using namespace std;
 
-class Map {
-	public:
-		int setsTraded = 0;
-		/** Constructor **/
-		Map();
-		bool map_AddListToMapConfig(vector<string>& keyValueString);
-		bool map_AddListToContinents(vector<string>& keyValueString);
-		bool map_AddListToCountries(vector<string>& keyValueString);
-		void map_DisplayAllContinentSizes(void);
-		bool map_AllContinentsConnectedSubgraphs(void);
-		bool map_IsValidMap(void);
-		vector<Country *> map_GetCountriesAdjacentTo(Country * someCountry);
-		vector<Country *> map_GetAllCountries(void);
-		bool map_IsConnected(void);
+#include <list>
 
-	private:
-		/** Graph where nodes contain countries, and edges contain strings */
-		Graph<Country, string> graph;
-		map<string, string> mapConfig;
-		map<string, Continent*> mapContinents;
-		map<string, Country*> mapCountries;
-		map<string, Graph<Country, string>::Vertex *> mapVertex;
-		void map_DisplayMapConfig(void);
-		void map_DisplayContinents(void);
-
-};
+class Observer;
 
 /***************************************************************
  * 						PUBLIC DEFINITIONS
  ***************************************************************/
+class Observer {
+
+public:
+	~Observer();
+	virtual void observer_Update() = 0;
+
+protected:
+	Observer();
+
+};
+
+
 
 /***************************************************************
  * 						PUBLIC TYPEDEFS
@@ -62,9 +45,9 @@ class Map {
 
 /** Include this at the top of source file that shares the
  * name with this header file; hides certain members that shouldn't be
- * exposed to other source files where MAP_LOCAL isn't defined.
+ * exposed to other source files where OBSERVER_LOCAL isn't defined.
  * */
-#ifdef MAP_LOCAL
+#ifdef OBSERVER_LOCAL
 
 
 /***************************************************************
@@ -88,4 +71,4 @@ class Map {
 
 
 
-#endif /* H_MAP_H_ */
+#endif /* H_OBSERVER_H_ */
