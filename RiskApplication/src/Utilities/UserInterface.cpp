@@ -73,9 +73,37 @@ string UserInterface::userInterface_getString(string& messageToDisplay)
 
 	string inputContainer;
 
+	cout << "> ";
+
 	cin >> inputContainer;
 
 	return inputContainer;
+}
+
+/** This function gets a "y" or "n" from the user, otherwise does not return
+ * - returns true if "y" was chosen, and false if "n" was chosen.
+ *
+ */
+bool UserInterface::userInterface_getYesNo(string & messageToDisplay)
+{
+	string outputString;
+
+	string messageToDisplayWithExtension = messageToDisplay + " [y\\n]";
+
+	do
+	{
+
+		outputString = UserInterface::userInterface_getString(messageToDisplayWithExtension);
+
+	}while((outputString != "y") && (outputString != "Y") && (outputString != "N") && (outputString != "n"));
+
+	if ((outputString == "y") || (outputString == "Y"))
+	{
+		return true;
+	}
+
+	return false;
+
 }
 
 void UserInterface::userInterface_displayInputHeader(void)

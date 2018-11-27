@@ -71,6 +71,9 @@ private:
 	int numCardSetsTraded;
 
 
+	/** Boolean that tracks the staet of game - either tournament, or non-tournament */
+	bool playingTournament = false;
+
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";
 

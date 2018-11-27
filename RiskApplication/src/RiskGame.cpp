@@ -114,13 +114,31 @@ void RiskGame::riskGame_incrementCardSetsTraded()
  * */
 void RiskGame::riskGame_start(void)
 {
-	/** Intermediary code may be added if necessary */
+	string tournamentMessage = "Would you like to play a tournament?";
 
-	this->riskGame_initializeGame();
+	/** Ask user which way they would like to play Risk -
+	 * either via Tournament, or single-game
+	 */
+	if (UserInterface::userInterface_getYesNo(tournamentMessage)) /** Selected "yes" */
+	{
+		this->playingTournament = true;
+	}
 
-	this->riskGame_playGame();
+	/** Play a tournament */
+	if (this->playingTournament)
+	{
 
-	this->riskGame_closeGame();
+	}
+	/** Play game as usual */
+	else
+	{
+		this->riskGame_initializeGame();
+
+		this->riskGame_playGame();
+
+		this->riskGame_closeGame();
+	}
+
 }
 
 bool RiskGame::riskGame_checkWinner()

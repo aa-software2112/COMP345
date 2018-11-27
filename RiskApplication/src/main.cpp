@@ -447,7 +447,7 @@ int assignment2Driver(void)
 	return 0;
 }
 
-int main()
+int assignment3Driver(void)
 {
 
 	/* PART 1: Player Strategy Pattern
@@ -507,5 +507,14 @@ int main()
 	driver->riskGame_playGame();
 }
 
+int main()
+{
+	RiskGame *driver = new RiskGame();
 
+	driver->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+
+	driver->riskGame_start();
+
+	return 0;
+}
 
