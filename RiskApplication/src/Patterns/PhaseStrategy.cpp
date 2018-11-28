@@ -458,6 +458,59 @@ void RandomPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void RandomPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	bool fortifyingPossible = false;
+	cout << "- RANDOM STRATEGY -" << endl;
+	cout << "FORTIFICATION PHASE" << endl;
+	cout << "Fortification Start" << endl << endl;
+	int sizeOfMyCollection = p->player_getMyCountries().size();
+	vector <Country *> countryAbleToSend;
+
+	for(int i = 0; i < sizeOfMyCollection; i ++){
+		if(p->player_getMyCountries()[i]->country_GetNumArmies() > 2)
+			countryAbleToSend.push_back(p->player_getMyCountries()[i]);
+	}
+
+
+	while(fortifyingPossible != true){
+		if(countryAbleToSend.size()==0){
+			cout << "NO FORTIFICATION POSSIBLE!" << endl;
+			break;
+		}
+
+
+		int randomCountry = rand()%countryAbleToSend.size();
+		vector <Country *> adjacent = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(countryAbleToSend[randomCountry]);
+		vector <Country *> possibleFortification;
+		for(int i = 0; i < adjacent.size(); i ++){
+			if(adjacent[i]->country_GetOwner() == p)
+					possibleFortification.push_back(adjacent[i]);
+		}
+		if(possibleFortification.size()== 0){
+			countryAbleToSend.erase(countryAbleToSend.begin() + randomCountry);
+			continue;
+		}
+		else{
+			fortifyingPossible = true;
+			int randomFortified = rand() % possibleFortification.size();
+			int amountSent = rand()% (countryAbleToSend[randomCountry]->country_GetNumArmies()-1)+1;
+			p->fortifyingCountryArmies = countryAbleToSend[randomCountry]->country_GetNumArmies();
+			p->fortifiedCountryArmies = possibleFortification[randomFortified]->country_GetNumArmies();
+			countryAbleToSend[randomCountry]->country_SetNumArmies(countryAbleToSend[randomCountry]->country_GetNumArmies()-amountSent);
+			possibleFortification[randomFortified]->country_SetNumArmies(possibleFortification[randomFortified]->country_GetNumArmies() + amountSent);
+			p->fortifyingCountry = countryAbleToSend[randomCountry];
+			p->fortifiedCountry = possibleFortification[randomFortified];
+			cout << "Successfully sent " << amountSent  << " army units from " <<  countryAbleToSend[randomCountry]->country_GetName() << " to " << possibleFortification[randomFortified]->country_GetName();
+			/* Variables sent to observers */
+			p->amountToFortify = amountSent;
+			/* Notify all observers */
+			p->subject_Notify();
+			break;
+		}
+	}
+
+	cout << endl;
+	cout << "Fortification End" << endl << endl;
+
 	return;
 }
 
