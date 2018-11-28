@@ -422,9 +422,13 @@ void RandomPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 	cout << endl;
 
+	/*
 	cout << "Exchange Phase:" << endl;
-	/* Exchange if it is possible */
+	Exchange if it is possible
+
 	newArmiesCount = newArmiesCount + p->player_getMyHand()->hand_autoExchange(rg);
+	*/
+	
 	cout << endl;
 
 	// Max size
