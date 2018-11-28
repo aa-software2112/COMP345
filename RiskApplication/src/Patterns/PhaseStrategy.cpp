@@ -11,36 +11,38 @@
  * */
 void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	int numberOfAttackPossible = 0;
+	bool attackPossible = false;
+	for(int i = 0; i < p->player_getMyCountries().size(); i++)
+	{
+		if(p->player_getMyCountries()[i]->country_GetNumArmies() > 1)
+		{
+			vector <Country *> adjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[i]);
+
+			for(int n = 0; n < adjacentCountries.size(); n++)
+			{
+				if(adjacentCountries[n]->country_GetOwner() != p)
+				{
+					numberOfAttackPossible ++;
+					attackPossible = true;
+				}
+			}
+		}
+	}
 	cout << "- RANDOM STRATEGY -" << endl;
 	cout << "ATTACK PHASE" << endl;
 	cout << "Attack Start" << endl;
 	bool capturedCountry = false; // flag used to determine if a country was captured this turn
 	srand(time(NULL));
 	bool attack = false;
-	bool attackPossible = false;
-	int counter = 0;
-	int end = rand()%5+1;
-	cout << "User will attack " << end << " times" << endl;
-	while(counter < end){
-		/* This loop will change attackPossible to true if the current player can make any possible attack */
-		for(int i = 0; i < p->player_getMyCountries().size(); i++)
-		{
-			if(p->player_getMyCountries()[i]->country_GetNumArmies() > 1)
-			{
-				vector <Country *> adjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[i]);
 
-				for(int n = 0; n < adjacentCountries.size(); n++)
-				{
-					if(adjacentCountries[n]->country_GetOwner() != p)
-					{
-						attackPossible = true;
-					}
-				}
-			}
-		}
-		/* If attackPossible is false, then the loop stops */
-		if(!attackPossible)
-			break;
+	int counter = 0;
+	int end = 0;
+	if(numberOfAttackPossible > 0)
+		end = rand()%numberOfAttackPossible+1;
+	cout <<  p->player_getPlayerName() << " will attack " << end << " times" << endl;
+	while(counter < end && attackPossible == true){
+
 		int sizeOfMyCollection = p->player_getMyCountries().size();
 		int rdmAttackingCountry = rand()% sizeOfMyCollection;
 		bool attack = false;
@@ -63,7 +65,7 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 		}
 		int rdmGlobalAttack;
-	
+
 		//Find global index
 		for(int i = 0; i < rg->riskGame_getMap()->map_GetAllCountries().size(); i++){
 			if(rg->riskGame_getMap()->map_GetAllCountries()[i] == p->player_getMyCountries()[rdmAttackingCountry]){
@@ -84,7 +86,6 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 				break;
 			}
 		}
-		
 
 		int attackingCountryIndex = rdmGlobalAttack;
 		int defendingCountryIndex = globalTarget;
