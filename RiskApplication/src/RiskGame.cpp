@@ -150,18 +150,19 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 
 	/* Prompt the user which type of strategy they would like to use this turn */
 	cout << "-------------------- " << currentPlayer->player_getPlayerName() << "'s turn! -------------------- " << endl;
-	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI";
+	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI\n[3] Random ";
 
-	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 2);
+	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 3);
 
 	/* Set the player's strategy accordingly */
 	if(strategyIndex == 0)
 		currentPlayer->player_setPhaseStrategy(new HumanPhaseStrategy());
 	else if(strategyIndex == 1)
 		currentPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
-	else
+	else if(strategyIndex == 2)
 		currentPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
-
+	else if(strategyIndex == 3)
+		currentPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
 	/* Call the appropriate functions in order (reinforce, attack, fortify) */
 	currentPlayer->player_setCurrentPhase(REINFORCE);
 	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
