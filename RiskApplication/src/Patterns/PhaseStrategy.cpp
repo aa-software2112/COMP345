@@ -11,16 +11,28 @@
  * */
 void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+
 	return;
 }
 
 void RandomPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+
 	return;
 }
 
 void RandomPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+
 	return;
 }
 
@@ -29,16 +41,107 @@ void RandomPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void CheaterPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+	cout << "- CHEATER STRATEGY -" << endl;
+	cout << "ATTACK PHASE" << endl;
+	cout << "Attack Start" << endl;
+
+	for(int i = 0; i < p->myCollectionOfCountries.size(); i++)
+	{
+		/* Using the map_GetCountriesAdjacentTo() function to create a vector that holds all adjacent countries to a specific country */
+		vector<Country *> vectorOfAdjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->myCollectionOfCountries[i]);
+
+		/* Loop through the adjacent countries */
+		for (unsigned int y = 0; y < vectorOfAdjacentCountries.size(); y++)
+		{
+			/* Check if the current country is an enemy country */
+			if (vectorOfAdjacentCountries[y]->country_GetOwner() != p)
+			{
+				cout << p->player_getPlayerName() << " automatically captures " << vectorOfAdjacentCountries[y]->country_GetName() << " from " << vectorOfAdjacentCountries[y]->country_GetOwner()->player_getPlayerName() << "." << endl;
+				vectorOfAdjacentCountries[y]->country_GetOwner()->player_removeCountry(vectorOfAdjacentCountries[y]);
+				p->player_addCountry(vectorOfAdjacentCountries[y]);
+				vectorOfAdjacentCountries[y]->country_SetOwner(p);
+				p->attackingCountry = p->myCollectionOfCountries[i];
+				p->attackedCountry = vectorOfAdjacentCountries[y];
+				p->attackingCountryArmies = p->myCollectionOfCountries[i]->country_GetNumArmies();
+				p->attackedCountryArmies = vectorOfAdjacentCountries[y]->country_GetNumArmies();
+				p->successfulInvasion = true;
+				p->subject_Notify();
+			}
+		}
+	}
+
+	cout << endl;
+	cout << "Attack End" << endl << endl;
 	return;
 }
 
 void CheaterPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+	cout << "- CHEATER STRATEGY -" << endl;
+	cout << "REINFORCE PHASE" << endl;
+	cout << "Reinforce Start" << endl;
+
+	for(int i = 0; i < p->myCollectionOfCountries.size(); i++)
+	{
+		cout << p->player_getPlayerName() << " doubles their units on " << p->myCollectionOfCountries[i]->country_GetName() << " from " << p->myCollectionOfCountries[i]->country_GetNumArmies() << " to " << p->myCollectionOfCountries[i]->country_GetNumArmies() * 2 << "." << endl;
+		p->myCollectionOfCountries[i]->country_SetNumArmies(p->myCollectionOfCountries[i]->country_GetNumArmies() * 2);
+		p->totalReinforcementCount = -1337; // used to avoid printing total number in observer
+		p->reinforcingCountry = p->myCollectionOfCountries[i];
+		p->amountToReinforce = p->myCollectionOfCountries[i]->country_GetNumArmies();
+		p->subject_Notify();
+
+	}
+
+	cout << endl;
+	cout << "Reinforce End" << endl << endl;
 	return;
 }
 
 void CheaterPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
+	cout << " CHEATER STRATEGY -" << endl;
+	cout << "FORTIFICATION PHASE" << endl;
+	cout << "Fortification Start" << endl << endl;
+
+	for(int i = 0; i < p->myCollectionOfCountries.size(); i++)
+	{
+		/* Using the map_GetCountriesAdjacentTo() function to create a vector that holds all adjacent countries to a specific country */
+		vector<Country *> vectorOfAdjacentCountries = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->myCollectionOfCountries[i]);
+
+		bool adjacentEnemyFlag = false;
+
+		/* Loop through the adjacent countries */
+		for (unsigned int y = 0; y < vectorOfAdjacentCountries.size(); y++)
+		{
+			/* Check if the current country is an enemy country */
+			if (vectorOfAdjacentCountries[y]->country_GetOwner() != p)
+			{
+				adjacentEnemyFlag = true;
+			}
+		}
+
+		if(adjacentEnemyFlag)
+		{
+			cout << p->player_getPlayerName() << " doubles their units on " << p->myCollectionOfCountries[i]->country_GetName() << " from " << p->myCollectionOfCountries[i]->country_GetNumArmies() << " to " << p->myCollectionOfCountries[i]->country_GetNumArmies() * 2 << "." << endl;
+			p->amountToFortify = p->myCollectionOfCountries[i]->country_GetNumArmies();
+			p->myCollectionOfCountries[i]->country_SetNumArmies(p->myCollectionOfCountries[i]->country_GetNumArmies() * 2);
+			p->fortifyingCountry == NULL;
+			p->fortifiedCountry = p->myCollectionOfCountries[i];
+			p->subject_Notify();
+		}
+	}
+
+	cout << endl;
+	cout << "Fortification End" << endl << endl;
 	return;
 }
 
@@ -48,6 +151,9 @@ void CheaterPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- HUMAN STRATEGY -" << endl;
 	cout << "ATTACK PHASE" << endl;
 	cout << "Attack Start" << endl;
@@ -199,13 +305,14 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
 
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 					capturedCountry = true;
 					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
@@ -248,13 +355,14 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					cin >> numOfArmiesToMove;
 
 
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 					capturedCountry = true;
 					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
@@ -298,13 +406,13 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
 
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 					capturedCountry = true;
 					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
@@ -329,13 +437,13 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
 
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 					capturedCountry = true;
 					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
@@ -379,14 +487,13 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 					cout << "Attacker, how many army units would you like to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << "? You can move up to " << attackingCountry->country_GetNumArmies() - 1 << " units." << endl;
 					cin >> numOfArmiesToMove;
 
-					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 					defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 					cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl << endl;
 					capturedCountry = true;
 					defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 					attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
-
+					defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 					/* Variables sent to observers */
 					p->attackOutcomeVictory = true;
 					p->successfulInvasion = true;
@@ -417,6 +524,9 @@ void HumanPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 void HumanPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- HUMAN STRATEGY -" << endl;
 	cout << "REINFORCEMENT PHASE:" << endl;
 
@@ -549,6 +659,9 @@ void HumanPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void HumanPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- HUMAN STRATEGY -" << endl;
 	cout << "FORTIFICATION PHASE" << endl;
 	cout << "Fortification Start" << endl << endl;
@@ -652,6 +765,9 @@ void HumanPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- AGRESSIVE STRATEGY -" << endl;
 	cout << "ATTACK PHASE" << endl;
 	cout << "Attack Start" << endl;
@@ -689,7 +805,7 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 		{
 
 			/* Get enemy adjacent countries to the player's strongest country */
-			vector <Country *> adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[r]);
+			vector <Country *> adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->myCollectionOfCountries[r]);
 			vector <Country *> adjacentCountriesToStrongestCOPY = adjacentCountriesToStrongest; // copy used to keep track of original indexes (due to deleting inside a vector)
 
 			for(int i = 0; i < adjacentCountriesToStrongestCOPY.size(); i ++)
@@ -710,7 +826,7 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 			}
 
 			/* Keep attacking until, the current country has no more countries to attack or if the current country doesn't have enough armies to perform the attack  */
-			while(adjacentCountriesToStrongest.size() != 0 && p->player_getMyCountries()[r]->country_GetNumArmies() > 1)
+			while(adjacentCountriesToStrongest.size() >= 1 && p->player_getMyCountries()[r]->country_GetNumArmies() > 1)
 			{
 				int globalIndexOfStrongest; // this will hold the global index of the strongest country
 
@@ -779,9 +895,8 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 				}
 
 				else {
-					string defendDiceMessage = "Defender, how many dice would you like to roll? Enter 1, or 2. (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)";
-
-					numOfDiceDefender = UserInterface::userInterface_getIntegerBetweenRange(defendDiceMessage, 1, 2);
+					cout << "Defender will roll 1 dice (REMINDER: " + std::to_string(defendingCountry->country_GetNumArmies()) + " units on your country)" << endl << endl;
+					numOfDiceDefender = 1;
 
 				}
 
@@ -822,13 +937,14 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 						cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
 						numOfArmiesToMove = 1;
 
-						defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 						defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 						cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 						capturedCountry = true;
 						defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 						attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+						defendingCountry->country_SetOwner(p);
 
 						p->attackOutcomeVictory = true;
 						p->successfulInvasion = true;
@@ -872,13 +988,14 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 						numOfArmiesToMove = 1;
 
 
-						defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 						attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 						defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 						cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 						capturedCountry = true;
 						defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 						attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+						defendingCountry->country_SetOwner(p);
 
 						/* Variables sent to observers */
 						p->attackOutcomeVictory = true;
@@ -923,13 +1040,14 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 							cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
 							numOfArmiesToMove = 1;
 
-							defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 							defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 							cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 							capturedCountry = true;
 							defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 							attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+							defendingCountry->country_SetOwner(p);
 
 							/* Variables sent to observers */
 							p->attackOutcomeVictory = true;
@@ -955,13 +1073,14 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 								cout << "Attacker would like to move 1 unit from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
 								numOfArmiesToMove = 1;
 
-								defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
+
 								attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 								defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 								cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl;
 								capturedCountry = true;
 								defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 								attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+								defendingCountry->country_SetOwner(p);
 
 								/* Variables sent to observers */
 								p->attackOutcomeVictory = true;
@@ -1012,12 +1131,12 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 							cout << "Attacker would like to move 1 unit to move from " << attackingCountry->country_GetName() << " to " << defendingCountry->country_GetName() << endl;
 							numOfArmiesToMove = 1;
 
-							defendingCountry->country_SetOwner(attackingCountry->country_GetOwner());
 							attackingCountry->country_SetNumArmies(attackingCountry->country_GetNumArmies() - numOfArmiesToMove);
 							defendingCountry->country_SetNumArmies(numOfArmiesToMove);
 							cout << p->myName << " now owns " << defendingCountry->country_GetName() << "." << endl << endl;
 							defendingCountry->country_GetOwner()->player_removeCountry(defendingCountry);
 							attackingCountry->country_GetOwner()->player_addCountry(defendingCountry);
+							defendingCountry->country_SetOwner(p);
 
 							/* Variables sent to observers */
 							p->attackOutcomeVictory = true;
@@ -1030,7 +1149,7 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 						}
 				}
 				/* Get enemy adjacent countries to the player's strongest country */
-				adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->player_getMyCountries()[r]);
+				adjacentCountriesToStrongest = rg->riskGame_getMap()->map_GetCountriesAdjacentTo(p->myCollectionOfCountries[r]);
 
 				vector <Country *> adjacentCountriesToStrongestCOPY2 = adjacentCountriesToStrongest;
 				for(int i = 0; i < adjacentCountriesToStrongestCOPY2.size(); i ++)
@@ -1062,6 +1181,9 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- AGGRESSIVE STRATEGY -" << endl;
 	cout << "REINFORCEMENT PHASE:" << endl;
 
@@ -1089,12 +1211,13 @@ void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 	}
 
 	cout << endl;
-
-	cout << "Exchange Phase:" << endl;
-	/* Exchange if it is possible */
+/*
+	cout << "Exchange Phase Start:" << endl;
 	newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
-	cout << endl;
 
+	cout << "Exchange Phase End:" << endl;
+	cout << endl;
+*/
 	/*Find the strongest country */
 	/* Index (Country) with the highest amount of armies */
 	int maxIndex = 0;
@@ -1131,6 +1254,9 @@ void AggressivePhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void AggressivePhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	bool fortyingPossible = false;
 	cout << "- AGGRESSIVE STRATEGY -" << endl;
 	cout << "FORTIFICATION PHASE" << endl;
@@ -1188,6 +1314,9 @@ void AggressivePhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
  * */
 void BenevolentPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- BENEVOLENT STRATEGY -" << endl;
 	cout << "ATTACK PHASE:" << endl;
 	cout << "Attack Start" << endl << endl;
@@ -1202,6 +1331,9 @@ void BenevolentPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- BENEVOLENT STRATEGY -" << endl;
 	cout << "REINFORCEMENT PHASE:" << endl;
 	cout << "Reinforcement Start" << endl << endl;
@@ -1238,10 +1370,13 @@ void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 	cout << endl;
 
-	cout << "Exchange Phase:" << endl;
-	/* Exchange if it is possible */
-	newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
-	cout << endl;
+	/*
+		cout << "Exchange Phase Start:" << endl;
+		newArmiesCount = newArmiesCount + p->myHand.hand_autoExchange(rg);
+
+		cout << "Exchange Phase End:" << endl;
+		cout << endl;
+	*/
 
 	/* This loop will run as long as the player did not place all their additional reinforcement units */
 	while(newArmiesCount != 0){
@@ -1289,6 +1424,9 @@ void BenevolentPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 
 void BenevolentPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 {
+	if(p->myCollectionOfCountries.size() == 0)
+		return;
+
 	cout << "- BENEVOLENT STRATEGY -" << endl;
 	cout << "FORTIFICATION PHASE" << endl;
 	cout << "Fortification Start" << endl << endl;
@@ -1342,11 +1480,19 @@ void BenevolentPhaseStrategy::phaseStrategy_Fortify(Player * p, RiskGame * rg)
 
 					/* Notify all observers */
 					p->subject_Notify();
+
+					cout << endl;
+					cout << "Reinforcement End" << endl << endl;
+
 					return;
 				}
 			}
 		}
 	}
+
+	cout << endl;
+	cout << "Fortification End" << endl << endl;
+	return;
 }
 
 

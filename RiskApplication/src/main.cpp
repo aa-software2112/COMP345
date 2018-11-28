@@ -473,13 +473,13 @@ int main()
 	 * Playout the turns, and you will be able to see (in the observer update) whose turn it is and other relevant info
 	 */
 
-
+	/*
 	RiskGame *r = new RiskGame();
 
-	r->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+	r->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
 
-	/* Uncomment this to test Part 3 */
-	// r->riskGame_start();
+	 r->riskGame_start();
+	 */
 
 	/* PART 3: Game Statistics Observer
 	 *
@@ -496,15 +496,25 @@ int main()
 
 	/* For (2), (3) */
 
+	/*
 	RiskGame *driver = new RiskGame();
 
-	driver->pathToMapFiles = "C:/Users/Anthony Andreoli/Desktop/Concordia/2018 - FALL/COMP 345/REPOSITORY/COMP345/RiskApplication/MapFiles";
+	driver->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
 
 	driver->riskGame_initializeGame();
-
+	 */
 	/* Assign all countries to the first player to trigger the win condition */
+	/*
 	driver->riskGame_giveAllCountriesButOneToPlayer(driver->riskGame_getPlayers()[0], driver->riskGame_getPlayers()[1]);
 	driver->riskGame_playGame();
+	*/
+
+	/* Assignment 4 Driver */
+	RiskGame *r = new RiskGame();
+
+	r->pathToMapFiles = "C:/Users/Rainily/Documents/GitHub/COMP345/RiskApplication/MapFiles/";
+
+	r->riskGame_start();
 }
 
 

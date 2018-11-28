@@ -87,6 +87,8 @@ class Player: public Subject {
 		friend HumanPhaseStrategy;
 		friend AggressivePhaseStrategy;
 		friend BenevolentPhaseStrategy;
+		friend CheaterPhaseStrategy;
+		friend RandomPhaseStrategy;
 
 		/** Members used to hold information that will be passed during phases
 		 *
