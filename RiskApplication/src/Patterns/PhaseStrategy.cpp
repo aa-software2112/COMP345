@@ -16,6 +16,65 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 
 void RandomPhaseStrategy::phaseStrategy_Reinforce(Player * p, RiskGame * rg)
 {
+	cout << "- RANDOM STRATEGY -" << endl;
+	cout << "REINFORCEMENT PHASE:" << endl;
+
+	cout << "Reinforcement Start" << endl;
+
+	/* Calculating the base amount of new armies at the start of the turn */
+	int newArmiesCount = p->player_getMyCountries().size();
+
+	/* Players receive at least 3 armies per turn */
+	if(newArmiesCount < 3)
+		newArmiesCount = 3;
+
+	/* Put of all the unique continents where the player owns at least 1 country on into a vector */
+		set<Continent *> setOfUniqueContinents = *p->player_getUniqueContinents();
+
+	for(set<Continent *>::iterator it = setOfUniqueContinents.begin(); it != setOfUniqueContinents.end(); it++)
+	{
+		/* If this condition is true, that means player owns the current iterated continent */
+		if((*(*it)).continent_playerOwnsContinent(p)) {
+			int continentBonus = (*(*it)).continent_getBonusValue();	// get the bonus value from the respective continent object
+			string continentName = (*(*it)).continent_GetContinentName();
+			cout << "Reinforcement Army Bonus! " << continentBonus << " additional army units for completely controlling a continent - " << continentName << "." << endl;
+			newArmiesCount = newArmiesCount + continentBonus;	// increment the player's new army count by the continent bonus
+		}
+	}
+
+	cout << endl;
+
+	cout << "Exchange Phase:" << endl;
+	/* Exchange if it is possible */
+	newArmiesCount = newArmiesCount + p->player_getMyHand()->hand_autoExchange(rg);
+	cout << endl;
+
+	// Max size
+	int size = p->player_getMyCountries().size();
+	srand(time(NULL));
+	int reinforceIndex = rand()% size;
+
+	/* Variables sent to observers */
+	p->totalReinforcementCount = newArmiesCount;
+
+	/* Display the whole board */
+	rg->riskGame_showStateOfGame();
+
+	/* Printing out the player's collection of countries with their respective index in the player's collection */
+	rg->riskGame_showStateOfPlayer(p);
+	/* Variables sent to observers */
+	p->reinforcingCountry = p->player_getMyCountries()[reinforceIndex];
+	p->amountToReinforce = newArmiesCount;
+
+	/* Add the armies to the appropriate country */
+	p->player_getMyCountries()[reinforceIndex]->country_SetNumArmies(p->player_getMyCountries()[reinforceIndex]->country_GetNumArmies() + newArmiesCount);
+
+	/* Notify all observers */
+	p->subject_Notify();
+
+	cout << endl;
+	cout << "Reinforcement End" << endl << endl;
+
 	return;
 }
 
