@@ -1,6 +1,8 @@
 
 #define TOURNAMENT_LOCAL
 #include "Tournament.h"
+#include "Country.h"
+#include "Player.h"
 
 /** Constructor */
 Tournament::Tournament(void)
@@ -146,6 +148,219 @@ void Tournament::tournament_pregamesSetup(void)
 
 	cout << "Pregame Setup: Num Games To Play: " << this->gamesLeftForCurrentMap << endl;
 }
+
+/** Checks if all the games were played in the current round */
+bool Tournament::tournament_allGamesPlayed(void)
+{
+	return this->gamesLeftForCurrentMap == 0;
+}
+
+/** Checks if there are turns left */
+bool Tournament::tournament_turnsLeft(void)
+{
+	return this->currentGame->game_getTurnsPlayed() < this->numTurns;
+}
+
+/** Checks if some player has won the game */
+bool Tournament::tournament_winnerExists(void)
+{
+	return this->currentGame->game_winnerExists();
+}
+
+/** Sets the winning player */
+void Tournament::tournament_setWinner(Player *winner)
+{
+	this->currentGame->game_setWinner(winner);
+}
+
+/** A turn was played, set appropriate values */
+void Tournament::tournament_turnPlayed(void)
+{
+	this->currentGame->game_decrementTurnsPlayed();
+}
+
+/** Returns the current map */
+Map * Tournament::tournament_getCurrentMap(void)
+{
+	return this->currentMap;
+}
+
+/** Ends the current game */
+void Tournament::tournament_endGame(void)
+{
+	/** Sets draw if there was no winner */
+	this->currentGame->game_setDrawOrWinner();
+
+	/** Stores the current game */
+	games.push_back(this->currentGame);
+
+	/** Resets all the players */
+
+}
+
+/** Start a new game
+ * 1. Create a new game
+ * 2. Set the new game as the current game
+ * 3. Assign all countries of map to each player
+ * 4. Assign all armies
+ */
+void Tournament::tournament_startNewGame(void)
+{
+
+	/** Create the new game */
+	Game * newGame = new Game(this->currentMap, this->gamesPerMap - this->gamesLeftForCurrentMap + 1);
+
+	/** Store it as the current game */
+	this->currentGame = newGame;
+
+
+	/**
+	 *************************
+	 *************************
+	 *    ASSIGN COUNTRIES   *
+	 *************************
+	 *************************
+	 */
+
+	/** Stores the total number of countries in the map */
+	int numCountryLeft = this->currentMap->map_GetNumCountries();
+
+	/** Stores all the countries in the map as a vector */
+	vector<Country *> allCountries = this->currentMap->map_GetAllCountries();
+
+	/** While there are not any countries left to assign,
+	 * randomly assign countries to each player one by one in a round-robin fashion
+	 * */
+	while(numCountryLeft != 0){
+
+		for(unsigned int i = 0; i < players.size(); i ++)
+		{
+			/** All country assignments are done - break */
+			if(numCountryLeft == 0)
+				break;
+
+			/** Randomly choose the next country to assign to players[i] */
+			int countryIndex = rand() % allCountries.size();
+
+			/**
+			 * Set owner of country,
+			 * Add Country to set of Countries a player owns,
+			 * Start the country with 1 army
+			 * Remove the country from the list of countries to allocate
+			 */
+			allCountries[countryIndex]->country_SetOwner(players[i]);
+			players[i]->player_addCountry(allCountries[countryIndex]);
+			allCountries[countryIndex]->country_SetNumArmies(1);
+			allCountries.erase(allCountries.begin()+countryIndex);
+			numCountryLeft --;
+		}
+	}
+
+	/**
+	 *************************
+	 *************************
+	 *    PREPARE ARMIES     *
+	 *************************
+	 *************************
+	 */
+
+	/** The number of armies for each player */
+	UINT A;
+
+	/** A boolean array describing when a given player is done placing their armies */
+	bool* placedArmiesFlag;
+
+	/** Allocating the number of armies necessary for each player */
+	switch(players.size()){
+	case 2: A = 40;
+			placedArmiesFlag = new bool(2);
+			break;
+	case 3: A = 35;
+			placedArmiesFlag = new bool(3);
+			break;
+	case 4: A = 30;
+			placedArmiesFlag = new bool(4);
+			break;
+	case 5: A = 25;
+			placedArmiesFlag = new bool(5);
+			break;
+	case 6: A = 20;
+			placedArmiesFlag = new bool(6);
+			break;
+	default: cout << "Error! Invalid number of players.";
+			break;
+	}
+
+	/** Place army in round-robin fashion */
+	bool donePlacingArmies = false;
+
+	while(!donePlacingArmies)
+	{
+		donePlacingArmies = true;
+
+		/**
+		 * Iterate over each player, and add a single army to a country
+		 * of their choice
+		 */
+		for(unsigned int i = 0; i < players.size(); i++)
+		{
+			/**
+			 * If the player has not added "A" number of armies yet,
+			 * prompt them to add another one to their set of countries
+			 */
+			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A - players[i]->player_getMyCountries().size())
+			{
+				/**
+				 * Display current state of user's countries & armies
+				 */
+				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - players[i]->player_getTotalNumberArmies() << " unit(s) left to place!):" << endl;
+
+
+				for(unsigned int g = 0; g < players[i]->player_getMyCountries().size(); g++)
+				{
+
+					cout << "[" << g << "] " << players[i]->player_getMyCountries()[g]->country_GetName() << " Number of Armies: " << players[i]->player_getMyCountries()[g]->country_GetNumArmies() << endl;
+
+				}
+
+				cout << endl;
+
+				/** Prompt user for which country to add an army to */
+				string armyPlacing = "Which country would you like to place armies on? (Enter index) ";
+
+				/** Randomly select a country to set an army in */
+				int countryIndex = rand() % players[i]->player_getMyCountries().size();
+
+				/** Add a single army to player's country*/
+				players[i]->player_getMyCountries()[countryIndex]->country_SetNumArmies(players[i]->player_getMyCountries()[countryIndex]->country_GetNumArmies() + 1);
+			}
+			/** Player is done adding armies - set boolean */
+			else
+			{
+				placedArmiesFlag[i] = true;
+			}
+
+		}
+
+		/** Check if all players are done */
+		for(unsigned int j = 0; j < players.size(); j++)
+		{
+			if(placedArmiesFlag[j] == false)
+				donePlacingArmies = false;
+		}
+
+	}
+
+	/** Destruct */
+	delete [] placedArmiesFlag;
+	placedArmiesFlag = NULL;
+
+
+
+
+}
+
+
 
 /**
  * This function is responsible for loading the next map to

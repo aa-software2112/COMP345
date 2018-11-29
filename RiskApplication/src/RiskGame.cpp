@@ -813,6 +813,15 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
 
 }
 
+/** Steps for playing the tournament
+ *
+ * 1. Check if all maps have been played
+ * 2. Load the next map
+ * 3. Setup the tournament for the next set of games for the current map
+ * 4. Check if all games have been played
+ * 5. Start a new game
+ *
+ */
 void RiskGame::riskGame_tournamentPlayGame(void)
 {
 	/** Play until all maps have been played */
@@ -822,10 +831,70 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 		/** Loads the next map to be played */
 		this->tournament->tournament_loadNextMap();
 
+		this->map = this->tournament->tournament_getCurrentMap();
+
 		/** Sets up necessary pregame data */
 		this->tournament->tournament_pregamesSetup();
 
+		/** Play all the games ( 1 - 5 ) for the current map */
+		while(!this->tournament->tournament_allGamesPlayed())
+		{
+			/** Start a new game */
+			this->tournament->tournament_startNewGame();
 
+			/** Stores the index of the player who is next to take its turn */
+			UINT playerIndex = 0;
+
+			Player * currentPlayer = this->players[playerIndex++];
+
+			/** Perform until winner or turns depleted */
+			while(!this->tournament->tournament_turnsLeft() && !this->tournament->tournament_winnerExists())
+			{
+				/** The player plays its turn */
+
+				/** Set the subject */
+				this->riskGame_setSubject(currentPlayer);
+
+				/* Call the appropriate functions in order (reinforce, attack, fortify) */
+				currentPlayer->player_setCurrentPhase(REINFORCE);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
+				currentPlayer->player_setCurrentPhase(ATTACK);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Attack(currentPlayer, this);
+				currentPlayer->player_setCurrentPhase(FORTIFY);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
+
+				/* Detach the game (observer) from the player (subject) */
+				this->riskGame_removeObserver(currentPlayer);
+
+				/** Check for a winner */
+				for(unsigned int j = 0; j < players.size(); j++)
+				{
+					/** The player that owns all countries is stored */
+					if(players[j]->player_getMyCountries().size() == this->riskGame_getMap()->map_GetNumCountries())
+					{
+						this->tournament->tournament_setWinner(players[j]);
+						break;
+					}
+
+				}
+
+				/** Move to next player */
+				currentPlayer = this->players[playerIndex];
+
+				playerIndex = (playerIndex + 1 ) % this->players.size();
+
+				/** Decrement number of turns remaining */
+				this->tournament->tournament_turnPlayed();
+
+			}
+
+
+
+			break;
+
+
+		}
+		break;
 
 	}
 

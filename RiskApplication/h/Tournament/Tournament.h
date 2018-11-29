@@ -45,9 +45,26 @@ public:
 
 	bool tournament_allMapsPlayed(void);
 
+	bool tournament_allGamesPlayed(void);
+
+	bool tournament_turnsLeft(void);
+
+	bool tournament_winnerExists(void);
+
+	Map * tournament_getCurrentMap(void);
+
+	void tournament_endGame(void);
+
+	void tournament_turnPlayed(void);
+
+	void tournament_setWinner(Player *winner);
+
 	void tournament_loadNextMap(void);
 
 	void tournament_pregamesSetup(void);
+
+	void tournament_startNewGame(void);
+
 
 	/** Threshold values */
 	const UINT MIN_NUM_MAPS = 1;
@@ -65,7 +82,9 @@ public:
 
 	class Game
 	{
-		Game(Map *map, int gameNumber)
+
+	public:
+		Game(Map *map, UINT gameNumber)
 		{
 			/** The map playing on */
 			this->mapPlayed = map;
@@ -79,13 +98,45 @@ public:
 			/** Stores the number of turns currently played in a single game */
 			this->turnsPlayed = 0;
 
+			this->gameDraw = false;
+
+		}
+
+		UINT game_getTurnsPlayed(void)
+		{
+			return this->turnsPlayed;
+		}
+
+		bool game_winnerExists(void)
+		{
+			return this->winner != NULL;
+		}
+
+		void game_setWinner(Player *winner)
+		{
+			this->winner = winner;
+		}
+
+		void game_decrementTurnsPlayed(void)
+		{
+			this->turnsPlayed--;
+		}
+
+		void game_setDrawOrWinner(void)
+		{
+			if (this->winner == NULL)
+			{
+				this->gameDraw = true;
+
+			}
 		}
 
 	private:
 		Map *mapPlayed;
 		Player *winner;
-		int turnsPlayed;
-		int gameId;
+		bool gameDraw;
+		UINT turnsPlayed;
+		UINT gameId;
 
 
 	};
@@ -119,9 +170,6 @@ private:
 	 * the same value across all maps
 	 * */
 	UINT gamesPerMap;
-
-	/** Stores the maximum number of turns in a game */
-	UINT maxNumTurns;
 
 	/** Stores the number of players */
 	UINT numPlayers;
