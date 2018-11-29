@@ -21,6 +21,7 @@ public:
 	static int userInterface_getIndexOfList(vector<string>& list, string& messageToDisplay);
 	static int userInterface_getInteger(string& messageToDisplay);
 	static string userInterface_getString(string& messageToDisplay);
+	static bool userInterface_getYesNo(string& messageToDisplay);
 private:
 	static void userInterface_displayInputHeader(void);
 	const static string header;

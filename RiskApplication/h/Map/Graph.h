@@ -30,6 +30,7 @@ class Graph {
 		/** Vertex (Nodes) */
 		class Vertex {
 			public:
+				~Vertex(void);
 				Vertex(V * element);
 				V vertex_GetElement(void);
 				V * vertex_GetElementPtr(void);
@@ -49,6 +50,7 @@ class Graph {
 		/** Edge (Links between nodes) */
 		class Edge {
 			public:
+				~Edge(void);
 				Edge(Vertex * u, Vertex * v);
 				vector<Vertex *> * edge_GetEndpoints(void);
 			private:
@@ -59,6 +61,7 @@ class Graph {
 
 		/** Constructor */
 		Graph(void);
+		~Graph(void);
 
 		/** Adds a vertex to the graph */
 		Vertex * graph_InsertVertex(V * element);

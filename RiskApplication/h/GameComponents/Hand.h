@@ -22,6 +22,10 @@ public:
 	int hand_exchange(RiskGame* currentGame);
 	void hand_showHand();
 	int hand_autoExchange(RiskGame *currentGame);
+
+	/** Reset the hand */
+	void hand_Reset(void);
+
 private:
 	std::vector<Card*> handOfCards;
 

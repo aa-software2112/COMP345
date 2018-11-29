@@ -3,6 +3,19 @@
 #include "RiskGame.h"
 #include "GameStatisticsObserver.h"
 
+/** Resets the risk game (insofar as the Tournament requires resetting)
+ * 1. Reset the number of card sets traded
+ * 2. Reset the deck
+ *
+ */
+void RiskGame::riskGame_Reset(void)
+{
+
+	this->numCardSetsTraded = 0;
+
+	delete this->deck;
+
+}
 
 /** Set the subject that the observer will listen to;
  *
@@ -121,13 +134,37 @@ void RiskGame::riskGame_incrementCardSetsTraded()
  * */
 void RiskGame::riskGame_start(void)
 {
-	/** Intermediary code may be added if necessary */
+	string tournamentMessage = "Would you like to play a tournament?";
 
-	this->riskGame_initializeGame();
+	/** Ask user which way they would like to play Risk -
+	 * either via Tournament, or single-game
+	 */
+	if (UserInterface::userInterface_getYesNo(tournamentMessage)) /** Selected "yes" */
+	{
+		this->playingTournament = true;
+	}
 
-	this->riskGame_playGame();
+	/** Play a tournament */
+	if (this->playingTournament)
+	{
+		this->riskGame_tournamentInitializeGame();
+		// TODO, autoassign initial armies
 
-	this->riskGame_closeGame();
+		this->riskGame_tournamentPlayGame();
+
+		//this->riskGame_tournamentCloseGame();
+
+	}
+	/** Play game as usual */
+	else
+	{
+		this->riskGame_initializeGame();
+
+		this->riskGame_playGame();
+
+		this->riskGame_closeGame();
+	}
+
 }
 
 bool RiskGame::riskGame_checkWinner()
@@ -272,7 +309,7 @@ void RiskGame::riskGame_initializeGame(void)
 	{
 		playerNameMessage = "Select a name for player " + std::to_string(i+1) + " ...";
 
-		this->players.push_back(new Player(  UserInterface::userInterface_getString(playerNameMessage)  ));
+		this->players.push_back(new Player(  UserInterface::userInterface_getString(playerNameMessage)  )	);
 	}
 
 	/**
@@ -661,3 +698,268 @@ void RiskGame::riskGame_giveAllCountriesButOneToPlayer(Player* firstPlayer, Play
 
 }
 
+
+/**
+ *
+ * Tournament Functions
+ *
+ */
+void RiskGame::riskGame_tournamentInitializeGame(void)
+{
+	/** Initializes the tournament
+	 * 1. Number of maps
+	 * 2. The actual maps
+	 * 3. Number of players
+	 * 4. Player behaviors
+	 * 5. Number of games
+	 * 6. Number of turns
+	 */
+
+	/** Create new tournament */
+	tournament = new Tournament();
+
+	string userPrompt = "Select the number of maps for the tournament [" + to_string(this->tournament->MIN_NUM_MAPS) + "," + to_string(this->tournament->MAX_NUM_MAPS) + "] ";
+
+	/** Get & Set number of maps */
+	UINT numberOfMaps = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_MAPS, this->tournament->MAX_NUM_MAPS);
+
+	tournament->tournament_setNumMaps(numberOfMaps);
+
+	/** Get list of map files */
+	vector<string> * listOfMapFiles = Directory::directory_GetAllFilesInDirectory(this->pathToMapFiles, this->mapFileExtension);
+
+	userPrompt = "Select a map";
+
+	UINT mapIndex = 0;
+
+	/** For loading maps */
+	MapLoader mapLoader;
+
+	/** String containing the path */
+	string pathToMap;
+
+	/** Add maps until all maps are set */
+	while (!tournament->tournament_allMapsSelected())
+	{
+		/** Select a map */
+		mapIndex = UserInterface::userInterface_getIndexOfList(*listOfMapFiles, userPrompt);
+
+		pathToMap = (*listOfMapFiles)[mapIndex];
+
+		Map * mapToAdd = mapLoader.mapLoader_LoadMap(pathToMap);
+
+		if (mapToAdd == NULL)
+		{
+			print("Could not parse file");
+			continue;
+		}
+
+		/** Add map to tournament */
+		this->tournament->tournament_addMap(mapToAdd);
+
+		/** Remove the map from possible selection */
+		listOfMapFiles->erase(listOfMapFiles->begin() + mapIndex);
+
+	}
+
+	userPrompt = "Number of players [" + to_string(this->tournament->MIN_NUM_PLYRS) + "," + to_string(this->tournament->MAX_NUM_PLYRS) + "] ";
+
+	/** Get & Set number of players */
+	UINT numPlayers = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_PLYRS, this->tournament->MAX_NUM_PLYRS);
+
+	tournament->tournament_setNumPlayers(numPlayers);
+
+	/** Behavior options */
+	vector<string> behaviorOptions {
+			"Aggressive Behavior",
+			"Benevolent Behavior",
+			"Random Behavior",
+			"Cheater Behavior"
+	};
+
+	string aggressiveBehavior = "Aggressive Behavior";
+	string benevolentBehavior = "Benevolent Behavior";
+	string randomBehavior = "Random Behavior";
+	string cheaterBehavior = "Cheater Behavior";
+
+	userPrompt = "Select a behavior";
+
+	string playerNamePrompt = "Select a player name";
+
+	UINT behaviorIndex;
+
+	/** Add players until all players are set */
+	while(!tournament->tournament_allPlayersSet())
+	{
+
+		/** Get the behavior */
+		behaviorIndex = UserInterface::userInterface_getIndexOfList(behaviorOptions, userPrompt);
+
+		/** Create new player */
+		Player * newPlayer = new Player(UserInterface::userInterface_getString(playerNamePrompt));
+
+		/** Set behavior */
+		if (stringContains(behaviorOptions[behaviorIndex], aggressiveBehavior) )
+		{
+			newPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
+		}
+		else if (stringContains(behaviorOptions[behaviorIndex], benevolentBehavior) )
+		{
+			newPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
+		}
+		else if (stringContains(behaviorOptions[behaviorIndex], randomBehavior))
+		{
+			newPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
+		}
+		else if (stringContains(behaviorOptions[behaviorIndex], cheaterBehavior))
+		{
+
+			newPlayer->player_setPhaseStrategy(new CheaterPhaseStrategy());
+		}
+
+		/** Remove option */
+		behaviorOptions.erase(behaviorOptions.begin() + behaviorIndex);
+
+		/** Store player in this risk game */
+		this->players.push_back(newPlayer);
+
+		/** Store the player in the tournament */
+		this->tournament->tournament_addPlayer(newPlayer);
+
+
+	}
+
+	/** Get & Set number of games */
+	userPrompt = "Number of games [" + to_string(this->tournament->MIN_NUM_GAMES) + "," + to_string(this->tournament->MAX_NUM_GAMES) + "] ";
+
+
+	UINT numGames = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_GAMES, this->tournament->MAX_NUM_GAMES);
+
+
+	this->tournament->tournament_setGamesPerMap(numGames);
+
+	/** Get & Set number of turns */
+	userPrompt = "Number of turns [" + to_string(this->tournament->MIN_NUM_TURNS) + "," + to_string(this->tournament->MAX_NUM_TURNS) + "] ";
+
+
+	UINT numTurns = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_TURNS, this->tournament->MAX_NUM_TURNS);
+
+
+	this->tournament->tournament_setNumTurns(numTurns);
+
+
+}
+
+/** Steps for playing the tournament
+ *
+ * 1. Check if all maps have been played
+ * 2. Load the next map
+ * 3. Setup the tournament for the next set of games for the current map
+ * 4. Check if all games have been played
+ * 5. Start a new game
+ *
+ */
+void RiskGame::riskGame_tournamentPlayGame(void)
+{
+	UINT mapNumber = 0;
+
+	/** Play until all maps have been played */
+	while(!this->tournament->tournament_allMapsPlayed())
+	{
+
+		cout << "Map Number: " << ++mapNumber << endl;
+
+		/** Loads the next map to be played */
+		this->tournament->tournament_loadNextMap();
+
+		this->map = this->tournament->tournament_getCurrentMap();
+
+		/** Sets up necessary pregame data */
+		this->tournament->tournament_pregamesSetup();
+
+		UINT gameNumber = 0;
+
+		/** Play all the games ( 1 - 5 ) for the current map */
+		while(!this->tournament->tournament_allGamesPlayed())
+		{
+
+			cout << "Game Number: " << ++gameNumber << endl;
+
+			/** Start a new game */
+			this->tournament->tournament_startNewGame();
+
+			/** Create & set a new deck */
+			this->deck = new Deck(this->map->map_GetNumCountries());
+
+			/** Stores the index of the player who is next to take its turn */
+			UINT playerIndex = 0;
+
+			Player * currentPlayer = this->players[playerIndex++];
+
+			/** Perform until winner or turns depleted */
+			while(this->tournament->tournament_turnsLeft() && !this->tournament->tournament_winnerExists())
+			{
+				/** The player plays its turn */
+				cout << "Start of turn" << endl;
+				/** Set the subject */
+				this->riskGame_setSubject(currentPlayer);
+
+				/* Call the appropriate functions in order (reinforce, attack, fortify) */
+				currentPlayer->player_setCurrentPhase(REINFORCE);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
+
+				currentPlayer->player_setCurrentPhase(ATTACK);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Attack(currentPlayer, this);
+
+				currentPlayer->player_setCurrentPhase(FORTIFY);
+				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
+
+				/* Detach the game (observer) from the player (subject) */
+				this->riskGame_removeObserver(currentPlayer);
+
+				/** Check for a winner */
+				for(unsigned int j = 0; j < players.size(); j++)
+				{
+					/** The player that owns all countries is stored */
+					if(players[j]->player_getMyCountries().size() == this->riskGame_getMap()->map_GetNumCountries())
+					{
+						this->tournament->tournament_setWinner(players[j]);
+						break;
+					}
+
+				}
+
+				/** Move to next player */
+				currentPlayer = this->players[playerIndex];
+
+				playerIndex = (playerIndex + 1 ) % this->players.size();
+
+				/** Decrement number of turns remaining */
+				this->tournament->tournament_turnPlayed();
+
+				cout << "Another turn" << endl;
+
+			}
+
+			/** Ends the current game */
+			this->tournament->tournament_endGame();
+
+			/** Resets the risk game */
+			this->riskGame_Reset();
+
+		}
+
+
+		this->tournament->tournament_setMapAsPlayed();
+
+	}
+
+	this->tournament->tournament_displayTournament();
+
+	cout << "Played entire Tournament" << endl;
+
+}

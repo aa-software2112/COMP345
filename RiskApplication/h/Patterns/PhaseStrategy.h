@@ -29,6 +29,7 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg) = 0;
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg) = 0;
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg) = 0;
+	virtual string phaseStrategy_GetName(void) = 0;
 
 };
 
@@ -38,6 +39,10 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+	virtual string phaseStrategy_GetName(void)
+	{
+		return "RANDOM";
+	}
 
 };
 
@@ -47,6 +52,10 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+	virtual string phaseStrategy_GetName(void)
+	{
+		return "CHEATER";
+	}
 
 };
 
@@ -56,6 +65,10 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+	virtual string phaseStrategy_GetName(void)
+	{
+		return "HUMAN";
+	}
 
 };
 
@@ -65,6 +78,10 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+	virtual string phaseStrategy_GetName(void)
+	{
+		return "AGGRESSIVE";
+	}
 
 };
 
@@ -74,6 +91,10 @@ public:
 	virtual void phaseStrategy_Attack(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Reinforce(Player * p, RiskGame * rg);
 	virtual void phaseStrategy_Fortify(Player * p, RiskGame * rg);
+	virtual string phaseStrategy_GetName(void)
+	{
+		return "BENEVOLENT";
+	}
 
 };
 

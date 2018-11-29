@@ -19,6 +19,7 @@ class Country {
 	public:
 		/** Constructor **/
 		Country(void);
+		~Country();
 		Country(string countryName);
 		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner );
 		string country_GetName(void);
@@ -33,6 +34,8 @@ class Country {
 		void country_SetNumArmies(UINT numArmies);
 		void country_SetOwner(Player* player);
 
+		/** Resets the country */
+		void country_Reset(void);
 
 	private:
 		/** A pointer to the continent that this country belongs to */

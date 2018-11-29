@@ -2,6 +2,30 @@
 #define GRAPH_LOCAL
 #include "Graph.h"
 
+
+template <class V, class E>
+Graph<V, E>::~Graph(void)
+{
+
+	cout << "In Graph Destructor" << endl;
+
+	/** Delete all vertices */
+	for (typename vector<typename Graph<V, E>::Vertex *>::iterator it=vertices.begin(); it!=vertices.end(); ++it)
+	{
+		delete *it;
+	}
+
+
+	/** Delete all edges */
+	for (typename vector<typename Graph<V, E>::Edge *>::iterator it=edges.begin(); it!=edges.end(); ++it)
+	{
+		delete *it;
+	}
+
+
+}
+
+
 /** Graph code */
 template <class V, class E>
 Graph<V, E>::Graph(void)
@@ -277,6 +301,16 @@ void Graph<V, E>::Vertex::vertex_AddVertexEdgePair(Vertex *otherVertex, Edge * c
 }
 
 template <class V, class E>
+Graph<V, E>::Vertex::~Vertex(void)
+{
+	cout << "In Vertex destructor" << endl;
+
+	delete this->element;
+
+
+}
+
+template <class V, class E>
 map< typename Graph<V, E>::Vertex *, typename Graph<V, E>::Edge *> * Graph<V, E>::Vertex::vertex_GetOutgoing(void)
 {
 
@@ -292,6 +326,15 @@ Graph<V, E>::Edge::Edge(Vertex * u, Vertex * v)
 	this->endpoints.push_back(u);
 	this->endpoints.push_back(v);
 	this->element = NULL;
+}
+
+template <class V, class E>
+Graph<V, E>::Edge::~Edge(void)
+{
+	cout << "In Edge destructor" << endl;
+
+	delete this->element;
+
 }
 
 template <class V, class E>

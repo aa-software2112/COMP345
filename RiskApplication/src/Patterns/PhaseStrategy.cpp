@@ -1694,13 +1694,21 @@ void AggressivePhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 				}
 				/* Notify all observers */
 				p->subject_Notify();
+
+				cout << "Notification complete" << endl;
 			}
 		}
 	}
 
+	cout << "Ending Attack Phase" << endl;
+
 	/* Draw if a country was captured during the attack phase */
 	if(capturedCountry)
+	{
+		cout << "Drawing from deck" << endl;
 		p->myHand.hand_addCardToHand(rg->riskGame_getDeck()->deck_draw());
+		cout << "Drawing complete" << endl;
+	}
 
 	cout << endl;
 	cout << "Attack End" << endl << endl;

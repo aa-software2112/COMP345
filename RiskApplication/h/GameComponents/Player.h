@@ -78,6 +78,22 @@ class Player: public Subject {
 		void player_setCurrentPhase(phaseType phase);
 		phaseType player_getCurrentPhase();
 
+		/** Resets all attributes in player */
+		void player_Reset(void);
+
+		/** Gets the name of the phase strategy */
+		string player_behaviorName(void)
+		{
+
+			if (this->player_PhaseStrategy == NULL)
+			{
+				return "NO NAME";
+			}
+
+			return this->player_PhaseStrategy->phaseStrategy_GetName();
+
+		}
+
 
 		friend ostream& operator<<(ostream& output, Player& p);
 
