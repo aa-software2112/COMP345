@@ -19,6 +19,7 @@ class Country {
 	public:
 		/** Constructor **/
 		Country(void);
+		~Country();
 		Country(string countryName);
 		Country(Continent * linkContinent, string countryName, UINT xCoordinate, UINT yCoordinate, Player *thisOwner );
 		string country_GetName(void);

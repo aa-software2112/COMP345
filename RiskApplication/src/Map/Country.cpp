@@ -4,6 +4,15 @@
 #include "Continent.h"
 
 
+Country::~Country(void)
+{
+	cout << "In Country Destructor " << endl;
+
+	delete this->parentContinent;
+	delete this->owner;
+
+}
+
 Country::Country(void)
 {
 	/** Country now points to a continent */

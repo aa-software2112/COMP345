@@ -18,6 +18,7 @@
 #include "Subject.h"
 #include "Observer.h"
 #include "GameStatisticsObserver.h"
+#include "Tournament.h"
 using namespace std;
 
 class RiskGame: public Observer {
@@ -40,6 +41,11 @@ public:
 	void riskGame_playGame(void);
 	void riskGame_closeGame(void);
 	bool riskGame_playerTurn(Player* currentPlayer);
+
+	/** Tournament functions */
+	void riskGame_tournamentInitializeGame(void);
+	void riskGame_tournamentPlayGame(void);
+	void riskGame_tournamentCloseGame(void);
 
 	void riskGame_giveAllCountriesToPlayer(Player *currentPlayer);
 	void riskGame_giveAllCountriesButOneToPlayer(Player *firstPlayer, Player *anotherPlayer);
@@ -70,6 +76,8 @@ private:
 	/** Number of card sets traded */
 	int numCardSetsTraded;
 
+	/** Tournament object */
+	Tournament *tournament;
 
 	/** Boolean that tracks the staet of game - either tournament, or non-tournament */
 	bool playingTournament = false;

@@ -15,6 +15,22 @@ Map::Map()
 
 Map::~Map()
 {
+	cout << "In Map Destructor" << endl;
+
+	/** Delete the continents */
+	for (map<string,Continent*>::iterator it=mapContinents.begin(); it!=mapContinents.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	/** Delete the countries */
+	for (map<string,Country*>::iterator it=mapCountries.begin(); it!=mapCountries.end(); ++it)
+	{
+		cout << "C1" << endl;
+		delete it->second;
+	}
+
+
 
 }
 

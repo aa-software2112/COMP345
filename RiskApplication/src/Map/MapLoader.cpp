@@ -27,6 +27,10 @@ Map * MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 	{
 		return this->loadedMap;
 	}
+	else
+	{
+		delete this->loadedMap;
+	}
 
 	cout << "NULL MAP" << endl;
 	return NULL;

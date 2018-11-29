@@ -127,6 +127,12 @@ void RiskGame::riskGame_start(void)
 	/** Play a tournament */
 	if (this->playingTournament)
 	{
+		this->riskGame_tournamentInitializeGame();
+		// TODO, autoassign initial armies
+
+		this->riskGame_tournamentPlayGame();
+
+		//this->riskGame_tournamentCloseGame();
 
 	}
 	/** Play game as usual */
@@ -264,7 +270,7 @@ void RiskGame::riskGame_initializeGame(void)
 	{
 		playerNameMessage = "Select a name for player " + std::to_string(i+1) + " ...";
 
-		this->players.push_back(new Player(  UserInterface::userInterface_getString(playerNameMessage)  ));
+		this->players.push_back(new Player(  UserInterface::userInterface_getString(playerNameMessage)  )	);
 	}
 
 	/**
@@ -653,3 +659,176 @@ void RiskGame::riskGame_giveAllCountriesButOneToPlayer(Player* firstPlayer, Play
 
 }
 
+
+/**
+ *
+ * Tournament Functions
+ *
+ */
+void RiskGame::riskGame_tournamentInitializeGame(void)
+{
+	/** Initializes the tournament
+	 * 1. Number of maps
+	 * 2. The actual maps
+	 * 3. Number of players
+	 * 4. Player behaviors
+	 * 5. Number of games
+	 * 6. Number of turns
+	 */
+
+	/** Create new tournament */
+	tournament = new Tournament();
+
+	string userPrompt = "Select the number of maps for the tournament [" + to_string(this->tournament->MIN_NUM_MAPS) + "," + to_string(this->tournament->MAX_NUM_MAPS) + "] ";
+
+	/** Get & Set number of maps */
+	UINT numberOfMaps = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_MAPS, this->tournament->MAX_NUM_MAPS);
+
+	tournament->tournament_setNumMaps(numberOfMaps);
+
+	/** Get list of map files */
+	vector<string> * listOfMapFiles = Directory::directory_GetAllFilesInDirectory(this->pathToMapFiles, this->mapFileExtension);
+
+	userPrompt = "Select a map";
+
+	UINT mapIndex = 0;
+
+	/** For loading maps */
+	MapLoader mapLoader;
+
+	/** String containing the path */
+	string pathToMap;
+
+	/** Add maps until all maps are set */
+	while (!tournament->tournament_allMapsSelected())
+	{
+		/** Select a map */
+		mapIndex = UserInterface::userInterface_getIndexOfList(*listOfMapFiles, userPrompt);
+
+		pathToMap = (*listOfMapFiles)[mapIndex];
+
+		Map * mapToAdd = mapLoader.mapLoader_LoadMap(pathToMap);
+
+		if (mapToAdd == NULL)
+		{
+			print("Could not parse file");
+			continue;
+		}
+
+		/** Add map to tournament */
+		this->tournament->tournament_addMap(mapToAdd);
+
+		/** Remove the map from possible selection */
+		listOfMapFiles->erase(listOfMapFiles->begin() + mapIndex);
+
+	}
+
+	userPrompt = "Number of players [" + to_string(this->tournament->MIN_NUM_PLYRS) + "," + to_string(this->tournament->MAX_NUM_PLYRS) + "] ";
+
+	/** Get & Set number of players */
+	UINT numPlayers = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_PLYRS, this->tournament->MAX_NUM_PLYRS);
+
+	tournament->tournament_setNumPlayers(numPlayers);
+
+	/** Behavior options */
+	vector<string> behaviorOptions {
+			"Aggressive Behavior",
+			"Benevolent Behavior",
+			"Random Behavior",
+			"Cheater Behavior"
+	};
+
+	userPrompt = "Select a behavior";
+
+	string playerNamePrompt = "Select a player name";
+
+	UINT behaviorIndex;
+
+	/** Add players until all players are set */
+	while(!tournament->tournament_allPlayersSet())
+	{
+
+		/** Get the behavior */
+		behaviorIndex = UserInterface::userInterface_getIndexOfList(behaviorOptions, userPrompt);
+
+		/** Create new player */
+		Player * newPlayer = new Player(UserInterface::userInterface_getString(playerNamePrompt));
+
+		/** Set behavior */
+		switch(behaviorIndex)
+		{
+			/** Aggressive behavior */
+			case 0:
+				newPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
+				break;
+
+			/** Benevolent behavior */
+			case 1:
+				newPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
+				break;
+
+			/** Random behavior */
+			case 2:
+				newPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
+				break;
+
+			/** Cheater behavior */
+			case 3:
+				newPlayer->player_setPhaseStrategy(new CheaterPhaseStrategy());
+				break;
+
+		}
+
+		/** Store player in this risk game */
+		this->players.push_back(newPlayer);
+
+		/** Store the player in the tournament */
+		this->tournament->tournament_addPlayer(newPlayer);
+
+
+	}
+
+	/** Get & Set number of games */
+	userPrompt = "Number of games [" + to_string(this->tournament->MIN_NUM_GAMES) + "," + to_string(this->tournament->MAX_NUM_GAMES) + "] ";
+
+
+	UINT numGames = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_GAMES, this->tournament->MAX_NUM_GAMES);
+
+
+	this->tournament->tournament_setGamesPerMap(numGames);
+
+	/** Get & Set number of turns */
+	userPrompt = "Number of turns [" + to_string(this->tournament->MIN_NUM_TURNS) + "," + to_string(this->tournament->MAX_NUM_TURNS) + "] ";
+
+
+	UINT numTurns = UserInterface::userInterface_getIntegerBetweenRange(userPrompt,
+			this->tournament->MIN_NUM_TURNS, this->tournament->MAX_NUM_TURNS);
+
+
+	this->tournament->tournament_setGamesPerMap(numTurns);
+
+
+}
+
+void RiskGame::riskGame_tournamentPlayGame(void)
+{
+	/** Play until all maps have been played */
+	while(!this->tournament->tournament_allMapsPlayed())
+	{
+
+		/** Loads the next map to be played */
+		this->tournament->tournament_loadNextMap();
+
+		/** Sets up necessary pregame data */
+		this->tournament->tournament_pregamesSetup();
+
+
+
+	}
+
+	cout << "Played entire Tournament" << endl;
+
+}
