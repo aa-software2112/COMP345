@@ -25,6 +25,8 @@ class DiceRollingFacility{
 		void diceRollingFacility_rollDice(int numDiceRolled);
 
 		void diceRollingFacility_printPlayerDiceStatistics();       // Displays percentages of all individual values rolled.
+
+		void diceRollingFacility_Reset(void);
 };
 
 

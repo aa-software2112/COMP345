@@ -10,6 +10,23 @@
 #include <algorithm>
 #include <array>
 
+Deck::~Deck()
+{
+	/** Remove all cards */
+	for(UINT cardIndex = 0; cardIndex < numCards; cardIndex++)
+	{
+		/** Each index refers to a Card pointer that must be deleted */
+		delete this->cards[cardIndex];
+
+	}
+
+	/** Delete the array */
+	delete[] this->cards;
+
+	/** Cards are indexed at zero again */
+	Card::CardId = 0;
+
+}
 
 Deck::Deck(int numOfCountries) {
 

@@ -2,7 +2,30 @@
 #define COUNTRY_LOCAL
 #include "Country.h"
 #include "Continent.h"
+#include "Player.h"
 
+
+/** Resets the country;
+ * 1. Clears all armies in country
+ * 2. Removes owner from country
+ */
+void Country::country_Reset(void)
+{
+	this->numArmies = 0;
+
+	this->owner = NULL;
+
+
+}
+
+Country::~Country(void)
+{
+	cout << "In Country Destructor " << endl;
+
+	delete this->parentContinent;
+	delete this->owner;
+
+}
 
 Country::Country(void)
 {

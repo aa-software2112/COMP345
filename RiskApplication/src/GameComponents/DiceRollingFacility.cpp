@@ -13,6 +13,26 @@
 
 using namespace std;
 
+/** Resets the dice rolling facility */
+void DiceRollingFacility::diceRollingFacility_Reset(void)
+{
+	/** Reset the results */
+	for (int i = 0; i<sizeof(resultsRolled)/sizeof(int); i++)
+	{
+		resultsRolled[i] = 0;
+	}
+
+	/** Reset the number of rolls for each die face */
+	rolledOne = 0;
+	rolledTwo = 0;
+	rolledThree = 0;
+	rolledFour = 0;
+	rolledFive = 0;
+	rolledSix = 0;
+	totalRolls = 0;
+
+}
+
 DiceRollingFacility::DiceRollingFacility()
 {
 

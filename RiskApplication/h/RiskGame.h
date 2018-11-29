@@ -18,6 +18,7 @@
 #include "Subject.h"
 #include "Observer.h"
 #include "GameStatisticsObserver.h"
+#include "Tournament.h"
 using namespace std;
 
 class RiskGame: public Observer {
@@ -41,12 +42,20 @@ public:
 	void riskGame_closeGame(void);
 	bool riskGame_playerTurn(Player* currentPlayer);
 
+	/** Tournament functions */
+	void riskGame_tournamentInitializeGame(void);
+	void riskGame_tournamentPlayGame(void);
+	void riskGame_tournamentCloseGame(void);
+
 	void riskGame_giveAllCountriesToPlayer(Player *currentPlayer);
 	void riskGame_giveAllCountriesButOneToPlayer(Player *firstPlayer, Player *anotherPlayer);
 
 	virtual void observer_Update(void);
 	void riskGame_setSubject(Player *subject);
 	void riskGame_removeObserver(Player *subject);
+
+	/** Resets the game of risk */
+	void riskGame_Reset(void);
 
 	/** Create the observer, and set its subject - the game's map */
 	GameStatisticsObserver statsObserver;
@@ -70,6 +79,11 @@ private:
 	/** Number of card sets traded */
 	int numCardSetsTraded;
 
+	/** Tournament object */
+	Tournament *tournament;
+
+	/** Boolean that tracks the staet of game - either tournament, or non-tournament */
+	bool playingTournament = false;
 
 	string pathToLoadedMap;
 	string mapFileExtension = ".map";

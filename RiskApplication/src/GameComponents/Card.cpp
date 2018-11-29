@@ -10,6 +10,7 @@
 
 int Card::CardId = 0;
 
+
 ostream& operator<<(ostream& output, Card &c)
 {
 	output << "CARD: ";
