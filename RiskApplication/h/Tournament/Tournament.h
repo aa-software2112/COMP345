@@ -117,9 +117,9 @@ public:
 			this->winner = winner;
 		}
 
-		void game_decrementTurnsPlayed(void)
+		void game_incrementTurnsPlayed(void)
 		{
-			this->turnsPlayed--;
+			this->turnsPlayed++;
 		}
 
 		void game_setDrawOrWinner(void)

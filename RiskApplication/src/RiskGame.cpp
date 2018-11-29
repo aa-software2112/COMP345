@@ -834,7 +834,7 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
 			this->tournament->MIN_NUM_TURNS, this->tournament->MAX_NUM_TURNS);
 
 
-	this->tournament->tournament_setGamesPerMap(numTurns);
+	this->tournament->tournament_setNumTurns(numTurns);
 
 
 }
@@ -868,16 +868,19 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 			/** Start a new game */
 			this->tournament->tournament_startNewGame();
 
+			/** Create & set a new deck */
+			this->deck = new Deck(this->map->map_GetNumCountries());
+
 			/** Stores the index of the player who is next to take its turn */
 			UINT playerIndex = 0;
 
 			Player * currentPlayer = this->players[playerIndex++];
 
 			/** Perform until winner or turns depleted */
-			while(!this->tournament->tournament_turnsLeft() && !this->tournament->tournament_winnerExists())
+			while(this->tournament->tournament_turnsLeft() && !this->tournament->tournament_winnerExists())
 			{
 				/** The player plays its turn */
-
+				cout << "Start of turn" << endl;
 				/** Set the subject */
 				this->riskGame_setSubject(currentPlayer);
 
@@ -911,6 +914,8 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 
 				/** Decrement number of turns remaining */
 				this->tournament->tournament_turnPlayed();
+
+				cout << "Another turn" << endl;
 
 			}
 

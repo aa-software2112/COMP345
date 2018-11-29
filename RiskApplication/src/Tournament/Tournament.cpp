@@ -158,6 +158,10 @@ bool Tournament::tournament_allGamesPlayed(void)
 /** Checks if there are turns left */
 bool Tournament::tournament_turnsLeft(void)
 {
+	cout << "Number of turns played: " << this->currentGame->game_getTurnsPlayed() << endl;
+	cout << "Number of turns total: " << this->numTurns << endl;
+
+
 	return this->currentGame->game_getTurnsPlayed() < this->numTurns;
 }
 
@@ -176,7 +180,7 @@ void Tournament::tournament_setWinner(Player *winner)
 /** A turn was played, set appropriate values */
 void Tournament::tournament_turnPlayed(void)
 {
-	this->currentGame->game_decrementTurnsPlayed();
+	this->currentGame->game_incrementTurnsPlayed();
 }
 
 /** Returns the current map */
@@ -185,7 +189,12 @@ Map * Tournament::tournament_getCurrentMap(void)
 	return this->currentMap;
 }
 
-/** Ends the current game */
+/** Ends the current game
+ * 1. Sets the game as a "draw" if there was no winner
+ * 2. Stores the current game in the vector of games
+ * 3. Resets all players
+ * 4. Resets the map
+ * */
 void Tournament::tournament_endGame(void)
 {
 	/** Sets draw if there was no winner */
