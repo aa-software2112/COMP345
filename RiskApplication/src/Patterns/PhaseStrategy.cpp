@@ -11,6 +11,9 @@
  * */
 void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 {
+	cout << "- RANDOM STRATEGY -" << endl;
+	cout << "ATTACK PHASE" << endl;
+	cout << "Attack Start" << endl;
 	if(p->myCollectionOfCountries.size() == 0)
 		return;
 
@@ -29,28 +32,34 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 				{
 					numberOfAttackPossible ++;
 					attackPossible = true;
+					//cout << p->player_getMyCountries()[i]->country_GetName() << p->player_getMyCountries()[i]->country_GetNumArmies() << " CAN ATTACK " << adjacentCountries[n]->country_GetName() << endl;
 				}
 			}
 		}
 	}
 
-	cout << "- RANDOM STRATEGY -" << endl;
-	cout << "ATTACK PHASE" << endl;
-	cout << "Attack Start" << endl;
+	//cout << "TOTAL ATTACKS POSSIBLE: " << numberOfAttackPossible << endl;
+
+
 	bool capturedCountry = false; // flag used to determine if a country was captured this turn
 	srand(time(NULL));
 
 	if(attackPossible == false){
 
-			cout << "NO ATTACK POSSIBLE AT THE MOMENT" << endl;
+			cout << endl << "NO ATTACK POSSIBLE AT THE MOMENT" << endl << endl;
 
 	}
 	int counter = 0;
-	//int end = 1;
-	int end  = 3;
+	int end = 1;
+	if(numberOfAttackPossible > 0)
+		end  = rand()%numberOfAttackPossible+1;
+	else
+		end = 0;
 	//int	end = rand()%10+1;
 	//cout <<  p->player_getPlayerName() << " will attack " << end << " times" << endl;
-	while(counter < end && attackPossible == true){
+	//cout <<  "WILL ATTACK " << end << endl;
+	while(counter < end){
+		//cout <<  "WILL ATTACK " << end << endl;
 		attackPossible = false;
 		for(int i = 0; i < p->player_getMyCountries().size(); i++)
 		{
@@ -62,15 +71,16 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 				{
 					if(adjacentCountries[n]->country_GetOwner() != p)
 					{
-						numberOfAttackPossible ++;
+
 						attackPossible = true;
+
 					}
 				}
 			}
 		}
-		if(attackPossible = false){
+		if(attackPossible == false){
 
-			cout << "NO ATTACK POSSIBLE AT THE MOMENT" << endl;
+			//cout << "NO ATTACK POSSIBLE AT THE MOMENT" << endl;
 			break;
 		}
 
@@ -78,6 +88,7 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 		int rdmAttackingCountry = rand()% sizeOfMyCollection;
 		bool attack = false;
 		if(p->player_getMyCountries()[rdmAttackingCountry]->country_GetNumArmies()<2){
+			//cout << "A" << endl;
 			continue;
 		}
 
@@ -91,7 +102,7 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 			}
 		}
 		if(attack == false){
-
+			//cout << "B" << endl;
 			continue;
 
 		}
@@ -424,6 +435,8 @@ void RandomPhaseStrategy::phaseStrategy_Attack(Player * p, RiskGame * rg)
 	}
 	if(capturedCountry)
 			p->player_getMyHand()->hand_addCardToHand(rg->riskGame_getDeck()->deck_draw());
+
+	cout << p->player_getPlayerName() << " has attacked " << counter << " times from " << numberOfAttackPossible << " possible attacks!!!!!!" << endl;
 	cout << endl;
 	cout << "Attack End" << endl << endl;
 	return;
