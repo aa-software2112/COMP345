@@ -65,6 +65,10 @@ public:
 
 	void tournament_startNewGame(void);
 
+	void tournament_setMapAsPlayed(void);
+
+	void tournament_displayTournament(void);
+
 
 	/** Threshold values */
 	const UINT MIN_NUM_MAPS = 1;
@@ -115,6 +119,16 @@ public:
 		void game_setWinner(Player *winner)
 		{
 			this->winner = winner;
+		}
+
+		Player * game_getWinner(void)
+		{
+			return this->winner;
+		}
+
+		bool game_wasADraw(void)
+		{
+			return this->gameDraw;
 		}
 
 		void game_incrementTurnsPlayed(void)

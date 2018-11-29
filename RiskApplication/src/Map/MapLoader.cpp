@@ -19,12 +19,32 @@ Map * MapLoader::mapLoader_LoadMap(const std::string& pathToMap)
 	/** Create new file container for current map file */
 	this->mapFileReader = new FileReader(pathToMap);
 
+
 	/** Extract content from .map file */
 	/** TODO throw an error if map file is not parsable within defined format, or
 	 * if key,value pairs are missing for any necessary section
 	 */
 	if(this->mapLoader_ParseMapFile())
 	{
+		/** Get the map name */
+		vector<string> splitStringTokens;
+		string delimiter = "/";
+		string stringToSplit = pathToMap;
+
+		splitString(stringToSplit, delimiter, splitStringTokens);
+
+
+		/** Sets the map name */
+		if (splitStringTokens.size() > 0)
+		{
+			this->loadedMap->map_SetMapName(splitStringTokens.back());
+		}
+		else
+		{
+			string s = "MAP NAME NOT FOUND";
+			this->loadedMap->map_SetMapName(s);
+		}
+
 		return this->loadedMap;
 	}
 	else

@@ -54,6 +54,9 @@ public:
 	void riskGame_setSubject(Player *subject);
 	void riskGame_removeObserver(Player *subject);
 
+	/** Resets the game of risk */
+	void riskGame_Reset(void);
+
 	/** Create the observer, and set its subject - the game's map */
 	GameStatisticsObserver statsObserver;
 

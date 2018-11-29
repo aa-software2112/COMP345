@@ -117,6 +117,16 @@ void Tournament::tournament_addPlayer(Player *player)
 	}
 }
 
+/** Sets the current map as played */
+void Tournament::tournament_setMapAsPlayed(void)
+{
+	if (this->currentMap != NULL)
+	{
+		/** Sets the current map as played */
+		this->playedMaps.push_back(this->currentMap);
+	}
+}
+
 /** True if all maps have been played on, false otherwise */
 bool Tournament::tournament_allMapsPlayed(void)
 {
@@ -203,7 +213,19 @@ void Tournament::tournament_endGame(void)
 	/** Stores the current game */
 	games.push_back(this->currentGame);
 
-	/** Resets all the players */
+	/** 1. Resets all the players
+	 * 2. Resets Map
+	 *
+	 */
+	for(UINT p = 0; p<this->players.size(); p++)
+	{
+		this->players[p]->player_Reset();
+	}
+
+	this->currentMap->map_Reset();
+
+	/** Decrement remaining games to be played */
+	this->gamesLeftForCurrentMap--;
 
 }
 
@@ -389,3 +411,65 @@ void Tournament::tournament_loadNextMap(void)
 	}
 
 }
+
+/** This function displays the outcome of all the games
+ * played in the tournament. The following steps are required
+ * to display the appropriate match statistics
+ * 0. Display a row representing the "Game #" by using the "gamesPerMap" variable (see assignment for table with this row as a reference)
+ * 1. Iterate over all maps
+ * 	1.1 Display the map name
+ * 2. For each map, iterate over the number of games per map
+ * (i.e. for the first map, if the number of games per map is 3, display games 0 -> 2,
+ * and for the second map, display games 3 - > 5, and so on)
+ * 3. For each game display
+ * 	3.1 The player's behavior that won (if winner != NULL)
+ * 	3.2 "DRAW" if there was no winner (winner == NULL)
+ *
+ */
+void Tournament::tournament_displayTournament(void)
+{
+
+	/** 0. Display the first row here <Blank Spaces> <Game 1> <Game 2> ... <Game this->gamesPerMap> */
+
+
+	/** 1. Iterate over all maps */
+	for (UINT mapIndex = 0; mapIndex < this->playedMaps.size(); mapIndex++)
+	{
+		/** Use this map for displaying purposes */
+		Map * mapToDisplay = this->playedMaps[mapIndex];
+
+		/** 1.1 Display the map name here (use function in map class --> map_GetMapName())
+		 * Must be displayed as the row name (see the assignment table as a reference)
+		 * */
+
+		/** The first game of the current map */
+		UINT gameNumber = mapIndex*this->gamesPerMap;
+
+		/** 2. Iterate over all games for the given map */
+		for( ; gameNumber < mapIndex*this->gamesPerMap + this->gamesPerMap; gameNumber++)
+		{
+
+			/** The game to display */
+			Game * gameToDisplay = this->games[gameNumber];
+
+			/** 3, 3.1, 3.2,
+			 * use both gameToDisplay-> game_wasADraw() to see if game was a draw, otherwise use
+			 * gameToDisplay->game_getWinner() to get the player and display its behavior
+			 *
+			 * If you use game_getWinner(), you will get a player (if there was a winner), and using this player,
+			 * call player->player_behaviorName() to get the string associated with the behavior type {AGGRESSIVE, CHEATER, ...}
+			 *
+			 * Display the player's behavior that won - or display DRAW here
+			 *
+			 * */
+
+		}
+
+	}
+
+
+
+
+
+}
+

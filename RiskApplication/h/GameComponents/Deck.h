@@ -23,6 +23,7 @@ private:
 
 public:
 	Deck(int numOfCountries);
+	~Deck();
 	Card** deck_getDeck();
 	int deck_getDeckSize();
 	Card* deck_draw();

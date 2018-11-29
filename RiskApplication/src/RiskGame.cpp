@@ -3,6 +3,19 @@
 #include "RiskGame.h"
 #include "GameStatisticsObserver.h"
 
+/** Resets the risk game (insofar as the Tournament requires resetting)
+ * 1. Reset the number of card sets traded
+ * 2. Reset the deck
+ *
+ */
+void RiskGame::riskGame_Reset(void)
+{
+
+	this->numCardSetsTraded = 0;
+
+	delete this->deck;
+
+}
 
 /** Set the subject that the observer will listen to;
  *
@@ -766,6 +779,11 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
 			"Cheater Behavior"
 	};
 
+	string aggressiveBehavior = "Aggressive Behavior";
+	string benevolentBehavior = "Benevolent Behavior";
+	string randomBehavior = "Random Behavior";
+	string cheaterBehavior = "Cheater Behavior";
+
 	userPrompt = "Select a behavior";
 
 	string playerNamePrompt = "Select a player name";
@@ -783,29 +801,26 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
 		Player * newPlayer = new Player(UserInterface::userInterface_getString(playerNamePrompt));
 
 		/** Set behavior */
-		switch(behaviorIndex)
+		if (stringContains(behaviorOptions[behaviorIndex], aggressiveBehavior) )
 		{
-			/** Aggressive behavior */
-			case 0:
-				newPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
-				break;
-
-			/** Benevolent behavior */
-			case 1:
-				newPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
-				break;
-
-			/** Random behavior */
-			case 2:
-				newPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
-				break;
-
-			/** Cheater behavior */
-			case 3:
-				newPlayer->player_setPhaseStrategy(new CheaterPhaseStrategy());
-				break;
-
+			newPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
 		}
+		else if (stringContains(behaviorOptions[behaviorIndex], benevolentBehavior) )
+		{
+			newPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
+		}
+		else if (stringContains(behaviorOptions[behaviorIndex], randomBehavior))
+		{
+			newPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
+		}
+		else if (stringContains(behaviorOptions[behaviorIndex], cheaterBehavior))
+		{
+
+			newPlayer->player_setPhaseStrategy(new CheaterPhaseStrategy());
+		}
+
+		/** Remove option */
+		behaviorOptions.erase(behaviorOptions.begin() + behaviorIndex);
 
 		/** Store player in this risk game */
 		this->players.push_back(newPlayer);
@@ -850,9 +865,13 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
  */
 void RiskGame::riskGame_tournamentPlayGame(void)
 {
+	UINT mapNumber = 0;
+
 	/** Play until all maps have been played */
 	while(!this->tournament->tournament_allMapsPlayed())
 	{
+
+		cout << "Map Number: " << ++mapNumber << endl;
 
 		/** Loads the next map to be played */
 		this->tournament->tournament_loadNextMap();
@@ -862,9 +881,14 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 		/** Sets up necessary pregame data */
 		this->tournament->tournament_pregamesSetup();
 
+		UINT gameNumber = 0;
+
 		/** Play all the games ( 1 - 5 ) for the current map */
 		while(!this->tournament->tournament_allGamesPlayed())
 		{
+
+			cout << "Game Number: " << ++gameNumber << endl;
+
 			/** Start a new game */
 			this->tournament->tournament_startNewGame();
 
@@ -887,8 +911,10 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 				/* Call the appropriate functions in order (reinforce, attack, fortify) */
 				currentPlayer->player_setCurrentPhase(REINFORCE);
 				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Reinforce(currentPlayer, this);
+
 				currentPlayer->player_setCurrentPhase(ATTACK);
 				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Attack(currentPlayer, this);
+
 				currentPlayer->player_setCurrentPhase(FORTIFY);
 				currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
 
@@ -919,15 +945,20 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 
 			}
 
+			/** Ends the current game */
+			this->tournament->tournament_endGame();
 
-
-			break;
-
+			/** Resets the risk game */
+			this->riskGame_Reset();
 
 		}
-		break;
+
+
+		this->tournament->tournament_setMapAsPlayed();
 
 	}
+
+	this->tournament->tournament_displayTournament();
 
 	cout << "Played entire Tournament" << endl;
 

@@ -37,6 +37,21 @@ class Map: public Subject {
 		bool map_IsConnected(void);
 		int map_GetNumCountries(void);
 
+		/** Sets the map name */
+		void map_SetMapName(string &mapName)
+		{
+			this->mapName = mapName;
+
+		}
+
+		string map_GetMapName(void)
+		{
+			return this->mapName;
+		}
+
+		/** Resetting the map */
+		void map_Reset(void);
+
 		/** This is for the observer to call, in order to get the state of the map
 		 * in terms of player ownership of countries
 		 */
@@ -44,6 +59,7 @@ class Map: public Subject {
 
 	private:
 		/** Graph where nodes contain countries, and edges contain strings */
+		string mapName;
 		Graph<Country, string> graph;
 		map<string, string> mapConfig;
 		map<string, Continent*> mapContinents;

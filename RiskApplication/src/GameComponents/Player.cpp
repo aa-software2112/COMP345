@@ -10,6 +10,47 @@
 #include "Continent.h"
 #include "DiceRollingFacility.h"
 
+
+/** Resets all attributes for a given player; used for playing multiple
+ * games with the same player
+ */
+void Player::player_Reset(void)
+{
+
+	this->totalReinforcementCount = 0;
+	this->reinforcingCountry = NULL;
+	this->amountToReinforce = 0;
+	this->attackingCountry = NULL;
+	this->attackedCountry = NULL;
+	this->attackingCountryArmies = 0;
+	this->attackedCountryArmies = 0;
+	this->attackOutcomeVictory = false;
+	this->successfulInvasion = false;
+	this->fortifyingCountry = NULL;
+	this->fortifiedCountry = NULL;
+	this->fortifiedCountryArmies = 0;
+	this->fortifyingCountryArmies = 0;
+	this->amountToFortify = 0;
+
+	/**
+	 * 1. Reset dice rolling facility
+	 * 2. Reset hand
+	 * 3. Reset collection of countries (empty it)
+	 *
+	 */
+	this->myDRF.diceRollingFacility_Reset();
+
+	this->myHand.hand_Reset();
+
+	while(this->myCollectionOfCountries.size() > 0)
+	{
+		this->myCollectionOfCountries.erase(this->myCollectionOfCountries.begin());
+	}
+
+
+
+}
+
 /** Sets the strategy for all phases
  * inside of attack, fortify, and reinforce, must make a call to
  * this->player_PhaseStrategy->(see PhaseStrategy.h for options)

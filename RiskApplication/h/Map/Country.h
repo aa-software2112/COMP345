@@ -34,6 +34,8 @@ class Country {
 		void country_SetNumArmies(UINT numArmies);
 		void country_SetOwner(Player* player);
 
+		/** Resets the country */
+		void country_Reset(void);
 
 	private:
 		/** A pointer to the continent that this country belongs to */

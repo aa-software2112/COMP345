@@ -2,6 +2,24 @@
 #define MAP_LOCAL
 #include "Map.h"
 
+/** Resets the map
+ * 1. Resets all countries (No need to reset continent; state is independent of previous
+ * played game)
+ */
+void Map::map_Reset(void)
+{
+
+	for(map<string, Country *>::iterator it = this->mapCountries.begin(); it != this->mapCountries.end(); it++)
+	{
+		/** Reset each country */
+		Country *c = it->second;
+
+		c->country_Reset();
+
+	}
+
+}
+
 Map::Map()
 {
 	/** Initialize the entries that are necessary for configuration */

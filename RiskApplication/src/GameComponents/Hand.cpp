@@ -12,6 +12,17 @@
 #include "UserInterface.h"
 #include "RiskGame.h"
 
+/** Resets the hand; clears all cards from deck */
+void Hand::hand_Reset(void)
+{
+	/** Clear entire hand */
+	while(this->handOfCards.size() > 0)
+	{
+		this->handOfCards.erase(this->handOfCards.begin());
+	}
+
+}
+
 /* Hand default constructor */
 Hand::Hand(){
 
