@@ -33,7 +33,10 @@ void RiskGame::observer_Update()
 	/* Message sent if the player is in the reinforce phase */
 	if(this->subject->player_getCurrentPhase() == REINFORCE)
 	{
-		cout << "Reinforcement Phase - " << this->subject->totalReinforcementCount << " unit(s) left to place!" << endl;
+		/* If statement used to filter out cheater reinforce total army count */
+		if(this->subject->totalReinforcementCount != -1337)
+			cout << "Reinforcement Phase - " << this->subject->totalReinforcementCount << " unit(s) left to place!" << endl;
+
 		cout << this->subject->player_getPlayerName() << " added " << this->subject->amountToReinforce << " units to " << this->subject->reinforcingCountry->country_GetName() << endl;
 	}
 	/* Message sent if the player is in the attack phase */
@@ -44,7 +47,7 @@ void RiskGame::observer_Update()
 
 		if(this->subject->attackOutcomeVictory == true)
 		{
-			if(this->subject->successfulInvasion == true)
+			if(this->subject->successfulInvasion != true)
 				cout << "The attacker won the battle, but defending unit(s) still remain!" << endl;
 			else
 				cout << "The attacker won the battle, the defending country was successfully captured!" << endl;
@@ -58,7 +61,11 @@ void RiskGame::observer_Update()
 	else
 	{
 		cout << "Fortify Phase" << endl;
-		cout << this->subject->player_getPlayerName() << " sent " << this->subject->amountToFortify << " units from " << this->subject->fortifyingCountry->country_GetName() << " (" << this->subject->fortifyingCountryArmies << " units) to " << this->subject->fortifiedCountry->country_GetName() << " (" << this->subject->fortifiedCountryArmies << " units)" << endl;
+		if(this->subject->fortifyingCountry != NULL)
+			cout << this->subject->player_getPlayerName() << " sent " << this->subject->amountToFortify << " units from " << this->subject->fortifyingCountry->country_GetName() << " (" << this->subject->fortifyingCountryArmies << " units) to " << this->subject->fortifiedCountry->country_GetName() << " (" << this->subject->fortifiedCountryArmies << " units)" << endl;
+		else
+			cout << this->subject->player_getPlayerName() << " gained " << this->subject->amountToFortify << " units on " << this->subject->fortifiedCountry->country_GetName() << " (Now has " << this->subject->fortifiedCountryArmies << " units)" << endl;
+
 	}
 
 	cout << endl << "*** END OF OBSERVER UPDATE ***" << endl << endl;
@@ -174,17 +181,21 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 
 	/* Prompt the user which type of strategy they would like to use this turn */
 	cout << "-------------------- " << currentPlayer->player_getPlayerName() << "'s turn! -------------------- " << endl;
-	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI";
+	string strategySelectionString = "What type of strategy would you like to adapt for this turn?\n[0] Human\n[1] Aggressive AI\n[2] Benevolent AI\n[3] Random AI \n[4] Cheater AI";
 
-	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 2);
+	int strategyIndex = UserInterface::userInterface_getIntegerBetweenRange(strategySelectionString, 0, 4);
 
 	/* Set the player's strategy accordingly */
 	if(strategyIndex == 0)
 		currentPlayer->player_setPhaseStrategy(new HumanPhaseStrategy());
 	else if(strategyIndex == 1)
 		currentPlayer->player_setPhaseStrategy(new AggressivePhaseStrategy());
-	else
+	else if(strategyIndex == 2)
 		currentPlayer->player_setPhaseStrategy(new BenevolentPhaseStrategy());
+	else if(strategyIndex == 3)
+		currentPlayer->player_setPhaseStrategy(new RandomPhaseStrategy());
+	else
+		currentPlayer->player_setPhaseStrategy(new CheaterPhaseStrategy());
 
 	/* Call the appropriate functions in order (reinforce, attack, fortify) */
 	currentPlayer->player_setCurrentPhase(REINFORCE);
@@ -194,8 +205,23 @@ bool RiskGame::riskGame_playerTurn(Player* currentPlayer)
 	currentPlayer->player_setCurrentPhase(FORTIFY);
 	currentPlayer->player_getPhaseStrategy()->phaseStrategy_Fortify(currentPlayer, this);
 
+	/* Delete current strategy */
+	delete currentPlayer->player_getPhaseStrategy();
+
 	/* Detach the game (observer) from the player (subject) */
 	this->riskGame_removeObserver(currentPlayer);
+
+	/* Refresh all player's country collection */
+
+	for(int x = 0; x < this->players.size(); x++)
+	{
+		this->players[x]->player_getMyCountries().clear();
+		for(int y; y < this->map->map_GetAllCountries().size(); y++)
+		{
+			if(this->map->map_GetAllCountries()[y]->country_GetOwner() == this->players[x])
+				this->players[x]->player_addCountry(this->map->map_GetAllCountries()[y]);
+		}
+	}
 
 	return false;
 }
