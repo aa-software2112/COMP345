@@ -429,8 +429,18 @@ void Tournament::tournament_loadNextMap(void)
 void Tournament::tournament_displayTournament(void)
 {
 
+	const char dash = '-';
+	const char space = ' ';
+	const int width1 = 20;
+	const int width2 = 15;
 	/** 0. Display the first row here <Blank Spaces> <Game 1> <Game 2> ... <Game this->gamesPerMap> */
 
+	cout << "\n+"<< setw(108)<< setfill(dash)<<"+\n"<< left << setw(22) << setfill(space) << "|";
+	for (unsigned int i=1; i<=gamesPerMap; i++){
+		cout << left << setw(width2)  << "| GAME " << i << setfill(space) << " ";
+	}
+	cout << "|\n"<< setw(107)<< setfill(dash) << "+";
+	cout << "+" << endl;
 
 	/** 1. Iterate over all maps */
 	for (UINT mapIndex = 0; mapIndex < this->playedMaps.size(); mapIndex++)
@@ -441,6 +451,7 @@ void Tournament::tournament_displayTournament(void)
 		/** 1.1 Display the map name here (use function in map class --> map_GetMapName())
 		 * Must be displayed as the row name (see the assignment table as a reference)
 		 * */
+		cout << "| "<< left << setw(width1) << setfill(space) << mapToDisplay-> map_GetMapName();
 
 		/** The first game of the current map */
 		UINT gameNumber = mapIndex*this->gamesPerMap;
@@ -462,10 +473,16 @@ void Tournament::tournament_displayTournament(void)
 			 * Display the player's behavior that won - or display DRAW here
 			 *
 			 * */
-
+			if (gameToDisplay->game_wasADraw()==true){
+				cout << "| " << left << setw(width2) << setfill(space) << "DRAW";
+			}
+			else
+				cout << "| " << left << setw(width2) << setfill(space) << gameToDisplay->game_getWinner()->player_behaviorName();
 		}
-
+		cout << "|"<< endl;
 	}
+	cout << setw(107) << setfill(dash) << "+";
+	cout << "+" << endl;
 
 
 
