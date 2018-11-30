@@ -12,16 +12,19 @@
 
 Deck::~Deck()
 {
+	cout << "Number of cards to delete " << this->totalCards << endl;
+
 	/** Remove all cards */
-	for(UINT cardIndex = 0; cardIndex < numCards; cardIndex++)
+	for(UINT cardIndex = 0; cardIndex < this->totalCards; cardIndex++)
 	{
 		/** Each index refers to a Card pointer that must be deleted */
 		delete this->cards[cardIndex];
 
 	}
 
-	/** Delete the array */
-	delete[] this->cards;
+	this->numCards = 0;
+
+	this->totalCards = 0;
 
 	/** Cards are indexed at zero again */
 	Card::CardId = 0;
@@ -29,6 +32,8 @@ Deck::~Deck()
 }
 
 Deck::Deck(int numOfCountries) {
+
+	this->totalCards = numOfCountries;
 
 	numCards = numOfCountries;
 
@@ -64,6 +69,10 @@ int Deck::deck_getDeckSize() {
 
 Card* Deck::deck_draw() {
 
+	if (numCards < 0)
+	{
+		return NULL;
+	}
 	numCards = numCards - 1;
 	return cards[numCards];
 }

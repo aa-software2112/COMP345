@@ -18,7 +18,11 @@ using namespace std;
 
 class Deck {
 private:
+	/** The number of cards left to deal to all players */
 	int numCards;
+
+	/** The number of cards in memory - for deletion purposes*/
+	int totalCards;
 	Card** cards;
 
 public:

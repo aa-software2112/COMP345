@@ -1,0 +1,94 @@
+[Map]
+author=_MIKE CRUSH_
+image=_52_ Flowers and Butterflies.bmp
+wrap=yes
+scroll=none
+warn=no
+
+[Continents]
+flower 1=2
+flower 2=2
+flower 3=2
+flower 4=2
+flower 5=2
+flower 6=2
+butterfly orange wing=1
+butterfly red wing=1
+butterfly yellow wing=1
+pot 1 & 2=1
+pot 3 & 4=1
+pot 5 & 6=1
+
+[Territories]
+Territory00,90,354,flower 1,Territory02,Territory03,Territory06,Territory05,Territory04,Territory01
+Territory01,36,336,flower 1,Territory04,Territory02,Territory00
+Territory02,96,304,flower 1,Territory57,Territory03,Territory01,Territory00
+Territory03,150,331,flower 1,Territory02,Territory06,Territory00
+Territory04,56,408,flower 1,Territory05,Territory01,Territory00
+Territory05,107,411,flower 1,Territory07,Territory06,Territory04,Territory00
+Territory06,150,388,flower 1,Territory07,Territory03,Territory05,Territory00,Territory15
+Territory07,165,460,flower 1,Territory17,Territory08,Territory16,Territory05,Territory06
+Territory08,123,469,flower 1,Territory07
+Territory09,260,331,flower 2,Territory11,Territory12,Territory13,Territory14,Territory15,Territory10
+Territory10,215,303,flower 2,Territory09,Territory11,Territory15
+Territory11,276,280,flower 2,Territory09,Territory10,Territory12
+Territory12,321,319,flower 2,Territory09,Territory11,Territory13
+Territory13,309,373,flower 2,Territory09,Territory12,Territory14
+Territory14,260,394,flower 2,Territory67,Territory16,Territory09,Territory13,Territory15
+Territory15,210,367,flower 2,Territory16,Territory09,Territory14,Territory10,Territory06
+Territory16,206,439,flower 2,Territory07,Territory15,Territory14
+Territory17,180,519,pot 1 & 2,Territory18,Territory07
+Territory18,179,564,pot 1 & 2,Territory17
+Territory19,359,115,flower 3,Territory20,Territory25,Territory24,Territory23,Territory22,Territory21
+Territory20,362,57,flower 3,Territory21,Territory25,Territory19
+Territory21,300,97,flower 3,Territory57,Territory22,Territory20,Territory19
+Territory22,318,166,flower 3,Territory23,Territory21,Territory19
+Territory23,374,169,flower 3,Territory26,Territory22,Territory24,Territory19
+Territory24,411,145,flower 3,Territory26,Territory25,Territory23,Territory34,Territory19
+Territory25,408,87,flower 3,Territory20,Territory24,Territory19
+Territory26,431,220,flower 3,Territory36,Territory27,Territory35,Territory24,Territory23
+Territory27,387,226,flower 3,Territory26
+Territory28,527,88,flower 4,Territory30,Territory31,Territory32,Territory33,Territory34,Territory29
+Territory29,479,61,flower 4,Territory34,Territory30,Territory28
+Territory30,540,46,flower 4,Territory29,Territory31,Territory28
+Territory31,584,79,flower 4,Territory66,Territory30,Territory32,Territory28
+Territory32,575,129,flower 4,Territory31,Territory33,Territory28
+Territory33,525,148,flower 4,Territory35,Territory34,Territory32,Territory28
+Territory34,477,129,flower 4,Territory35,Territory33,Territory29,Territory24,Territory28
+Territory35,474,193,flower 4,Territory26,Territory34,Territory33
+Territory36,447,277,pot 3 & 4,Territory37,Territory26
+Territory37,449,322,pot 3 & 4,Territory36
+Territory38,624,333,flower 5,Territory44,Territory43,Territory42,Territory41,Territory40,Territory39
+Territory39,609,286,flower 5,Territory40,Territory44,Territory38
+Territory40,564,319,flower 5,Territory41,Territory39,Territory38
+Territory41,575,372,flower 5,Territory67,Territory42,Territory40,Territory38
+Territory42,621,391,flower 5,Territory45,Territory43,Territory41,Territory38
+Territory43,677,372,flower 5,Territory45,Territory42,Territory44,Territory38,Territory52
+Territory44,672,303,flower 5,Territory39,Territory43,Territory38
+Territory45,684,439,flower 5,Territory53,Territory43,Territory42
+Territory46,794,355,flower 6,Territory52,Territory48,Territory47,Territory49,Territory50,Territory51
+Territory47,788,304,flower 6,Territory48,Territory49,Territory46
+Territory48,732,327,flower 6,Territory52,Territory47,Territory46
+Territory49,854,336,flower 6,Territory66,Territory47,Territory50,Territory46
+Territory50,833,405,flower 6,Territory49,Territory51,Territory46
+Territory51,782,412,flower 6,Territory53,Territory52,Territory50,Territory46
+Territory52,734,390,flower 6,Territory53,Territory51,Territory48,Territory46,Territory43
+Territory53,720,462,flower 6,Territory55,Territory45,Territory54,Territory51,Territory52
+Territory54,761,469,flower 6,Territory53
+Territory55,710,520,pot 5 & 6,Territory56,Territory53
+Territory56,711,564,pot 5 & 6,Territory55
+Territory57,132,139,butterfly orange wing,Territory60,Territory61,Territory58,Territory59,Territory21,Territory02
+Territory58,99,130,butterfly orange wing,Territory57,Territory59
+Territory59,111,172,butterfly orange wing,Territory57,Territory58
+Territory60,162,117,butterfly orange wing,Territory57,Territory61
+Territory61,168,156,butterfly orange wing,Territory57,Territory60
+Territory62,708,156,butterfly red wing,Territory66,Territory65
+Territory63,768,142,butterfly red wing,Territory66,Territory64
+Territory64,773,177,butterfly red wing,Territory66,Territory63
+Territory65,719,193,butterfly red wing,Territory66,Territory62
+Territory66,743,162,butterfly red wing,Territory63,Territory64,Territory62,Territory65,Territory49,Territory31
+Territory67,453,472,butterfly yellow wing,Territory68,Territory69,Territory71,Territory70,Territory14,Territory41
+Territory68,422,453,butterfly yellow wing,Territory67,Territory69
+Territory69,420,492,butterfly yellow wing,Territory67,Territory68
+Territory70,488,466,butterfly yellow wing,Territory67,Territory71
+Territory71,474,508,butterfly yellow wing,Territory67,Territory70

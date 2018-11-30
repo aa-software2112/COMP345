@@ -13,7 +13,11 @@ void RiskGame::riskGame_Reset(void)
 
 	this->numCardSetsTraded = 0;
 
+	cout << "Set num cards traded to 0 " << endl;
+
 	delete this->deck;
+
+	cout << "Deleted the deck" << endl;
 
 }
 
@@ -489,16 +493,22 @@ void RiskGame::riskGame_initializeGame(void)
 		 */
 		for(unsigned int i = 0; i < players.size(); i++)
 		{
+
+			cout << "Total armies for player: " << players[i]->player_getTotalNumberArmies();
+			cout << "Number of countries for player: " << players[i]->player_getMyCountries().size();
+
+
+
 			/**
 			 * If the player has not added "A" number of armies yet,
 			 * prompt them to add another one to their set of countries
 			 */
-			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A - players[i]->player_getMyCountries().size())
+			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A)
 			{
 				/**
 				 * Display current state of user's countries & armies
 				 */
-				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - players[i]->player_getTotalNumberArmies() << " unit(s) left to place!):" << endl;
+				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - (players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size()) << " unit(s) left to place!):" << endl;
 
 
 				for(unsigned int g = 0; g < players[i]->player_getMyCountries().size(); g++)
@@ -513,7 +523,8 @@ void RiskGame::riskGame_initializeGame(void)
 				/** Prompt user for which country to add an army to */
 				string armyPlacing = "Which country would you like to place armies on? (Enter index) ";
 
-				int countryIndex = UserInterface::userInterface_getIntegerBetweenRange(armyPlacing, 0, players[i]->player_getMyCountries().size() - 1);
+				/** Randomly select a country to set an army in */
+				int countryIndex = rand() % players[i]->player_getMyCountries().size();
 
 				/** Add a single army to player's country*/
 				players[i]->player_getMyCountries()[countryIndex]->country_SetNumArmies(players[i]->player_getMyCountries()[countryIndex]->country_GetNumArmies() + 1);
@@ -866,6 +877,7 @@ void RiskGame::riskGame_tournamentInitializeGame(void)
 void RiskGame::riskGame_tournamentPlayGame(void)
 {
 	UINT mapNumber = 0;
+	UINT playerIndex = 0;
 
 	/** Play until all maps have been played */
 	while(!this->tournament->tournament_allMapsPlayed())
@@ -893,10 +905,11 @@ void RiskGame::riskGame_tournamentPlayGame(void)
 			this->tournament->tournament_startNewGame();
 
 			/** Create & set a new deck */
+			cout << "New deck made with " << this->map->map_GetNumCountries() << " cards" << endl;
 			this->deck = new Deck(this->map->map_GetNumCountries());
 
 			/** Stores the index of the player who is next to take its turn */
-			UINT playerIndex = 0;
+			playerIndex = 0;
 
 			Player * currentPlayer = this->players[playerIndex++];
 

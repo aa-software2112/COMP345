@@ -1,0 +1,72 @@
+[Map]
+author=Wook
+image=Orcs Of Thar.bmp
+wrap=no
+scroll=horizontal
+warn=yes
+
+[Continents]
+Orcandia=10
+Nomad Punks=3
+Out West=3
+Camper Land=2
+Gold Country West=6
+Gold Country East=3
+Godless Wizards=3
+Our Potatoes=1
+Thier Potatoes=3
+Crazed Imperialists=3
+Desert Bums=1
+Caravania=4
+Tree Scum=2
+Dwarven Maniacs=3
+Horse Lovers=4
+Horned Humans=4
+
+[Territories]
+Orgemoor,306,401,Orcandia,Malphiggi Beach,Streel River Plains,Red Orcland,Trollhattan,Orcas Rex,There be Vamps
+Orcas Rex,281,300,Orcandia,Orgemoor,There be Vamps,Bugburbia,Trollhattan
+Trollhattan,355,350,Orcandia,Orgemoor,Orcas Rex,Bugburbia,Red Orcland
+Bugburbia,386,258,Orcandia,Orcas Rex,Trollhattan,Red Orcland,Highgobliny,There be Vamps
+Red Orcland,455,351,Orcandia,Streel River Plains,Orgemoor,Trollhattan,Bugburbia,Highgobliny,South Gnollistan,Kol
+Kol,503,393,Orcandia,Orc Infested MTS.,Streel River Plains,Red Orcland,South Gnollistan
+Highgobliny,479,242,Orcandia,Battlefields,Bugburbia,Red Orcland,There be Vamps,South Gnollistan,Hobgobland
+Hobgobland,561,196,Orcandia,Battlefields,Highgobliny,Yellow Orkia,South Gnollistan
+Yellow Orkia,619,229,Orcandia,Battlefields,Orc Infested MTS.,Hobgobland,South Gnollistan
+South Gnollistan,550,306,Orcandia,Orc Infested MTS.,Red Orcland,Highgobliny,Hobgobland,Yellow Orkia,Kol
+Punkia,148,103,Nomad Punks,Out There City,Up North,There be Vamps,There be Dragons
+Out There City,58,104,Nomad Punks,Punkia
+There be Dragons,103,369,Out West,Punkia,Sayr Ulan City,There be Vamps,The Golf Course,Malphiggi Beach
+Sayr Ulan City,42,395,Out West,There be Dragons
+The Golf Course,217,585,Camper Land,There be Dragons,Atruaghin CIty,Malphiggi Beach
+Atruaghin CIty,188,533,Camper Land,The Golf Course
+Malphiggi Beach,369,520,Gold Country West,There be Dragons,The Golf Course,Akorros City,Akesoli City,There be Vamps,Orgemoor,Streel River Plains
+Akorros City,307,466,Gold Country West,Malphiggi Beach
+Akesoli City,201,418,Gold Country West,Malphiggi Beach
+Streel River Plains,486,515,Gold Country East,Malphiggi Beach,Orc Infested MTS.,Fenhold,The Feilds,Darokin City,Corunglain City,Kol,Red Orcland,Orgemoor
+Darokin City,434,507,Gold Country East,Streel River Plains
+Corunglain City,448,429,Gold Country East,Streel River Plains
+There be Vamps,384,136,Godless Wizards,Punkia,There be Dragons,Malphiggi Beach,Battlefields,Up North,Glantri City,Orgemoor,Orcas Rex,Highgobliny,Bugburbia
+Glantri City,269,199,Godless Wizards,There be Vamps
+The Feilds,546,570,Our Potatoes,Fenhold,Streel River Plains,Resort MTS.,Shireton Port
+Shireton Port,513,581,Our Potatoes,The Feilds
+Resort MTS.,646,547,Thier Potatoes,Fenhold,The Feilds,Specularum Port,Sunnyside,Herendas
+Specularum Port,686,602,Thier Potatoes,Resort MTS.
+Herendas,793,542,Crazed Imperialists,Resort MTS.,Sunnyside,Thyatis Port
+Thyatis Port,900,611,Crazed Imperialists,Herendas
+Sunnyside,791,444,Desert Bums,Coldlands,Bad News,Fenhold,Resort MTS.,Herendas,Ylarum City
+Ylarum City,858,440,Desert Bums,Sunnyside
+Fenhold,626,485,Caravania,Orc Infested MTS.,Bad News,Woodlands,Selenica City,Sunnyside,Resort MTS.,The Feilds,Streel River Plains
+Selenica City,690,468,Caravania,Fenhold
+Woodlands,639,371,Tree Scum,Orc Infested MTS.,Fenhold,Alfhiem City
+Alfhiem City,631,423,Tree Scum,Woodlands
+Orc Infested MTS.,659,288,Dwarven Maniacs,Battlefields,Bad News,Fenhold,Woodlands,Streel River Plains,Kol,South Gnollistan,Yellow Orkia
+Bad News,805,349,Dwarven Maniacs,Battlefields,Coldlands,Orc Infested MTS.,Fenhold,Sunnyside,Dengar City
+Dengar City,744,352,Dwarven Maniacs,Bad News
+Battlefields,582,126,Horse Lovers,There be Vamps,Ethengar City,Up North,Coldlands,Bad News,Orc Infested MTS.,Yellow Orkia,Hobgobland,Highgobliny
+Ethengar City,642,123,Horse Lovers,Battlefields
+Up North,629,47,Horse Lovers,Punkia,There be Vamps,Freiburg Port,Battlefields,Coldlands
+Freiburg Port,779,46,Horse Lovers,Up North
+Coldlands,744,138,Horned Humans,Up North,Battlefields,Norvikk City,Soderfjord Port,Bad News,Sunnyside
+Norvikk City,814,184,Horned Humans,Coldlands
+Soderfjord Port,862,340,Horned Humans,Coldlands

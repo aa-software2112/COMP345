@@ -13,7 +13,6 @@ Continent::Continent(string continentName, int bonusValue)
 bool Continent::continent_playerOwnsContinent(Player *p)
 {
 
-
 	for (map<string,Country*>::iterator it=mapOfCountries.begin(); it!=mapOfCountries.end(); ++it)
 	{
 		Country * c = (it->second);

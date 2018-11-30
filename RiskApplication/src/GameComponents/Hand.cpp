@@ -30,6 +30,10 @@ Hand::Hand(){
 
 /* Function that adds a card to a player's hand */
 void Hand::hand_addCardToHand(Card* cardToAdd) {
+
+	if (cardToAdd == NULL)
+		return;
+
 	handOfCards.push_back(cardToAdd);
 }
 

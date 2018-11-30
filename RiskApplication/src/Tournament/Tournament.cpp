@@ -207,11 +207,17 @@ Map * Tournament::tournament_getCurrentMap(void)
  * */
 void Tournament::tournament_endGame(void)
 {
+	cout << "Ending game" << endl;
+
 	/** Sets draw if there was no winner */
 	this->currentGame->game_setDrawOrWinner();
 
+	cout << "Set draw or winnder done" << endl;
+
 	/** Stores the current game */
 	games.push_back(this->currentGame);
+
+	cout << "Pushed game to list" << endl;
 
 	/** 1. Resets all the players
 	 * 2. Resets Map
@@ -220,12 +226,18 @@ void Tournament::tournament_endGame(void)
 	for(UINT p = 0; p<this->players.size(); p++)
 	{
 		this->players[p]->player_Reset();
+
+		cout << "Reset player " << p << endl;
 	}
 
 	this->currentMap->map_Reset();
 
+	cout << "Reset map" << endl;
+
 	/** Decrement remaining games to be played */
 	this->gamesLeftForCurrentMap--;
+
+	cout << "Decremented games left to play" << endl;
 
 }
 
@@ -296,7 +308,7 @@ void Tournament::tournament_startNewGame(void)
 	 */
 
 	/** The number of armies for each player */
-	UINT A;
+	int A;
 
 	/** A boolean array describing when a given player is done placing their armies */
 	bool* placedArmiesFlag;
@@ -322,6 +334,9 @@ void Tournament::tournament_startNewGame(void)
 			break;
 	}
 
+
+	cout << "Number of armies to place: " << A << endl;
+
 	/** Place army in round-robin fashion */
 	bool donePlacingArmies = false;
 
@@ -335,16 +350,22 @@ void Tournament::tournament_startNewGame(void)
 		 */
 		for(unsigned int i = 0; i < players.size(); i++)
 		{
+
+			cout << "Total armies for player: " << players[i]->player_getTotalNumberArmies();
+			cout << "Number of countries for player: " << players[i]->player_getMyCountries().size();
+
+
+
 			/**
 			 * If the player has not added "A" number of armies yet,
 			 * prompt them to add another one to their set of countries
 			 */
-			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A - players[i]->player_getMyCountries().size())
+			if(players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size() < A)
 			{
 				/**
 				 * Display current state of user's countries & armies
 				 */
-				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - players[i]->player_getTotalNumberArmies() << " unit(s) left to place!):" << endl;
+				cout << players[i]->player_getPlayerName() << "'s turn (You have " << A - (players[i]->player_getTotalNumberArmies() - players[i]->player_getMyCountries().size()) << " unit(s) left to place!):" << endl;
 
 
 				for(unsigned int g = 0; g < players[i]->player_getMyCountries().size(); g++)
@@ -429,17 +450,19 @@ void Tournament::tournament_loadNextMap(void)
 void Tournament::tournament_displayTournament(void)
 {
 
+	cout << "Displaying tournament" << endl;
+
 	const char dash = '-';
 	const char space = ' ';
-	const int width1 = 20;
+	const int width1 = 40;
 	const int width2 = 15;
 	/** 0. Display the first row here <Blank Spaces> <Game 1> <Game 2> ... <Game this->gamesPerMap> */
 
-	cout << "\n+"<< setw(108)<< setfill(dash)<<"+\n"<< left << setw(22) << setfill(space) << "|";
+	cout << "\n+"<< setw(width1+this->gamesPerMap*width2 + this->gamesPerMap*2 + 3) << setfill(dash)<<"+\n"<< left << setw(width1+2) << setfill(space) << "|";
 	for (unsigned int i=1; i<=gamesPerMap; i++){
 		cout << left << setw(width2)  << "| GAME " << i << setfill(space) << " ";
 	}
-	cout << "|\n"<< setw(107)<< setfill(dash) << "+";
+	cout << "|\n"<< setw(width1+this->gamesPerMap*width2 + this->gamesPerMap*2 + 2)<< setfill(dash) << "+";
 	cout << "+" << endl;
 
 	/** 1. Iterate over all maps */
@@ -481,7 +504,7 @@ void Tournament::tournament_displayTournament(void)
 		}
 		cout << "|"<< endl;
 	}
-	cout << setw(107) << setfill(dash) << "+";
+	cout << setw(width1+this->gamesPerMap*width2 + this->gamesPerMap*2 + 2) << setfill(dash) << "+";
 	cout << "+" << endl;
 
 
